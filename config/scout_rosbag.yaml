@@ -11,6 +11,7 @@ input:
   odometry:
     topic: /odom
     type: Odometry
+    use_odom: false
   subscribe_to_gt_pose: true
   gt_pose:
     topic: /odom_gt

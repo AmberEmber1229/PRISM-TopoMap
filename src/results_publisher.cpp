@@ -127,10 +127,26 @@ void ResultsPublisher::publishGraph(const TopologicalGraph& graph,
         text_marker.pose.position.x = v.pose_for_visualization[0];
         text_marker.pose.position.y = v.pose_for_visualization[1];
         text_marker.pose.position.z = 0.5;
-        text_marker.scale.z = 0.3;
+        text_marker.scale.z = 0.4; // 稍微放大一点字体
         text_marker.color.r = 1.0; text_marker.color.g = 1.0;
         text_marker.color.b = 1.0; text_marker.color.a = 1.0;
-        text_marker.text = std::to_string(i);
+        
+        // 拼接节点索引与绝对位姿
+        std::stringstream ss;
+        ss << i << ": (" << std::fixed << std::setprecision(1) 
+           << v.pose_for_visualization[0] << ", " 
+           << v.pose_for_visualization[1] << ", " 
+           << std::setprecision(2) << v.pose_for_visualization[2] << ")";
+           
+        // 查找上一节点的边以拼接相对位姿
+        if (i > 0 && graph.hasEdge(i - 1, i)) {
+            Pose2D rel = graph.getEdge(i - 1, i);
+            ss << "\nrel: (" << std::fixed << std::setprecision(1) 
+               << rel[0] << ", " << rel[1] << ", " 
+               << std::setprecision(2) << rel[2] << ")";
+        }
+        
+        text_marker.text = ss.str();
         marker_array.markers.push_back(text_marker);
     }
 

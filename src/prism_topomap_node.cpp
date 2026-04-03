@@ -55,16 +55,17 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
     // --- input.odometry ---
     auto odometry_config = input_config["odometry"];
     odom_topic_ = odometry_config["topic"].as<std::string>("/odom");
+    use_odom_ = odometry_config["use_odom"].as<bool>(true);
 
     // --- input.gt_pose ---
-    bool use_gt_pose = input_config["subscribe_to_gt_pose"].as<bool>(true);
-    if (use_gt_pose && input_config["gt_pose"]) {
+    use_gt_pose_ = input_config["subscribe_to_gt_pose"].as<bool>(true);
+    if (use_gt_pose_ && input_config["gt_pose"]) {
         auto gt_pose_config = input_config["gt_pose"];
         gt_topic_ = gt_pose_config["topic"].as<std::string>("/odom_gt");
         std::string gt_type = gt_pose_config["type"].as<std::string>("Odometry");
         use_gt_pose_pose_stamped_ = (gt_type == "PoseStamped");
     } else {
-        gt_topic_ = "/odom_gt";
+        gt_topic_.clear();
         use_gt_pose_pose_stamped_ = false;
     }
 
@@ -121,12 +122,14 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
     odom_sub_ = nh_.subscribe(odom_topic_, 100,
                               &PRISMTopomapNode::odomCallback, this);
 
-    if (use_gt_pose_pose_stamped_) {
-        gt_pose_sub_ = nh_.subscribe(gt_topic_, 100,
-                                     &PRISMTopomapNode::gtPoseCallback, this);
-    } else {
-        gt_pose_sub_ = nh_.subscribe(gt_topic_, 100,
-                                     &PRISMTopomapNode::gtOdomPoseCallback, this);
+    if (use_gt_pose_) {
+        if (use_gt_pose_pose_stamped_) {
+            gt_pose_sub_ = nh_.subscribe(gt_topic_, 100,
+                                         &PRISMTopomapNode::gtPoseCallback, this);
+        } else {
+            gt_pose_sub_ = nh_.subscribe(gt_topic_, 100,
+                                         &PRISMTopomapNode::gtOdomPoseCallback, this);
+        }
     }
 
     if (subscribe_to_images_) {
@@ -160,8 +163,12 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
     ROS_INFO("  Mode: %s", topo_slam_model_->mode().c_str());
     ROS_INFO("  PCD topic: %s", pcd_topic_.c_str());
     ROS_INFO("  Odom topic: %s", odom_topic_.c_str());
-    ROS_INFO("  GT topic: %s", gt_topic_.c_str());
-    ROS_INFO("  GT type: %s", use_gt_pose_pose_stamped_ ? "PoseStamped" : "Odometry");
+    ROS_INFO("  use_odom for rel_pose: %s", use_odom_ ? "true" : "false");
+    ROS_INFO("  use_gt_pose: %s", use_gt_pose_ ? "true" : "false");
+    if (use_gt_pose_) {
+        ROS_INFO("  GT topic: %s", gt_topic_.c_str());
+        ROS_INFO("  GT type: %s", use_gt_pose_pose_stamped_ ? "PoseStamped" : "Odometry");
+    }
 }
 
 // ============================================================================
@@ -279,7 +286,70 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
     result.has_curbs = false;
 
     // 查找 GT 位姿 (插值)
-    if (gt_poses_.size() < 2) return result;
+    if (true) {
+        const double kPoseSyncTolerance = 0.2;
+
+        auto getNearestPose = [timestamp](const std::vector<StampedPose>& poses,
+                                          Pose2D& out_pose,
+                                          double& best_diff) -> bool {
+            if (poses.empty()) return false;
+            int best_idx = 0;
+            best_diff = std::abs(poses[0].timestamp - timestamp);
+            for (int i = 1; i < static_cast<int>(poses.size()); ++i) {
+                double diff = std::abs(poses[i].timestamp - timestamp);
+                if (diff < best_diff) {
+                    best_diff = diff;
+                    best_idx = i;
+                }
+            }
+            out_pose = poses[best_idx].pose;
+            return true;
+        };
+
+        if (use_gt_pose_) {
+            if (gt_poses_.empty()) return result;
+
+            if (gt_poses_.size() == 1) {
+                double gt_diff = std::abs(gt_poses_[0].timestamp - timestamp);
+                if (gt_diff > kPoseSyncTolerance) return result;
+                result.global_pose = gt_poses_[0].pose;
+            } else {
+                int gt_idx = -1;
+                for (int i = 0; i < static_cast<int>(gt_poses_.size()) - 1; ++i) {
+                    if (gt_poses_[i].timestamp <= timestamp && gt_poses_[i + 1].timestamp >= timestamp) {
+                        gt_idx = i;
+                        break;
+                    }
+                }
+
+                if (gt_idx >= 0) {
+                    result.global_pose = interpolatePose(gt_poses_[gt_idx], gt_poses_[gt_idx + 1], timestamp);
+                } else {
+                    double gt_diff = std::numeric_limits<double>::max();
+                    if (!getNearestPose(gt_poses_, result.global_pose, gt_diff) || gt_diff > kPoseSyncTolerance) {
+                        return result;
+                    }
+                }
+            }
+        } else {
+            double odom_diff = std::numeric_limits<double>::max();
+            if (!getNearestPose(odom_poses_, result.global_pose, odom_diff) || odom_diff > kPoseSyncTolerance) {
+                return result;
+            }
+        }
+
+        if (use_odom_) {
+            double odom_diff = std::numeric_limits<double>::max();
+            if (!getNearestPose(odom_poses_, result.odom_pose, odom_diff) || odom_diff > kPoseSyncTolerance) {
+                return result;
+            }
+        } else {
+            result.odom_pose = result.global_pose;
+        }
+
+        result.valid = true;
+    } /* legacy sync logic retained for reference:
+        if (gt_poses_.size() < 2) return result;
 
     // 找到最近的两个 GT 位姿
     int idx = -1;
@@ -324,6 +394,7 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
     }
 
     result.valid = true;
+    } */
 
     // 匹配前视图像
     if (subscribe_to_images_ && !rgb_buffer_front_.empty()) {

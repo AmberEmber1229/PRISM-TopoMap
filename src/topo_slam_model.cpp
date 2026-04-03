@@ -20,34 +20,43 @@ namespace prism_topomap {
 // 对应 Python: TopoSLAMModel.__init__() 中的 self.xxx = config['xxx']
 // ============================================================================
 void TopoSLAMModel::initParamsFromConfig(const YAML::Node& config) {
-    mode_ = config["mode"].as<std::string>("mapping");
-    iou_threshold_ = config["iou_threshold"].as<double>(0.8);
-    localization_frequency_ = config["localization_frequency"].as<double>(0.5);
-    rel_pose_correction_frequency_ = config["rel_pose_correction_frequency"].as<double>(0.0);
-    max_edge_length_ = config["max_edge_length"].as<double>(10.0);
-    drift_coef_ = config["drift_coef"].as<double>(0.02);
-    localization_timeout_ = config["localization_timeout"].as<double>(10.0);
+    const YAML::Node topomap_config = config["topomap"] ? config["topomap"] : config;
+    const YAML::Node input_config = config["input"];
+    const YAML::Node pointcloud_config = input_config["pointcloud"];
+    const YAML::Node pr_config = config["place_recognition"] ? config["place_recognition"] : config;
+    const YAML::Node grid_config = config["local_occupancy_grid"] ? config["local_occupancy_grid"] : config;
+    const YAML::Node reg_config = config["scan_matching"] ? config["scan_matching"] : config;
+    const YAML::Node inline_reg_config = config["scan_matching_along_edge"] ? config["scan_matching_along_edge"] : config;
+    const YAML::Node viz_config = config["visualization"] ? config["visualization"] : config;
 
-    floor_height_ = config["floor_height"].as<double>(0.0);
-    ceil_height_ = config["ceil_height"].as<double>(1.0);
-    pointcloud_quantization_size_ = config["pointcloud_quantization_size"].as<float>(0.5);
+    mode_ = topomap_config["mode"].as<std::string>("mapping");
+    iou_threshold_ = topomap_config["iou_threshold"].as<double>(0.8);
+    localization_frequency_ = topomap_config["localization_frequency"].as<double>(0.5);
+    rel_pose_correction_frequency_ = topomap_config["rel_pose_correction_frequency"].as<double>(0.0);
+    max_edge_length_ = topomap_config["max_edge_length"].as<double>(10.0);
+    drift_coef_ = topomap_config["drift_coef"].as<double>(0.02);
+    localization_timeout_ = topomap_config["localization_timeout"].as<double>(10.0);
 
-    grid_resolution_ = config["grid_resolution"].as<double>(0.1);
-    grid_radius_ = config["grid_radius"].as<double>(18.0);
-    max_grid_range_ = config["max_grid_range"].as<double>(8.0);
+    floor_height_ = pointcloud_config["floor_height"].as<double>(0.0);
+    ceil_height_ = pointcloud_config["ceiling_height"].as<double>(1.0);
+    pointcloud_quantization_size_ = pr_config["pointcloud_quantization_size"].as<float>(0.5);
 
-    reg_score_threshold_ = config["registration_score_threshold"].as<double>(0.6);
-    inline_reg_score_threshold_ = config["inline_registration_score_threshold"].as<double>(0.5);
+    grid_resolution_ = grid_config["resolution"].as<double>(0.1);
+    grid_radius_ = grid_config["radius"].as<double>(18.0);
+    max_grid_range_ = grid_config["max_range"].as<double>(8.0);
 
-    local_jump_threshold_ = config["local_jump_threshold"].as<double>(3.0);
-    map_frame_ = config["map_frame"].as<std::string>("map");
-    top_k_ = config["top_k"].as<int>(5);
+    reg_score_threshold_ = reg_config["score_threshold"].as<double>(0.6);
+    inline_reg_score_threshold_ = inline_reg_config["score_threshold"].as<double>(0.5);
 
-    if (config["start_location"]) {
-        start_location_ = config["start_location"].as<int>(-1);
+    local_jump_threshold_ = inline_reg_config["jump_threshold"].as<double>(3.0);
+    map_frame_ = viz_config["map_frame"].as<std::string>("map");
+    top_k_ = pr_config["top_k"].as<int>(5);
+
+    if (topomap_config["start_location"]) {
+        start_location_ = topomap_config["start_location"].as<int>(-1);
     }
-    if (config["start_local_pose"]) {
-        auto slp = config["start_local_pose"];
+    if (topomap_config["start_local_pose"]) {
+        auto slp = topomap_config["start_local_pose"];
         start_local_pose_ = Pose2D(slp[0].as<double>(), slp[1].as<double>(), slp[2].as<double>());
         has_start_local_pose_ = true;
     }
@@ -63,20 +72,32 @@ TopoSLAMModel::TopoSLAMModel(const YAML::Node& config,
                                const std::string& path_to_save_logs)
     : inference_client_(inference_client),
       graph_(inference_client,
-             config["inline_registration_score_threshold"].as<double>(0.5),
-             config["grid_resolution"].as<double>(0.1),
-             config["grid_radius"].as<double>(18.0),
-             config["max_grid_range"].as<double>(8.0),
-             config["descriptor_length"].as<int>(256)),
+             config["scan_matching_along_edge"]["score_threshold"].as<double>(
+                 config["inline_registration_score_threshold"].as<double>(0.5)),
+             config["local_occupancy_grid"]["resolution"].as<double>(
+                 config["grid_resolution"].as<double>(0.1)),
+             config["local_occupancy_grid"]["radius"].as<double>(
+                 config["grid_radius"].as<double>(18.0)),
+             config["local_occupancy_grid"]["max_range"].as<double>(
+                 config["max_grid_range"].as<double>(8.0)),
+             config["place_recognition"]["descriptor_length"].as<int>(
+                 config["descriptor_length"].as<int>(256))),
       localizer_(graph_, inference_client,
-                 config["registration_score_threshold"].as<double>(0.6),
-                 config["top_k"].as<int>(5),
+                 config["scan_matching"]["score_threshold"].as<double>(
+                     config["registration_score_threshold"].as<double>(0.6)),
+                 config["place_recognition"]["top_k"].as<int>(
+                     config["top_k"].as<int>(5)),
                  path_to_save_logs),
-      cur_grid_(config["grid_resolution"].as<double>(0.1),
-                config["grid_radius"].as<double>(18.0),
-                config["max_grid_range"].as<double>(8.0),
-                config["floor_height"].as<double>(0.0),
-                config["ceil_height"].as<double>(1.0)),
+      cur_grid_(config["local_occupancy_grid"]["resolution"].as<double>(
+                    config["grid_resolution"].as<double>(0.1)),
+                config["local_occupancy_grid"]["radius"].as<double>(
+                    config["grid_radius"].as<double>(18.0)),
+                config["local_occupancy_grid"]["max_range"].as<double>(
+                    config["max_grid_range"].as<double>(8.0)),
+                config["input"]["pointcloud"]["floor_height"].as<double>(
+                    config["floor_height"].as<double>(0.0)),
+                config["input"]["pointcloud"]["ceiling_height"].as<double>(
+                    config["ceil_height"].as<double>(1.0))),
       path_to_load_graph_(path_to_load_graph),
       path_to_save_graph_(path_to_save_graph),
       path_to_save_logs_(path_to_save_logs) {
@@ -130,6 +151,7 @@ void TopoSLAMModel::processObservations(
         // 确保描述符是正确维度
         ROS_DEBUG("描述符提取成功, 维度=%lu", cur_desc_.size());
     } else {
+        cur_desc_.clear();
         ROS_WARN("Descriptor extraction failed!");
     }
 
@@ -317,6 +339,8 @@ bool TopoSLAMModel::reattachByEdge(bool require_match) {
                 last_vertex_id_ = nearest_vertex_id;
                 edge_reattach_cnt_++;
                 last_successful_match_time_ = current_stamp_;
+                rel_poses_stamped_.clear();
+                rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
                 changed = true;
             }
         }
@@ -327,6 +351,8 @@ bool TopoSLAMModel::reattachByEdge(bool require_match) {
         rel_pose_of_vcur_ = graph_.inverseTransform(rel_pose_to_vertex[0], rel_pose_to_vertex[1], rel_pose_to_vertex[2]);
         last_vertex_id_ = nearest_vertex_id;
         edge_reattach_cnt_++;
+        rel_poses_stamped_.clear();
+        rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
         changed = true;
     }
 
@@ -385,6 +411,8 @@ bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
             last_vertex_id_ = vid;
             rel_pose_of_vcur_ = pred_rel_pose;
             last_successful_match_time_ = localized_stamp;
+            rel_poses_stamped_.clear();
+            rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
             return true;
         }
     }
@@ -541,22 +569,31 @@ void TopoSLAMModel::update(
     // =============================================
     // 步骤 A: 里程计积分
     // =============================================
+    Pose2D grid_shift = Pose2D::Zero();
+    if (odom_initialized_) {
+        grid_shift = getRelPose(cur_odom_pose, odom_pose_);
+        // 对齐 Python：局部栅格按“当前里程计坐标 -> 上一帧里程计坐标”的相对位姿滚动。
+        grid_shift = getRelPose(cur_odom_pose, odom_pose_);
+    }
     updateRelPoseByOdom(cur_odom_pose);
 
     // =============================================
     // 步骤 B: 观测处理 (描述符提取 + 栅格更新)
     // =============================================
-    Pose2D rel = rel_pose_of_vcur_;
     processObservations(cloud_msg, cur_cloud,
                         has_image_front, has_image_back,
                         image_front, image_back,
                         cur_curbs,
-                        rel[0], rel[1], rel[2]);
+                        grid_shift[0], grid_shift[1], grid_shift[2]);
 
     // =============================================
     // 步骤 C: 更新定位器状态
     // =============================================
-    localizer_.updateCurrentState(global_pose, cur_desc_, cur_grid_, current_stamp_);
+    if (!cur_desc_.empty()) {
+        localizer_.updateCurrentState(global_pose, cur_desc_, cur_grid_, current_stamp_);
+    } else {
+        ROS_WARN_THROTTLE(2.0, "Descriptor is empty, skip localizer state update at stamp %.3f", current_stamp_);
+    }
 
     // 记录带时间戳的相对位姿
     rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
