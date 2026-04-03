@@ -1,132 +1,150 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(prism_topomap)
 
+# 使用 C++17 标准 (Eigen, structured bindings 等)
+add_compile_options(-std=c++17 -O2)
 
-add_compile_options(-std=c++14)
-
+###############################################################################
+# 查找依赖 (新增了 roslib)
+###############################################################################
 find_package(catkin REQUIRED COMPONENTS
-  geometry_msgs
   roscpp
+  rospy
   std_msgs
+  sensor_msgs
+  geometry_msgs
   nav_msgs
+  visualization_msgs
+  tf
+  cv_bridge
+  message_generation
   toposlam_msgs
+  roslib  # <--- 解决 ros::package::getPath 报错
 )
 
-## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+# Eigen3
+find_package(Eigen3 REQUIRED)
 
+# OpenCV
+find_package(OpenCV REQUIRED)
 
-################################################
-## Declare ROS messages, services and actions ##
-################################################
+find_package(OpenMP REQUIRED)
+if(OpenMP_CXX_FOUND)
+    # 把 OpenMP 的编译参数加到全局
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
+# FAISS — 因为我们在系统级安装了，直接用 REQUIRED 强制查找，最稳妥
+find_package(faiss REQUIRED)
 
-## To declare and build messages, services or actions from within this
-## package, follow these steps:
-## * Let MSG_DEP_SET be the set of packages whose message types you use in
-##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
-## * In the file package.xml:
-##   * add a build_depend tag for "message_generation"
-##   * add a build_depend and a exec_depend tag for each package in MSG_DEP_SET
-##   * If MSG_DEP_SET isn't empty the following dependency has been pulled in
-##     but can be declared for certainty nonetheless:
-##     * add a exec_depend tag for "message_runtime"
-## * In this file (CMakeLists.txt):
-##   * add "message_generation" and every package in MSG_DEP_SET to
-##     find_package(catkin REQUIRED COMPONENTS ...)
-##   * add "message_runtime" and every package in MSG_DEP_SET to
-##     catkin_package(CATKIN_DEPENDS ...)
-##   * uncomment the add_*_files sections below as needed
-##     and list every .msg/.srv/.action file to be processed
-##   * uncomment the generate_messages entry below
-##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
+# yaml-cpp
+find_package(yaml-cpp REQUIRED)
 
-## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+# nlohmann_json — 用于图的 JSON 序列化
+find_package(nlohmann_json QUIET)
+if(NOT nlohmann_json_FOUND)
+  message(STATUS "nlohmann_json not found via cmake, assuming header-only in system include path")
+endif()
 
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+###############################################################################
+# 自定义 Service
+###############################################################################
+add_service_files(
+  FILES
+  GetDescriptor.srv
+  GridRegistration.srv
+)
 
-## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  sensor_msgs
+)
 
-## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   std_msgs
-# )
-
-################################################
-## Declare ROS dynamic reconfigure parameters ##
-################################################
-
-## To declare and build dynamic reconfigure parameters within this
-## package, follow these steps:
-## * In the file package.xml:
-##   * add a build_depend and a exec_depend tag for "dynamic_reconfigure"
-## * In this file (CMakeLists.txt):
-##   * add "dynamic_reconfigure" to
-##     find_package(catkin REQUIRED COMPONENTS ...)
-##   * uncomment the "generate_dynamic_reconfigure_options" section below
-##     and list every .cfg file to be processed
-
-## Generate dynamic reconfigure parameters in the 'cfg' folder
-# generate_dynamic_reconfigure_options(
-#   cfg/DynReconf1.cfg
-#   cfg/DynReconf2.cfg
-# )
-
-###################################
-## catkin specific configuration ##
-###################################
-## The catkin_package macro generates cmake config files for your package
-## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if your package contains header files
-## LIBRARIES: libraries you create in this project that dependent projects also need
-## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## DEPENDS: system dependencies of this project that dependent projects also need
+###############################################################################
+# catkin 包配置 (新增了 roslib)
+###############################################################################
 catkin_package(
-  #INCLUDE_DIRS include
-  #LIBRARIES theta_star_planner
-  #CATKIN_DEPENDS geometry_msgs roscpp std_msgs
-  #DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES prism_topomap_lib
+  CATKIN_DEPENDS
+    roscpp rospy std_msgs sensor_msgs geometry_msgs nav_msgs
+    visualization_msgs tf cv_bridge message_runtime toposlam_msgs roslib
+  DEPENDS EIGEN3 OpenCV
 )
 
-###########
-## Build ##
-###########
+###############################################################################
+# 头文件路径
+###############################################################################
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  ${YAML_CPP_INCLUDE_DIR}
+)
 
+###############################################################################
+# 构建静态库 (所有核心模块)
+###############################################################################
+add_library(prism_topomap_lib
+  src/utils.cpp
+  src/local_grid.cpp
+  src/inference_client.cpp
+  src/topological_graph.cpp
+  src/localizer.cpp
+  src/topo_slam_model.cpp
+  src/results_publisher.cpp
+)
+add_dependencies(prism_topomap_lib
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+)
+# 强制把 faiss 链接进你的底层库
+target_link_libraries(prism_topomap_lib
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  ${YAML_CPP_LIBRARIES}
+  faiss 
+  Eigen3::Eigen
+)
 
-#include_directories(
-#  include
-#  ${catkin_INCLUDE_DIRS}
-#)
+###############################################################################
+# 构建可执行文件 (C++ 主节点)
+###############################################################################
+add_executable(prism_topomap_cpp_node
+  src/prism_topomap_node.cpp
+)
+add_dependencies(prism_topomap_cpp_node
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+)
+# 强制把 faiss 也链接进你的节点程序
+target_link_libraries(prism_topomap_cpp_node
+  prism_topomap_lib
+  ${catkin_LIBRARIES}
+  faiss 
+)
 
-#############
-## Install ##
-#############
+###############################################################################
+# 安装
+###############################################################################
+install(TARGETS prism_topomap_lib prism_topomap_cpp_node
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
 
-#############
-## Testing ##
-#############
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+)
 
-## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_theta_star_planner.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
-
-## Add folders to be run by python nosetests
-# catkin_add_nosetests(test)
+# Python 脚本安装
+catkin_install_python(PROGRAMS
+  scripts/inference_service_node.py
+  scripts/tf_manager.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)

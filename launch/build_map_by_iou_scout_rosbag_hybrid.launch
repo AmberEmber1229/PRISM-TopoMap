@@ -1,0 +1,28 @@
+<launch>
+  <arg name="path_to_gt_map" default=""/>
+  <arg name="path_to_save_graph" default="$(find prism_topomap)/graph_jsons/scout_rosbag"/>
+  <arg name="path_to_save_logs" default="$(find prism_topomap)/logs"/>
+  <arg name="config_file" default="scout_rosbag.yaml"/>
+
+  <node pkg="prism_topomap" type="inference_service_node.py"
+        name="prism_inference_service" output="screen">
+    <param name="config_file" value="$(arg config_file)"/>
+  </node>
+
+  <node pkg="prism_topomap" type="prism_topomap_cpp_node"
+        name="prism_topomap_node" output="screen">
+    <param name="path_to_gt_map" value="$(arg path_to_gt_map)"/>
+    <param name="path_to_save_graph" value="$(arg path_to_save_graph)"/>
+    <param name="path_to_save_logs" value="$(arg path_to_save_logs)"/>
+    <param name="config_file" value="$(arg config_file)"/>
+  </node>
+
+  <node pkg="prism_topomap" type="tf_manager.py" name="odometry_publisher" output="screen">
+    <param name="publish_tf_from_odom" value="true" />
+    <param name="odometry_topic" value="/odom" />
+    <param name="tf_from_odom_target_frame" value="base_link" />
+  </node>
+
+  <node pkg="image_transport" type="republish" name="decompress_realsense_image" args="compressed in:=/camera/color/image_raw raw out:=/camera/color/image_raw"/>
+
+</launch>

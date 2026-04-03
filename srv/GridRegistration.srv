@@ -1,0 +1,36 @@
+# GridRegistration.srv
+# C++ 主节点 → Python 推理服务：请求栅格到栅格配准
+#
+# 输入: 两幅占据栅格 + 配准类型
+# 输出: 配准变换 + 分数
+
+# ========== 请求 (Request) ==========
+
+# 栅格尺寸
+uint32 grid_height
+uint32 grid_width
+
+# 参考栅格 (当前帧 occupancy 层, uint8, 按行展平)
+uint8[] ref_grid
+
+# 候选栅格 (拓扑图节点 occupancy 层, 同尺寸)
+uint8[] cand_grid
+
+# 配准类型标识:
+#   "localization" = 使用全局定位配准模型 (registration_model)
+#   "inline"       = 使用沿边配准模型 (inline_registration_model)
+string registration_type
+
+---
+# ========== 响应 (Response) ==========
+
+# 配准是否成功 (score > threshold 时为 true, 但阈值判断在C++端进行)
+bool success
+
+# 配准分数
+float64 score
+
+# 配准变换 (栅格像素坐标系下)
+float64 trans_i
+float64 trans_j
+float64 rot_angle

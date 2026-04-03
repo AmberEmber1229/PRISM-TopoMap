@@ -1,0 +1,71 @@
+<launch>
+  <!--
+    PRISM-TopoMap 混合架构 Launch 文件
+    启动 C++ 主框架节点 + Python 深度学习推理服务节点
+
+    参数:
+      config_file:        配置文件名 (位于 config/ 目录下)
+      path_to_load_graph: 加载已有图的路径 (空=从零开始建图)
+      path_to_save_graph: 保存图的路径
+      path_to_save_logs:  保存日志的路径
+  -->
+
+  <!-- 参数定义 -->
+  <arg name="config_file" default="scout_rosbag.yaml"/>
+  <arg name="path_to_load_graph" default=""/>
+  <arg name="path_to_save_graph" default=""/>
+  <arg name="path_to_save_logs" default=""/>
+
+  <!--
+    ============================================================
+    Python 推理服务节点 (必须先启动, C++ 端等待其就绪)
+
+    提供:
+      /prism/get_descriptor    - 描述符提取 Service
+      /prism/grid_registration - 栅格配准 Service
+    ============================================================
+  -->
+  <node pkg="prism_topomap" type="inference_service_node.py"
+        name="prism_inference_service" output="screen">
+    <param name="config_file" value="$(arg config_file)"/>
+  </node>
+
+  <!--
+    ============================================================
+    C++ 主框架节点
+
+    订阅:
+      /rslidar_points (或配置文件中的 pointcloud_topic)
+      /odom, /odom_gt, /image_*, /curb_*
+    发布:
+      /topological_map, /local_grid, /cur_grid, /last_vertex_grid,
+      /last_vertex_id, /rel_pose, /matched_points, /unmatched_points,
+      /loop_closure, /topological_path, /navigation_subgoal
+    ============================================================
+  -->
+  <node pkg="prism_topomap" type="prism_topomap_cpp_node"
+        name="prism_topomap_node" output="screen">
+    <param name="config_file" value="$(arg config_file)"/>
+    <param name="path_to_load_graph" value="$(arg path_to_load_graph)"/>
+    <param name="path_to_save_graph" value="$(arg path_to_save_graph)"/>
+    <param name="path_to_save_logs" value="$(arg path_to_save_logs)"/>
+  </node>
+
+  <!--
+    ============================================================
+    TF 管理节点 (保持原样)
+    ============================================================
+  -->
+  <node pkg="prism_topomap" type="tf_manager.py"
+        name="odometry_publisher" output="screen"/>
+
+  <!--
+    ============================================================
+    图像解压缩 (如需要)
+    ============================================================
+  -->
+  <!-- <node pkg="image_transport" type="republish"
+        name="decompress_realsense_image"
+        args="compressed in:=/camera/color/image_raw raw out:=/camera/color/image_raw"/> -->
+
+</launch>

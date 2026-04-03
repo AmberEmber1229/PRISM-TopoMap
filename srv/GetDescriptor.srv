@@ -1,0 +1,30 @@
+# GetDescriptor.srv
+# C++ 主节点 → Python 推理服务：请求位置识别描述符
+#
+# 输入: 关键帧点云 + 可选图像
+# 输出: 全局描述符向量
+
+# ========== 请求 (Request) ==========
+
+# 关键帧点云 (必须)
+sensor_msgs/PointCloud2 pointcloud
+
+# 可选前视图像
+bool has_image_front
+sensor_msgs/Image image_front
+
+# 可选后视图像
+bool has_image_back
+sensor_msgs/Image image_back
+
+# MinkowskiEngine 稀疏量化尺寸 (从配置文件读取)
+float32 quantization_size
+
+---
+# ========== 响应 (Response) ==========
+
+# 推理是否成功
+bool success
+
+# 全局描述符 (MinkLoc3D=256维, MSSPlace=512维)
+float32[] descriptor

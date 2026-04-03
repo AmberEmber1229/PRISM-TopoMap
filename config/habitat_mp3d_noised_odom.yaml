@@ -32,8 +32,8 @@ topomap:
 place_recognition:
   model: minkloc3d
   #weights_path: /home/kirill/TopoSLAM/OpenPlaceRecognition/weights/place_recognition/habitat_multimodal_resnet18-gem-seqgem_minkloc3dv2.pth
-  weights_path: /home/kirill/TopoSLAM/OpenPlaceRecognition/weights/place_recognition/minkloc3d_nclt.pth
-  model_config_path: /home/kirill/TopoSLAM/OpenPlaceRecognition/configs/model/place_recognition/resnet18-seqgem_minkloc3dv2.yaml
+  weights_path: /home/docker_prism/weights/minkloc3d_nclt.pth
+  model_config_path: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/OpenPlaceRecognition/configs/model/place_recognition/resnet18-seqgem_minkloc3dv2.yaml
   top_k: 5
   pointcloud_quantization_size: 0.2
 local_occupancy_grid:
@@ -68,3 +68,5 @@ visualization:
   loop_closure_edge_marker_size: 0.3
   path_marker_size: 0.3
   vertex_orientation_marker_size: 0.05
+habitat:
+  scene_path: "/home/docker_prism/habitat_data/mp3d_toposlam_validation_scenes/2n8kARJN3HM/2n8kARJN3HM.glb"

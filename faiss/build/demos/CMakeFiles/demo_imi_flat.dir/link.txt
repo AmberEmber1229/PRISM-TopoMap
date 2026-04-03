@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/demo_imi_flat.dir/demo_imi_flat.cpp.o -o demo_imi_flat  ../faiss/libfaiss.a /usr/lib/gcc/x86_64-linux-gnu/9/libgomp.so /usr/lib/x86_64-linux-gnu/libpthread.so /usr/lib/x86_64-linux-gnu/libopenblas.so -lpthread -lm -ldl 
