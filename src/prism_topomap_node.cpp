@@ -236,7 +236,8 @@ void PRISMTopomapNode::backImageCallback(const sensor_msgs::Image::ConstPtr& msg
 
 void PRISMTopomapNode::curbDetectionCallback(const sensor_msgs::PointCloud2::ConstPtr& msg) {
     double stamp = msg->header.stamp.toSec();
-    PointCloud cloud = getXyzCoordsFromMsg(*msg, "xyz", Eigen::Matrix3f::Identity());
+    PointCloudPtr cloud(new PointCloudXYZ);
+    pcl::fromROSMsg(*msg, *cloud);
     curb_clouds_.push_back({stamp, cloud});
 }
 
@@ -520,18 +521,18 @@ void PRISMTopomapNode::processPcdQueue() {
         pcd_queue_.pop_front();
         frame_cnt_++;
 
-        // 2. 解析点云
-        PointCloud cur_cloud = getXyzCoordsFromMsg(*msg, pcd_fields_, pcd_rotation_);
-        if (cur_cloud.rows() == 0) {
+        // 2. Parse point cloud
+        PointCloudPtr cur_cloud = getXyzCoordsFromMsg(*msg, pcd_fields_, pcd_rotation_);
+        if (!cur_cloud || cur_cloud->empty()) {
             ROS_WARN("Empty pointcloud, skipping");
             continue; 
         }
 
-        // 3. 设置时间戳
+        // 3. Set timestamp
         topo_slam_model_->setCurrentStamp(stamp);
 
-        // 4. 调用核心算法
-        PointCloud* curbs_ptr = sync.has_curbs ? &sync.curbs : nullptr;
+        // 4. Call core algorithm
+        PointCloudPtr curbs_ptr = sync.has_curbs ? sync.curbs : PointCloudPtr();
 
         topo_slam_model_->update(
             sync.global_pose,

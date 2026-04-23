@@ -48,12 +48,12 @@ public:
     void update(const Pose2D& global_pose,
                 const Pose2D& cur_odom_pose,
                 const sensor_msgs::PointCloud2& cloud_msg,
-                const PointCloud& cur_cloud,
+                const PointCloudPtr& cur_cloud,
                 bool has_image_front,
                 bool has_image_back,
                 const sensor_msgs::Image& image_front,
                 const sensor_msgs::Image& image_back,
-                const PointCloud* cur_curbs);
+                const PointCloudPtr& cur_curbs);
 
     /**
      * @brief 相对位姿校正
@@ -89,12 +89,12 @@ private:
     void initParamsFromConfig(const YAML::Node& config);
 
     void processObservations(const sensor_msgs::PointCloud2& cloud_msg,
-                             const PointCloud& cur_cloud,
+                             const PointCloudPtr& cur_cloud,
                              bool has_image_front,
                              bool has_image_back,
                              const sensor_msgs::Image& img_front,
                              const sensor_msgs::Image& img_back,
-                             const PointCloud* cur_curbs,
+                             const PointCloudPtr& cur_curbs,
                              double x, double y, double theta);
 
     void updateRelPoseByOdom(const Pose2D& cur_odom_pose);
@@ -107,7 +107,7 @@ private:
     bool isInsideVcur() const;
 
     bool reattachByEdge(bool require_match = true);
-    bool reattachByLocalization(double iou_threshold, double localized_stamp, bool force_reattach = false);
+    bool reattachByLocalization(double iou_threshold, double localized_stamp);
 
     void addNewVertex(const std::vector<int>& vertex_ids,
                       const std::vector<Pose2D>& rel_poses);
@@ -125,6 +125,8 @@ private:
     // 当前状态
     int last_vertex_id_ = -1;
     Pose2D rel_pose_of_vcur_ = Pose2D::Zero();
+    Pose2D rel_pose_vcur_to_loc_ = Pose2D::Zero();
+    bool has_rel_pose_vcur_to_loc_ = false;
     Pose2D odom_pose_ = Pose2D::Zero();
     bool odom_initialized_ = false;
     Pose2D global_pose_for_visualization_ = Pose2D::Zero();

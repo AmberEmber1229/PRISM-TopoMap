@@ -1,0 +1,11 @@
+ceil_height: 2.0
+curbs_attenuation: 0.99
+floor_height: -0.3
+layer_names:
+- occupancy
+- density_map
+- height_map
+max_range: 15.0
+obstacles_attenuation: 0.9
+radius: 18.0
+resolution: 0.1

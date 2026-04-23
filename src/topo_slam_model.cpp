@@ -132,11 +132,11 @@ void TopoSLAMModel::updateRelPoseByOdom(const Pose2D& cur_odom_pose) {
 // ============================================================================
 void TopoSLAMModel::processObservations(
     const sensor_msgs::PointCloud2& cloud_msg,
-    const PointCloud& cur_cloud,
+    const PointCloudPtr& cur_cloud,
     bool has_image_front, bool has_image_back,
     const sensor_msgs::Image& img_front,
     const sensor_msgs::Image& img_back,
-    const PointCloud* cur_curbs,
+    const PointCloudPtr& cur_curbs,
     double x, double y, double theta) {
 
     // 1. 调用 Python 推理服务提取描述符
@@ -159,9 +159,9 @@ void TopoSLAMModel::processObservations(
     // 注意: Python 中传入的 theta 取反 (-theta)
     cur_grid_.updateFromCloudAndTransform(cur_cloud, x, y, -theta);
 
-    // 3. 路沿更新
-    if (cur_curbs != nullptr && cur_curbs->rows() > 0) {
-        cur_grid_.updateCurbsFromCloud(*cur_curbs);
+    // 3. Curb update
+    if (cur_curbs && !cur_curbs->empty()) {
+        cur_grid_.updateCurbsFromCloud(cur_curbs);
     }
 }
 
@@ -171,21 +171,18 @@ void TopoSLAMModel::processObservations(
 // ============================================================================
 Pose2D TopoSLAMModel::getRelPoseFromStamp(double timestamp) const {
     if (rel_poses_stamped_.empty()) {
-        return Pose2D::Zero();
+        return rel_pose_of_vcur_;
     }
 
-    // 查找最近的时间戳
-    int best_idx = 0;
-    double best_diff = std::abs(rel_poses_stamped_[0].timestamp - timestamp);
-    for (int i = 1; i < static_cast<int>(rel_poses_stamped_.size()); ++i) {
-        double diff = std::abs(rel_poses_stamped_[i].timestamp - timestamp);
-        if (diff < best_diff) {
-            best_diff = diff;
-            best_idx = i;
-        }
+    // 对齐 Python：取第一个 timestamp >= query 的位姿；若不存在则取最后一个
+    int idx = 0;
+    while (idx < static_cast<int>(rel_poses_stamped_.size()) &&
+           rel_poses_stamped_[idx].timestamp < timestamp) {
+        ++idx;
     }
+    if (idx == static_cast<int>(rel_poses_stamped_.size())) idx -= 1;
 
-    return rel_poses_stamped_[best_idx].pose;
+    return rel_poses_stamped_[idx].pose;
 }
 
 // ============================================================================
@@ -193,8 +190,8 @@ Pose2D TopoSLAMModel::getRelPoseFromStamp(double timestamp) const {
 // 对应 Python: TopoSLAMModel.get_rel_pose_since_localization()
 // ============================================================================
 Pose2D TopoSLAMModel::getRelPoseSinceLocalization() const {
-    if (localization_results_.timestamp <= 0 || rel_poses_stamped_.empty()) {
-        return Pose2D::Zero();
+    if (rel_poses_stamped_.empty() || localization_results_.timestamp <= 0.0) {
+        return rel_pose_of_vcur_;
     }
 
     Pose2D loc_rel_pose = getRelPoseFromStamp(localization_results_.timestamp);
@@ -212,11 +209,16 @@ bool TopoSLAMModel::checkPathCondition(int u, int v) {
     auto path_result = graph_.getPathWithLength(u, v);
     if (!path_result.found) return true;  // 不可达, 允许回环
 
-    double dist = path_result.length;
-    double rel_dist = std::sqrt(rel_pose_of_vcur_[0] * rel_pose_of_vcur_[0] +
-                                rel_pose_of_vcur_[1] * rel_pose_of_vcur_[1]);
+    Pose2D rel_pose_along_path = Pose2D::Zero();
+    const auto& path = path_result.path;
+    for (int i = 1; i < static_cast<int>(path.size()); ++i) {
+        Pose2D edge = graph_.getEdge(path[i - 1], path[i]);
+        rel_pose_along_path = applyPoseShift(rel_pose_along_path, edge);
+    }
 
-    return (dist > rel_dist * 2.0);  // 图距离 > 直线距离 * 2
+    double straight_length = std::sqrt(rel_pose_along_path[0] * rel_pose_along_path[0] +
+                                       rel_pose_along_path[1] * rel_pose_along_path[1]);
+    return (path_result.length > 3.0 * straight_length || straight_length < 10.0);
 }
 
 // ============================================================================
@@ -224,32 +226,28 @@ bool TopoSLAMModel::checkPathCondition(int u, int v) {
 // 对应 Python: TopoSLAMModel.find_loop_closure()
 // ============================================================================
 bool TopoSLAMModel::findLoopClosure(const std::vector<int>& vertex_ids,
-                                    const std::vector<double>& /*dists*/) {
+                                    const std::vector<double>& dists) {
     found_loop_closure_ = false;
     path_.clear();
 
-    for (int vid : vertex_ids) {
-        if (vid == last_vertex_id_) continue;
-        if (graph_.hasEdge(last_vertex_id_, vid)) continue;
+    const size_t n = std::min(vertex_ids.size(), dists.size());
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < n; ++j) {
+            int u = vertex_ids[i];
+            int v = vertex_ids[j];
+            if (u < 0 || v < 0) continue;
 
-        // 检查里程计几何距离
-        Pose2D vcur_to_v = getRelPose(graph_.getVertex(last_vertex_id_).pose_for_visualization,
-                                      graph_.getVertex(vid).pose_for_visualization);
-        Pose2D cur_to_v = getRelPose(vcur_to_v, rel_pose_of_vcur_);
-        double dst = std::sqrt(cur_to_v[0] * cur_to_v[0] + cur_to_v[1] * cur_to_v[1]);
+            auto path_result = graph_.getPathWithLength(u, v);
+            if (!path_result.found) continue;
 
-        if (dst > drift_coef_ * (current_stamp_ - last_successful_match_time_) + 10.0) {
-            continue;
-        }
-
-        if (checkPathCondition(last_vertex_id_, vid)) {
-            // 回环! 获取路径
-            auto path_result = graph_.getPathWithLength(last_vertex_id_, vid);
-            if (path_result.found) {
+            double dst_through_cur = dists[i] + dists[j];
+            if (path_result.length > 5.0 &&
+                path_result.length > 2.0 * dst_through_cur &&
+                checkPathCondition(u, v)) {
                 found_loop_closure_ = true;
                 path_ = path_result.path;
-                ROS_INFO("\n\n\n=== LOOP CLOSURE FOUND! from %d to %d, path_len=%.1f ===\n\n\n",
-                         last_vertex_id_, vid, path_result.length);
+                ROS_INFO("\n\n\n=== LOOP CLOSURE FOUND! connect %d and %d through current ===\n\n\n",
+                         u, v);
                 return true;
             }
         }
@@ -356,6 +354,14 @@ bool TopoSLAMModel::reattachByEdge(bool require_match) {
         changed = true;
     }
 
+    if (changed) {
+        need_to_change_vcur_ = false;
+        if (has_rel_pose_vcur_to_loc_) {
+            Pose2D inv_pose_on_edge = graph_.inverseTransform(pose_on_edge[0], pose_on_edge[1], pose_on_edge[2]);
+            rel_pose_vcur_to_loc_ = applyPoseShift(inv_pose_on_edge, rel_pose_vcur_to_loc_);
+        }
+    }
+
     return changed;
 }
 
@@ -364,53 +370,67 @@ bool TopoSLAMModel::reattachByEdge(bool require_match) {
 // 对应 Python: TopoSLAMModel.reattach_by_localization()
 // ============================================================================
 bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
-                                           double localized_stamp,
-                                           bool force_reattach) {
-    if (localization_results_.vertex_ids_matched.empty()) return false;
+                                           double localized_stamp) {
+    const auto& vertex_ids = localization_results_.vertex_ids_matched;
+    const auto& rel_poses = localization_results_.rel_poses;
+    if (vertex_ids.empty() || rel_poses.empty()) return false;
+    if (last_vertex_id_ < 0) return false;
 
     if (!rel_poses_stamped_.empty() && localized_stamp < rel_poses_stamped_.front().timestamp) {
         ROS_WARN("Old localization! Ignore it");
         return false;
     }
 
-    Pose2D rel_pose_vcur_to_loc = getRelPoseFromStamp(localized_stamp);
-    Pose2D rel_since_loc = getRelPoseSinceLocalization();
+    rel_pose_vcur_to_loc_ = getRelPoseFromStamp(localized_stamp);
+    has_rel_pose_vcur_to_loc_ = true;
+    const Pose2D rel_pose_after_localization = getRelPose(rel_pose_vcur_to_loc_, rel_pose_of_vcur_);
+    const Pose2D rel_since_loc = getRelPoseSinceLocalization();
+    const size_t n = std::min(vertex_ids.size(), rel_poses.size());
 
-    for (size_t i = 0; i < localization_results_.vertex_ids_matched.size(); ++i) {
-        int vid = localization_results_.vertex_ids_matched[i];
-        Pose2D loc_rel = localization_results_.rel_poses[i];
+    for (size_t i = 0; i < n; ++i) {
+        const int vid = vertex_ids[i];
+        if (vid < 0 || vid >= graph_.numVertices()) continue;
+        const Pose2D& loc_rel = rel_poses[i];
 
-        // Python's dst checking: distance between robot and matched vertex
+        Pose2D inv_loc_rel = graph_.inverseTransform(loc_rel[0], loc_rel[1], loc_rel[2]);
+        Pose2D pred_rel_pose_vcur_to_v = applyPoseShift(rel_pose_vcur_to_loc_, inv_loc_rel);
+        Pose2D rel_pose_robot_to_loc = getRelPose(rel_since_loc, loc_rel);
+        double iou = cur_grid_.getIoU(graph_.getVertex(vid).grid,
+                                      rel_pose_robot_to_loc[0],
+                                      rel_pose_robot_to_loc[1],
+                                      rel_pose_robot_to_loc[2]);
+
         Pose2D vcur_to_v = getRelPose(graph_.getVertex(last_vertex_id_).pose_for_visualization,
                                       graph_.getVertex(vid).pose_for_visualization);
         Pose2D cur_to_v = getRelPose(vcur_to_v, rel_pose_of_vcur_);
         double dst = std::sqrt(cur_to_v[0] * cur_to_v[0] + cur_to_v[1] * cur_to_v[1]);
-
         if (dst > drift_coef_ * (current_stamp_ - last_successful_match_time_) + 10.0) {
             ROS_INFO("Vertex %d is too far to match", vid);
             continue;
         }
 
-        Pose2D pred_rel_pose = applyPoseShift(loc_rel, rel_since_loc);
-        Pose2D rel_pose_robot_to_loc = getRelPose(rel_since_loc, loc_rel);
+        if (iou > iou_threshold_val || need_to_change_vcur_) {
+            ROS_INFO("Localization reattach: to vertex %d (IoU=%.3f, need_change=%s)",
+                     vid, iou, need_to_change_vcur_ ? "true" : "false");
+            last_successful_match_time_ = localized_stamp;
 
-        double iou = cur_grid_.getIoU(graph_.getVertex(vid).grid,
-                                       rel_pose_robot_to_loc[0],
-                                       rel_pose_robot_to_loc[1],
-                                       rel_pose_robot_to_loc[2]);
-
-        if (iou > iou_threshold_val || force_reattach) {
-            ROS_INFO("Localization reattach: to vertex %d (IoU=%.3f)", vid, iou);
-            
             if (mode_ == "mapping") {
-                Pose2D inv_rel_pose_v = graph_.inverseTransform(loc_rel[0], loc_rel[1], loc_rel[2]);
-                Pose2D pred_rel_pose_vcur_to_v = applyPoseShift(rel_pose_vcur_to_loc, inv_rel_pose_v);
-                graph_.addEdge(last_vertex_id_, vid, pred_rel_pose_vcur_to_v[0], pred_rel_pose_vcur_to_v[1], pred_rel_pose_vcur_to_v[2]);
+                graph_.addEdge(last_vertex_id_, vid,
+                               pred_rel_pose_vcur_to_v[0],
+                               pred_rel_pose_vcur_to_v[1],
+                               pred_rel_pose_vcur_to_v[2]);
             }
 
             last_vertex_id_ = vid;
+            need_to_change_vcur_ = false;
+            Pose2D pred_rel_pose = applyPoseShift(loc_rel, rel_pose_after_localization);
             rel_pose_of_vcur_ = pred_rel_pose;
-            last_successful_match_time_ = localized_stamp;
+
+            Pose2D inv_pred_rel_pose_vcur_to_v =
+                graph_.inverseTransform(pred_rel_pose_vcur_to_v[0], pred_rel_pose_vcur_to_v[1], pred_rel_pose_vcur_to_v[2]);
+            rel_pose_vcur_to_loc_ = applyPoseShift(inv_pred_rel_pose_vcur_to_v, rel_pose_vcur_to_loc_);
+            has_rel_pose_vcur_to_loc_ = true;
+
             rel_poses_stamped_.clear();
             rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
             return true;
@@ -418,8 +438,6 @@ bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
     }
 
     return false;
-
-
 }
 
 // ============================================================================
@@ -434,27 +452,36 @@ void TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
         cur_grid_
     );
 
+    Pose2D pose_stamped = getRelPoseFromStamp(current_stamp_);
+    Pose2D new_rel_pose_of_vcur = getRelPose(pose_stamped, rel_pose_of_vcur_);
+
     // 添加从上一个节点到新节点的边
     if (last_vertex_id_ >= 0) {
         graph_.addEdge(last_vertex_id_, new_id,
-                       rel_pose_of_vcur_[0], rel_pose_of_vcur_[1], rel_pose_of_vcur_[2]);
+                       pose_stamped[0], pose_stamped[1], pose_stamped[2]);
+    }
+
+    rel_pose_of_vcur_ = new_rel_pose_of_vcur;
+    if (has_rel_pose_vcur_to_loc_) {
+        rel_pose_vcur_to_loc_ = getRelPose(pose_stamped, rel_pose_vcur_to_loc_);
     }
 
     // 如果有定位匹配结果, 添加回环边
-    for (size_t i = 0; i < vertex_ids.size(); ++i) {
+    const size_t n = std::min(vertex_ids.size(), rel_poses.size());
+    for (size_t i = 0; i < n; ++i) {
         int vid = vertex_ids[i];
-        if (vid >= 0 && vid != new_id && vid != last_vertex_id_) {
-            Pose2D rel_since_loc = getRelPoseSinceLocalization();
-            Pose2D adjusted = applyPoseShift(rel_poses[i], rel_since_loc);
-            Pose2D inv_adjusted = graph_.inverseTransform(adjusted[0], adjusted[1], adjusted[2]);
-            graph_.addEdge(vid, new_id, inv_adjusted[0], inv_adjusted[1], inv_adjusted[2]);
-        }
+        if (vid < 0 || vid >= graph_.numVertices()) continue;
+        if (!has_rel_pose_vcur_to_loc_) continue;
+
+        Pose2D inv_rel = graph_.inverseTransform(rel_poses[i][0], rel_poses[i][1], rel_poses[i][2]);
+        Pose2D pred_rel_pose = applyPoseShift(rel_pose_vcur_to_loc_, inv_rel);
+        graph_.addEdge(new_id, vid, pred_rel_pose[0], pred_rel_pose[1], pred_rel_pose[2]);
     }
 
     last_vertex_id_ = new_id;
-    rel_pose_of_vcur_ = Pose2D::Zero();
-    odom_initialized_ = false;
-    last_successful_match_time_ = current_stamp_;
+    need_to_change_vcur_ = false;
+    rel_poses_stamped_.clear();
+    rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
 }
 
 // ============================================================================
@@ -494,6 +521,11 @@ void TopoSLAMModel::initLocalization() {
             if (has_start_local_pose_) {
                 rel_pose_of_vcur_ = start_local_pose_;
             }
+            need_to_change_vcur_ = false;
+            rel_pose_vcur_to_loc_ = rel_pose_of_vcur_;
+            has_rel_pose_vcur_to_loc_ = true;
+            rel_poses_stamped_.clear();
+            rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
             ROS_INFO("Init localization: using preset location %d", start_location_);
         } else {
             // 等待定位器结果
@@ -501,7 +533,13 @@ void TopoSLAMModel::initLocalization() {
             auto state = localizer_.getLocalizedState();
             if (!state.vertex_ids_matched.empty()) {
                 last_vertex_id_ = state.vertex_ids_matched[0];
-                rel_pose_of_vcur_ = state.rel_poses[0];
+                Pose2D inv_rel = graph_.inverseTransform(state.rel_poses[0][0], state.rel_poses[0][1], state.rel_poses[0][2]);
+                rel_pose_of_vcur_ = inv_rel;
+                need_to_change_vcur_ = false;
+                rel_pose_vcur_to_loc_ = rel_pose_of_vcur_;
+                has_rel_pose_vcur_to_loc_ = true;
+                rel_poses_stamped_.clear();
+                rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
                 ROS_INFO("Init localization success: vertex %d", last_vertex_id_);
             } else {
                 ROS_WARN("Init localization failed, waiting for next frame...");
@@ -558,22 +596,21 @@ void TopoSLAMModel::update(
     const Pose2D& global_pose,
     const Pose2D& cur_odom_pose,
     const sensor_msgs::PointCloud2& cloud_msg,
-    const PointCloud& cur_cloud,
+    const PointCloudPtr& cur_cloud,
     bool has_image_front, bool has_image_back,
     const sensor_msgs::Image& image_front,
     const sensor_msgs::Image& image_back,
-    const PointCloud* cur_curbs) {
+    const PointCloudPtr& cur_curbs) {
 
     global_pose_for_visualization_ = global_pose;
 
-    // =============================================
-    // 步骤 A: 里程计积分
+    // Step A: Odometry integration
     // =============================================
     Pose2D grid_shift = Pose2D::Zero();
     if (odom_initialized_) {
-        grid_shift = getRelPose(cur_odom_pose, odom_pose_);
-        // 对齐 Python：局部栅格按“当前里程计坐标 -> 上一帧里程计坐标”的相对位姿滚动。
-        grid_shift = getRelPose(cur_odom_pose, odom_pose_);
+        // FIX: parameter order was reversed (from=new, to=old).
+        // Correct: from=old_pose, to=new_pose → gives forward increment.
+        grid_shift = getRelPose(odom_pose_, cur_odom_pose);
     }
     updateRelPoseByOdom(cur_odom_pose);
 
@@ -589,25 +626,10 @@ void TopoSLAMModel::update(
     // =============================================
     // 步骤 C: 更新定位器状态
     // =============================================
-    if (!cur_desc_.empty()) {
-        localizer_.updateCurrentState(global_pose, cur_desc_, cur_grid_, current_stamp_);
-    } else {
-        ROS_WARN_THROTTLE(2.0, "Descriptor is empty, skip localizer state update at stamp %.3f", current_stamp_);
-    }
+    localizer_.updateCurrentState(global_pose, cur_desc_, cur_grid_, current_stamp_);
 
     // 记录带时间戳的相对位姿
     rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
-
-    // Python-style array trimming based on last_successful_match_time_
-    auto it = std::remove_if(rel_poses_stamped_.begin(), rel_poses_stamped_.end(),
-        [this](const StampedPose& sp) { return sp.timestamp < last_successful_match_time_; });
-    rel_poses_stamped_.erase(it, rel_poses_stamped_.end());
-
-    // Fallback size bounding
-    if (rel_poses_stamped_.size() > 10000) {
-        rel_poses_stamped_.erase(rel_poses_stamped_.begin(),
-                                  rel_poses_stamped_.begin() + 5000);
-    }
 
     // =============================================
     // 步骤 D: 初始定位 (仅首帧)
@@ -627,13 +649,52 @@ void TopoSLAMModel::update(
     // 步骤 E: 获取定位结果
     // =============================================
     localization_results_ = localizer_.getLocalizedState();
+    if (localization_results_.timestamp > 0.0) {
+        localization_time_ = localization_results_.timestamp;
+    }
+    const double localized_stamp = localization_results_.timestamp;
+    const bool localization_is_fresh =
+        (rel_poses_stamped_.empty() ||
+         localized_stamp <= 0.0 ||
+         localized_stamp >= rel_poses_stamped_.front().timestamp - 1e-3);
+    if (localization_is_fresh && localized_stamp > 0.0) {
+        rel_pose_vcur_to_loc_ = getRelPoseFromStamp(localized_stamp);
+        has_rel_pose_vcur_to_loc_ = true;
+    }
 
     // =============================================
     // 步骤 F: 回环检测 (mapping 模式)
     // =============================================
-    if (mode_ == "mapping") {
-        std::vector<double> dists;
-        findLoopClosure(localization_results_.vertex_ids_matched, dists);
+    if (mode_ == "mapping" && localization_is_fresh) {
+        std::vector<int> vertex_ids = localization_results_.vertex_ids_matched;
+        std::vector<Pose2D> rel_poses = localization_results_.rel_poses;
+        if (vertex_ids.size() == rel_poses.size()) {
+            bool has_last_vertex = false;
+            for (int id : vertex_ids) {
+                if (id == last_vertex_id_) {
+                    has_last_vertex = true;
+                    break;
+                }
+            }
+            if (!has_last_vertex && last_vertex_id_ >= 0 && has_rel_pose_vcur_to_loc_) {
+                vertex_ids.push_back(last_vertex_id_);
+                Pose2D inv_rel_pose = graph_.inverseTransform(rel_pose_vcur_to_loc_[0],
+                                                              rel_pose_vcur_to_loc_[1],
+                                                              rel_pose_vcur_to_loc_[2]);
+                rel_poses.push_back(inv_rel_pose);
+            }
+
+            std::vector<double> dists;
+            dists.reserve(rel_poses.size());
+            for (const auto& rp : rel_poses) {
+                dists.push_back(std::sqrt(rp[0] * rp[0] + rp[1] * rp[1]));
+            }
+            if (findLoopClosure(vertex_ids, dists)) {
+                ROS_INFO("Found loop closure. Add new vertex to close loop");
+                addNewVertex(vertex_ids, rel_poses);
+                return;
+            }
+        }
     }
 
     // =============================================
@@ -641,21 +702,17 @@ void TopoSLAMModel::update(
     // =============================================
 
     // G.1: 沿边匹配切换
-    bool reattached = reattachByEdge(true);
+    bool changed = reattachByEdge(true);
 
     // G.2: IoU 判定
-    if (reattached || last_vertex_id_ < 0) {
-        cur_iou_ = 1.0;
-    } else {
-        Pose2D inv_rel_pose = graph_.inverseTransform(rel_pose_of_vcur_[0],
-                                                      rel_pose_of_vcur_[1],
-                                                      rel_pose_of_vcur_[2]);
-        cur_iou_ = cur_grid_.getIoU(graph_.getVertex(last_vertex_id_).grid,
-                                     inv_rel_pose[0],
-                                     inv_rel_pose[1],
-                                     inv_rel_pose[2],
-                                     false, iou_cnt_++);
-    }
+    Pose2D inv_rel_pose = graph_.inverseTransform(rel_pose_of_vcur_[0],
+                                                  rel_pose_of_vcur_[1],
+                                                  rel_pose_of_vcur_[2]);
+    cur_iou_ = cur_grid_.getIoU(graph_.getVertex(last_vertex_id_).grid,
+                                inv_rel_pose[0],
+                                inv_rel_pose[1],
+                                inv_rel_pose[2],
+                                false, iou_cnt_++);
 
     // G.3: 核心切换判定 (严格对齐 Python)
     bool inside_vcur = isInsideVcur();
@@ -663,6 +720,7 @@ void TopoSLAMModel::update(
                                 rel_pose_of_vcur_[1] * rel_pose_of_vcur_[1]);
 
     if (!inside_vcur || cur_iou_ < iou_threshold_ || rel_dist > max_edge_length_) {
+        need_to_change_vcur_ = true;
         // 打印因为什么原因想切换/创建顶点
         if (!inside_vcur) {
             ROS_INFO("Moved outside vcur %d", last_vertex_id_);
@@ -672,27 +730,20 @@ void TopoSLAMModel::update(
             ROS_INFO("Too far from location center (dist=%.2f > %.2f)", rel_dist, max_edge_length_);
         }
 
-        if (!reattached) {
-            bool changed = false;
+        if (!changed) {
             // 判断 localization 是否过旧
             if (current_stamp_ - localization_results_.timestamp < 5.0) {
                 // 尝试根据定位结果直接跳过去
-                changed = reattachByLocalization(cur_iou_, localization_results_.timestamp, true);
+                changed = reattachByLocalization(cur_iou_, localization_results_.timestamp);
                 
                 // 如果定位也没能跳成功
-                if (!changed) {
-                    if (mode_ == "mapping") {
-                        ROS_INFO("No proper vertex to change. Add new vertex");
-                        bool is_fresh = (rel_poses_stamped_.empty() || localization_results_.timestamp >= rel_poses_stamped_.front().timestamp - 1e-3);
-                        if (is_fresh) {
-                            addNewVertex(localization_results_.vertex_ids_matched,
-                                         localization_results_.rel_poses);
-                        } else {
-                            addNewVertex({}, {});
-                        }
-                        saveGraph();
+                if (!changed && mode_ == "mapping") {
+                    ROS_INFO("No proper vertex to change. Add new vertex");
+                    if (localization_is_fresh) {
+                        addNewVertex(localization_results_.vertex_ids_matched,
+                                     localization_results_.rel_poses);
                     } else {
-                        ROS_WARN("Localization mode: IoU too low but cannot switch.");
+                        addNewVertex({}, {});
                     }
                 }
             } else {
@@ -700,7 +751,6 @@ void TopoSLAMModel::update(
                 if (mode_ == "mapping") {
                     ROS_INFO("No recent localization. Add new vertex");
                     addNewVertex({}, {});
-                    saveGraph();
                 } else {
                     ROS_WARN("No recent localization");
                 }

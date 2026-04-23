@@ -23,15 +23,18 @@
   <depend>tf</depend>
   <depend>cv_bridge</depend>
   <depend>toposlam_msgs</depend>
-  <depend>roslib</depend>
+
   <!-- 消息生成 -->
   <build_depend>message_generation</build_depend>
   <exec_depend>message_runtime</exec_depend>
 
-  <!-- 系统依赖 (C++ 库) -->
+  <!-- System dependencies (C++ libraries) -->
   <build_depend>eigen</build_depend>
   <build_depend>libopencv-dev</build_depend>
+  <build_depend>libpcl-dev</build_depend>
   <build_depend>yaml-cpp</build_depend>
+  <depend>pcl_conversions</depend>
+  <depend>pcl_ros</depend>
 
   <exec_depend>eigen</exec_depend>
   <exec_depend>libopencv-dev</exec_depend>

@@ -66,7 +66,7 @@ public:
      * 4. 光线投影 (raycast)
      * 5. 更新 density_map / height_map
      */
-    void updateFromCloudAndTransform(const PointCloud& points_xyz,
+    void updateFromCloudAndTransform(const PointCloudPtr& points_xyz,
                                      double x = 0.0, double y = 0.0,
                                      double theta = 0.0);
 
@@ -74,7 +74,7 @@ public:
      * @brief 更新路沿层
      * 对应 Python: update_curbs_from_cloud()
      */
-    void updateCurbsFromCloud(const PointCloud& points_xyz);
+    void updateCurbsFromCloud(const PointCloudPtr& points_xyz);
 
     /**
      * @brief 对所有栅格层做仿射变换

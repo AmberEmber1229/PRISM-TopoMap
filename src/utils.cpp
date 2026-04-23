@@ -1,24 +1,23 @@
 /**
  * @file utils.cpp
- * @brief 位姿工具函数和点云处理工具的实现
+ * @brief Pose utilities and PCL-based point cloud processing
  *
- * 逐函数对应原 Python utils.py, 使用 Eigen 进行向量化计算
+ * Migrated from Eigen::MatrixXf to pcl::PointCloud<pcl::PointXYZ>::Ptr
+ * for full PCL ecosystem compatibility (VoxelGrid, PassThrough, etc.)
  */
 #include "prism_topomap/utils.h"
-#include <sensor_msgs/point_cloud2_iterator.h>
+#include <pcl/filters/voxel_grid.h>
+#include <pcl/filters/passthrough.h>
+#include <pcl/common/transforms.h>
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include <ros/ros.h>
 
 namespace prism_topomap {
 
 // ============================================================================
-// normalize: 角度归一化到 [-π, π]
-// 对应 Python:
-//   def normalize(angle):
-//       while angle < -np.pi: angle += 2*np.pi
-//       while angle > np.pi:  angle -= 2*np.pi
-//       return angle
+// normalize
 // ============================================================================
 double normalize(double angle) {
     while (angle < -M_PI) angle += 2.0 * M_PI;
@@ -27,12 +26,7 @@ double normalize(double angle) {
 }
 
 // ============================================================================
-// rotate2D: 2D坐标旋转
-// 对应 Python:
-//   def rotate(x, y, angle):
-//       x_new = x * np.cos(angle) + y * np.sin(angle)
-//       y_new = -x * np.sin(angle) + y * np.cos(angle)
-//       return x_new, y_new
+// rotate2D
 // ============================================================================
 Eigen::Vector2d rotate2D(double x, double y, double angle) {
     double cos_a = std::cos(angle);
@@ -44,11 +38,7 @@ Eigen::Vector2d rotate2D(double x, double y, double angle) {
 }
 
 // ============================================================================
-// getRelPose: 计算相对位姿
-// 对应 Python:
-//   def get_rel_pose(x, y, theta, x2, y2, theta2):
-//       rel_x, rel_y = rotate(x2 - x, y2 - y, theta)
-//       return [rel_x, rel_y, normalize(theta2 - theta)]
+// getRelPose
 // ============================================================================
 Pose2D getRelPose(const Pose2D& from, const Pose2D& to) {
     Eigen::Vector2d rotated = rotate2D(
@@ -60,14 +50,7 @@ Pose2D getRelPose(const Pose2D& from, const Pose2D& to) {
 }
 
 // ============================================================================
-// applyPoseShift: 位姿叠加
-// 对应 Python:
-//   def apply_pose_shift(pose, rel_x, rel_y, rel_theta):
-//       x, y, theta = pose
-//       new_x = x + rel_x * np.cos(-theta) + rel_y * np.sin(-theta)
-//       new_y = y - rel_x * np.sin(-theta) + rel_y * np.cos(-theta)
-//       new_theta = theta + rel_theta
-//       return [new_x, new_y, new_theta]
+// applyPoseShift
 // ============================================================================
 Pose2D applyPoseShift(const Pose2D& pose, const Pose2D& shift) {
     double x     = pose[0];
@@ -88,152 +71,198 @@ Pose2D applyPoseShift(const Pose2D& pose, const Pose2D& shift) {
 }
 
 // ============================================================================
-// rotatePcd: 对点云 xyz 坐标应用旋转矩阵
-// 对应 Python:
-//   def rotate_pcd(points, rotation_matrix):
-//       points_xyz = points[:, :3]
-//       points_xyz_rotated = points_xyz @ rotation_matrix
-//       points_rotated = points.copy()
-//       points_rotated[:, :3] = points_xyz_rotated
-//       return points_rotated
+// rotatePcd: Apply 3x3 rotation to PCL point cloud
 // ============================================================================
-PointCloud rotatePcd(const PointCloud& points,
-                     const Eigen::Matrix3f& rotation_matrix) {
-    PointCloud result = points;  // 拷贝全部列
-    // 仅旋转前3列: result[:, :3] = points[:, :3] * rotation_matrix
-    result.leftCols(3) = points.leftCols(3) * rotation_matrix;
+PointCloudPtr rotatePcd(const PointCloudPtr& points,
+                        const Eigen::Matrix3f& rotation_matrix) {
+    // Build 4x4 transform from 3x3 rotation
+    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
+    transform.linear() = rotation_matrix;
+
+    PointCloudPtr result(new PointCloudXYZ);
+    pcl::transformPointCloud(*points, *result, transform);
     return result;
 }
 
 // ============================================================================
-// transformPcd: 对点云应用 2D 变换
-// 对应 Python:
-//   def transform_pcd(points, x, y, theta):
-//       points_transformed = points.copy()
-//       points_transformed[:, 0] = points[:, 0]*cos(theta) + points[:, 1]*sin(theta)
-//       points_transformed[:, 1] = -points[:, 0]*sin(theta) + points[:, 1]*cos(theta)
-//       points_transformed[:, 0] += x
-//       points_transformed[:, 1] += y
-//       return points_transformed
+// transformPcd: Apply 2D transform (x, y, theta) to PCL point cloud
 // ============================================================================
-PointCloud transformPcd(const PointCloud& points,
-                        double x, double y, double theta) {
-    PointCloud result = points;
+PointCloudPtr transformPcd(const PointCloudPtr& points,
+                           double x, double y, double theta) {
+    PointCloudPtr result(new PointCloudXYZ);
+    result->resize(points->size());
+
     float cos_t = static_cast<float>(std::cos(theta));
     float sin_t = static_cast<float>(std::sin(theta));
 
-    // 先旋转
-    Eigen::VectorXf new_col0 =  points.col(0) * cos_t + points.col(1) * sin_t;
-    Eigen::VectorXf new_col1 = -points.col(0) * sin_t + points.col(1) * cos_t;
-
-    // 再平移
-    result.col(0) = new_col0.array() + static_cast<float>(x);
-    result.col(1) = new_col1.array() + static_cast<float>(y);
-
-    return result;
-}
-
-// ============================================================================
-// getXyzCoordsFromMsg: 从 ROS PointCloud2 消息提取点云
-// 对应 Python:
-//   def get_xyz_coords_from_msg(msg, fields, rotation):
-//       points_numpify = ros_numpy.point_cloud2.pointcloud2_to_array(msg)
-//       ...
-//       points_xyz = rotate_pcd(points_xyz, rotation)
-//       return points_xyz
-// ============================================================================
-PointCloud getXyzCoordsFromMsg(const sensor_msgs::PointCloud2& msg,
-                               const std::string& fields,
-                               const Eigen::Matrix3f& rotation) {
-    // 计算点数
-    int n_points = msg.width * msg.height;
-    if (n_points == 0) {
-        return PointCloud(0, 3);
-    }
-
-    int n_cols = 3;  // xyz
-    if (fields == "xyzrgb") {
-        n_cols = 6;
-    }
-
-    PointCloud points(n_points, n_cols);
-
-    // 使用 PointCloud2 迭代器高效提取数据
-    sensor_msgs::PointCloud2ConstIterator<float> iter_x(msg, "x");
-    sensor_msgs::PointCloud2ConstIterator<float> iter_y(msg, "y");
-    sensor_msgs::PointCloud2ConstIterator<float> iter_z(msg, "z");
-
-    for (int i = 0; i < n_points; ++i, ++iter_x, ++iter_y, ++iter_z) {
-        points(i, 0) = *iter_x;
-        points(i, 1) = *iter_y;
-        points(i, 2) = *iter_z;
-    }
-
-    // 如果是 xyzrgb, 还需要提取 RGB
-    if (fields == "xyzrgb") {
-        // 尝试读取 rgb 打包字段
-        sensor_msgs::PointCloud2ConstIterator<uint8_t> iter_r(msg, "r");
-        sensor_msgs::PointCloud2ConstIterator<uint8_t> iter_g(msg, "g");
-        sensor_msgs::PointCloud2ConstIterator<uint8_t> iter_b(msg, "b");
-        for (int i = 0; i < n_points; ++i, ++iter_r, ++iter_g, ++iter_b) {
-            points(i, 3) = static_cast<float>(*iter_r);
-            points(i, 4) = static_cast<float>(*iter_g);
-            points(i, 5) = static_cast<float>(*iter_b);
-        }
-    }
-
-    // 应用旋转矩阵
-    points = rotatePcd(points, rotation);
-
-    return points;
-}
-
-// ============================================================================
-// removeFloorAndCeil: 移除地面和天花板点
-// 对应 Python:
-//   def remove_floor_and_ceil(cloud, floor_height, ceil_height):
-//       return cloud[(cloud[:, 2] > floor_height) * (cloud[:, 2] < ceil_height)]
-// (简化版: 仅支持固定阈值, 不支持 'auto' 模式)
-// ============================================================================
-PointCloud removeFloorAndCeil(const PointCloud& cloud,
-                              float floor_height,
-                              float ceil_height) {
-    // 先计算满足条件的点数
-    std::vector<int> valid_indices;
-    valid_indices.reserve(cloud.rows());
-
-    for (int i = 0; i < cloud.rows(); ++i) {
-        float z = cloud(i, 2);
-        if (z > floor_height && z < ceil_height) {
-            valid_indices.push_back(i);
-        }
-    }
-
-    // 构建结果矩阵
-    PointCloud result(valid_indices.size(), cloud.cols());
-    for (size_t i = 0; i < valid_indices.size(); ++i) {
-        result.row(i) = cloud.row(valid_indices[i]);
+    for (size_t i = 0; i < points->size(); ++i) {
+        const auto& p = (*points)[i];
+        auto& q = (*result)[i];
+        q.x =  p.x * cos_t + p.y * sin_t + static_cast<float>(x);
+        q.y = -p.x * sin_t + p.y * cos_t + static_cast<float>(y);
+        q.z =  p.z;
     }
     return result;
 }
 
 // ============================================================================
-// rotateVertical: 绕 x 轴旋转点云
-// 对应 Python:
-//   def rotate_vertical(cloud, angle):
-//       cloud_rotated = cloud.copy()
-//       cloud_rotated[:, 0] = cloud[:, 0]*cos(angle) + cloud[:, 2]*sin(angle)
-//       cloud_rotated[:, 2] = -cloud[:, 0]*sin(angle) + cloud[:, 2]*cos(angle)
-//       return cloud_rotated
+// getXyzCoordsFromMsg: ROS PointCloud2 → PCL, with rotation
+// Uses pcl::fromROSMsg for efficient conversion.
 // ============================================================================
-PointCloud rotateVertical(const PointCloud& cloud, double angle) {
-    PointCloud result = cloud;
+PointCloudPtr getXyzCoordsFromMsg(const sensor_msgs::PointCloud2& msg,
+                                  const std::string& fields,
+                                  const Eigen::Matrix3f& rotation) {
+    PointCloudPtr cloud(new PointCloudXYZ);
+
+    // Convert ROS message to PCL (extracts xyz automatically)
+    pcl::fromROSMsg(msg, *cloud);
+
+    if (cloud->empty()) {
+        return cloud;
+    }
+
+    // Remove NaN points
+    PointCloudPtr clean(new PointCloudXYZ);
+    clean->reserve(cloud->size());
+    for (const auto& p : *cloud) {
+        if (std::isfinite(p.x) && std::isfinite(p.y) && std::isfinite(p.z)) {
+            clean->push_back(p);
+        }
+    }
+
+    // Apply sensor rotation matrix
+    if (!rotation.isIdentity(1e-6f)) {
+        clean = rotatePcd(clean, rotation);
+    }
+
+    return clean;
+}
+
+// ============================================================================
+// removeFloorAndCeil: Remove ground and ceiling points
+//
+// Restores the original Python 'auto' mode:
+//   heights = linspace(-4.0, 4.0, 41)
+//   if floor_height == 'auto':
+//       bins = [len(cloud[(z > h) & (z < heights[i+1])]) for ...]
+//       floor_index = argmax(bins[:20]) + 1
+//       floor_height = heights[floor_index]
+//   if ceil_height == 'auto':
+//       ceil_index = floor_index + 5 + argmax(bins[floor_index+5:])
+//       ceil_height = heights[ceil_index]
+//   return cloud[(z > floor_height) & (z < ceil_height)]
+// ============================================================================
+PointCloudPtr removeFloorAndCeil(const PointCloudPtr& cloud,
+                                 float floor_height,
+                                 float ceil_height) {
+    if (!cloud || cloud->empty()) {
+        return PointCloudPtr(new PointCloudXYZ);
+    }
+
+    // Auto mode: detect floor/ceiling from Z-axis histogram
+    const int NUM_BINS = 40;
+    const float Z_MIN = -4.0f;
+    const float Z_MAX = 4.0f;
+    const float BIN_WIDTH = (Z_MAX - Z_MIN) / NUM_BINS;
+
+    bool auto_floor = std::isnan(floor_height);
+    bool auto_ceil  = std::isnan(ceil_height);
+
+    if (auto_floor || auto_ceil) {
+        // Build Z histogram
+        std::vector<int> bins(NUM_BINS, 0);
+        for (const auto& p : *cloud) {
+            if (!std::isfinite(p.z)) continue;
+            int idx = static_cast<int>((p.z - Z_MIN) / BIN_WIDTH);
+            if (idx >= 0 && idx < NUM_BINS) {
+                bins[idx]++;
+            }
+        }
+
+        int floor_index = 0;
+        if (auto_floor) {
+            // Find peak in first 20 bins (ground plane)
+            int max_count = 0;
+            for (int i = 0; i < std::min(20, NUM_BINS); ++i) {
+                if (bins[i] > max_count) {
+                    max_count = bins[i];
+                    floor_index = i;
+                }
+            }
+            floor_index += 1;  // One bin above the ground peak
+            floor_height = Z_MIN + floor_index * BIN_WIDTH;
+            ROS_DEBUG("Auto floor detected: %.2f m (bin %d)", floor_height, floor_index);
+        }
+
+        if (auto_ceil) {
+            // Find floor_index if not already set
+            if (!auto_floor) {
+                floor_index = 0;
+                while (floor_index < NUM_BINS - 6 &&
+                       (Z_MIN + floor_index * BIN_WIDTH) < floor_height) {
+                    floor_index++;
+                }
+            }
+            // Find ceiling peak starting 5 bins above floor
+            int start = floor_index + 5;
+            int max_count = 0;
+            int ceil_index = start;
+            for (int i = start; i < NUM_BINS; ++i) {
+                if (bins[i] > max_count) {
+                    max_count = bins[i];
+                    ceil_index = i;
+                }
+            }
+            ceil_height = Z_MIN + ceil_index * BIN_WIDTH;
+            ROS_DEBUG("Auto ceiling detected: %.2f m (bin %d)", ceil_height, ceil_index);
+        }
+    }
+
+    // Apply PassThrough filter on Z axis
+    PointCloudPtr filtered(new PointCloudXYZ);
+    pcl::PassThrough<pcl::PointXYZ> pass;
+    pass.setInputCloud(cloud);
+    pass.setFilterFieldName("z");
+    pass.setFilterLimits(floor_height, ceil_height);
+    pass.filter(*filtered);
+
+    return filtered;
+}
+
+// ============================================================================
+// voxelDownsample: PCL VoxelGrid downsampling
+// ============================================================================
+PointCloudPtr voxelDownsample(const PointCloudPtr& cloud, float leaf_size) {
+    if (!cloud || cloud->empty()) {
+        return PointCloudPtr(new PointCloudXYZ);
+    }
+
+    PointCloudPtr filtered(new PointCloudXYZ);
+    pcl::VoxelGrid<pcl::PointXYZ> vg;
+    vg.setInputCloud(cloud);
+    vg.setLeafSize(leaf_size, leaf_size, leaf_size);
+    vg.filter(*filtered);
+
+    return filtered;
+}
+
+// ============================================================================
+// rotateVertical: Rotate point cloud around X axis
+// ============================================================================
+PointCloudPtr rotateVertical(const PointCloudPtr& cloud, double angle) {
+    PointCloudPtr result(new PointCloudXYZ);
+    result->resize(cloud->size());
+
     float cos_a = static_cast<float>(std::cos(angle));
     float sin_a = static_cast<float>(std::sin(angle));
 
-    result.col(0) =  cloud.col(0) * cos_a + cloud.col(2) * sin_a;
-    result.col(2) = -cloud.col(0) * sin_a + cloud.col(2) * cos_a;
-
+    for (size_t i = 0; i < cloud->size(); ++i) {
+        const auto& p = (*cloud)[i];
+        auto& q = (*result)[i];
+        q.x =  p.x * cos_a + p.z * sin_a;
+        q.y =  p.y;
+        q.z = -p.x * sin_a + p.z * cos_a;
+    }
     return result;
 }
 

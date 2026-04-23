@@ -218,80 +218,60 @@ void LocalGrid::transform(double x, double y, double theta) {
 // updateFromCloudAndTransform
 // 对应 Python: LocalGrid.update_from_cloud_and_transform()
 // ============================================================================
-void LocalGrid::updateFromCloudAndTransform(const PointCloud& points_xyz,
+void LocalGrid::updateFromCloudAndTransform(const PointCloudPtr& points_xyz,
                                             double x, double y, double theta) {
-    // 1. 先变换已有栅格 (累积里程计增量)
+    // 1. Transform existing grid (accumulate odometry increment)
     transform(x, y, theta);
 
-    // 2. 去除 NaN 行
-    std::vector<int> valid;
-    valid.reserve(points_xyz.rows());
-    for (int i = 0; i < points_xyz.rows(); ++i) {
-        if (!std::isnan(points_xyz(i, 0)) &&
-            !std::isnan(points_xyz(i, 1)) &&
-            !std::isnan(points_xyz(i, 2))) {
-            valid.push_back(i);
-        }
-    }
+    if (!points_xyz || points_xyz->empty()) return;
 
-    // 3. 范围过滤: [-max_range, max_range]
+    // 2. Range filter: [-max_range, max_range] on X and Y
     float mr = static_cast<float>(max_range_);
-    std::vector<int> in_range;
-    in_range.reserve(valid.size());
-    for (int idx : valid) {
-        float px = points_xyz(idx, 0);
-        float py = points_xyz(idx, 1);
-        if (px > -mr && px < mr && py > -mr && py < mr) {
-            in_range.push_back(idx);
+    PointCloudPtr in_range(new PointCloudXYZ);
+    in_range->reserve(points_xyz->size());
+    for (const auto& p : *points_xyz) {
+        if (std::isfinite(p.x) && std::isfinite(p.y) && std::isfinite(p.z) &&
+            p.x > -mr && p.x < mr && p.y > -mr && p.y < mr) {
+            in_range->push_back(p);
         }
     }
 
-    // 构建过滤后的点云
-    PointCloud filtered(in_range.size(), points_xyz.cols());
-    for (size_t i = 0; i < in_range.size(); ++i) {
-        filtered.row(i) = points_xyz.row(in_range[i]);
-    }
+    if (in_range->empty()) return;
 
-    // 4. 分离障碍物点 (去除地面和天花板)
-    PointCloud obstacles = removeFloorAndCeil(filtered, floor_height_, ceil_height_);
+    // 3. Separate obstacle points (remove floor and ceiling)
+    PointCloudPtr obstacles = removeFloorAndCeil(in_range, floor_height_, ceil_height_);
 
     int grid_radius = static_cast<int>(radius_ / resolution_);
 
-    // 5. 所有点 → 栅格坐标
-    //    points_ij_all = round(points[:, :2] / resolution) + [grid_radius, grid_radius]
-    auto toGridCoords = [&](const PointCloud& pts, std::vector<std::pair<int, int>>& result) {
-        result.clear();
-        result.reserve(pts.rows());
-        for (int i = 0; i < pts.rows(); ++i) {
-            int gi = static_cast<int>(std::round(pts(i, 0) / resolution_)) + grid_radius;
-            int gj = static_cast<int>(std::round(pts(i, 1) / resolution_)) + grid_radius;
-            if (gi >= 0 && gi < grid_size_ && gj >= 0 && gj < grid_size_) {
-                result.push_back({gi, gj});
-            }
-        }
+    // 4. Project all points to grid coordinates
+    auto toGridCoord = [&](const pcl::PointXYZ& p, int& gi, int& gj) -> bool {
+        gi = static_cast<int>(std::round(p.x / resolution_)) + grid_radius;
+        gj = static_cast<int>(std::round(p.y / resolution_)) + grid_radius;
+        return (gi >= 0 && gi < grid_size_ && gj >= 0 && gj < grid_size_);
     };
 
     std::vector<std::pair<int, int>> all_ij, obst_ij;
-    toGridCoords(filtered, all_ij);
-    toGridCoords(obstacles, obst_ij);
-
-    // 记录 all_ij 对应的 z 值 (需要给 height_map)
-    // 使用一个并行的 z 值向量
     std::vector<float> all_z_values;
-    {
-        all_z_values.reserve(filtered.rows());
-        int k = 0;
-        for (int i = 0; i < filtered.rows(); ++i) {
-            int gi = static_cast<int>(std::round(filtered(i, 0) / resolution_)) + grid_radius;
-            int gj = static_cast<int>(std::round(filtered(i, 1) / resolution_)) + grid_radius;
-            if (gi >= 0 && gi < grid_size_ && gj >= 0 && gj < grid_size_) {
-                all_z_values.push_back(filtered(i, 2));
-            }
+    all_ij.reserve(in_range->size());
+    all_z_values.reserve(in_range->size());
+
+    for (const auto& p : *in_range) {
+        int gi, gj;
+        if (toGridCoord(p, gi, gj)) {
+            all_ij.push_back({gi, gj});
+            all_z_values.push_back(p.z);
         }
     }
 
-    // 6. 填充 occupancy 层
-    //    occupancy 清零, 所有点标1, raycast, 障碍物标2
+    obst_ij.reserve(obstacles->size());
+    for (const auto& p : *obstacles) {
+        int gi, gj;
+        if (toGridCoord(p, gi, gj)) {
+            obst_ij.push_back({gi, gj});
+        }
+    }
+
+    // 5. Fill occupancy layer
     layers_["occupancy"] = cv::Mat::zeros(grid_size_, grid_size_, CV_8U);
     for (const auto& p : all_ij) {
         layers_["occupancy"].at<uint8_t>(p.first, p.second) = 1;
@@ -301,20 +281,18 @@ void LocalGrid::updateFromCloudAndTransform(const PointCloud& points_xyz,
         layers_["occupancy"].at<uint8_t>(p.first, p.second) = 2;
     }
 
-    // 7. 更新 density_map
+    // 6. Update density_map
     if (layers_.count("density_map")) {
-        // density_map_cur = histogram2d(obst_ij)
         cv::Mat density_cur = cv::Mat::zeros(grid_size_, grid_size_, CV_32F);
         for (const auto& p : obst_ij) {
             density_cur.at<float>(p.first, p.second) += 1.0f;
         }
         layers_["density_map_cur"] = density_cur;
-        // density_map = density_map * attenuation + density_cur
         layers_["density_map"].convertTo(layers_["density_map"], CV_32F);
         layers_["density_map"] = layers_["density_map"] * obstacles_attenuation_ + density_cur;
     }
 
-    // 8. 更新 height_map
+    // 7. Update height_map
     if (layers_.count("height_map")) {
         layers_["height_map"] = cv::Mat::zeros(grid_size_, grid_size_, CV_32F);
         for (size_t i = 0; i < all_ij.size(); ++i) {
@@ -328,20 +306,19 @@ void LocalGrid::updateFromCloudAndTransform(const PointCloud& points_xyz,
 // updateCurbsFromCloud
 // 对应 Python: LocalGrid.update_curbs_from_cloud()
 // ============================================================================
-void LocalGrid::updateCurbsFromCloud(const PointCloud& points_xyz) {
+void LocalGrid::updateCurbsFromCloud(const PointCloudPtr& points_xyz) {
+    if (!points_xyz || points_xyz->empty()) return;
+
     float mr = static_cast<float>(max_range_);
     int grid_radius = static_cast<int>(radius_ / resolution_);
 
-    // 过滤 NaN 和范围
     std::vector<std::pair<int, int>> curb_ij;
-    for (int i = 0; i < points_xyz.rows(); ++i) {
-        if (std::isnan(points_xyz(i, 0))) continue;
-        float px = points_xyz(i, 0);
-        float py = points_xyz(i, 1);
-        if (px <= -mr || px >= mr || py <= -mr || py >= mr) continue;
+    for (const auto& p : *points_xyz) {
+        if (!std::isfinite(p.x)) continue;
+        if (p.x <= -mr || p.x >= mr || p.y <= -mr || p.y >= mr) continue;
 
-        int gi = static_cast<int>(std::round(px / resolution_)) + grid_radius;
-        int gj = static_cast<int>(std::round(py / resolution_)) + grid_radius;
+        int gi = static_cast<int>(std::round(p.x / resolution_)) + grid_radius;
+        int gj = static_cast<int>(std::round(p.y / resolution_)) + grid_radius;
         if (gi >= 0 && gi < grid_size_ && gj >= 0 && gj < grid_size_) {
             curb_ij.push_back({gi, gj});
         }
@@ -353,7 +330,6 @@ void LocalGrid::updateCurbsFromCloud(const PointCloud& points_xyz) {
     }
 
     if (layers_.count("curbs")) {
-        // curbs = curbs * attenuation + curbs_cur
         cv::Mat curbs_float;
         layers_["curbs"].convertTo(curbs_float, CV_32F);
         cv::Mat curbs_cur_float;

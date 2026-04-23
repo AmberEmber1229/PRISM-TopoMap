@@ -5,7 +5,7 @@ project(prism_topomap)
 add_compile_options(-std=c++17 -O2)
 
 ###############################################################################
-# 查找依赖 (新增了 roslib)
+# 查找依赖
 ###############################################################################
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -19,7 +19,8 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   message_generation
   toposlam_msgs
-  roslib  # <--- 解决 ros::package::getPath 报错
+  pcl_conversions
+  pcl_ros
 )
 
 # Eigen3
@@ -28,13 +29,28 @@ find_package(Eigen3 REQUIRED)
 # OpenCV
 find_package(OpenCV REQUIRED)
 
-find_package(OpenMP REQUIRED)
-if(OpenMP_CXX_FOUND)
-    # 把 OpenMP 的编译参数加到全局
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+# PCL
+find_package(PCL REQUIRED COMPONENTS common filters segmentation io)
+add_definitions(${PCL_DEFINITIONS})
+
+# FAISS — 通过 pkg-config 或 cmake 查找
+# 如果 FAISS 安装在标准路径, find_package 可用;
+# 否则手动指定 FAISS_INCLUDE_DIR 和 FAISS_LIBRARIES
+find_package(faiss QUIET)
+if(NOT faiss_FOUND)
+  # 尝试 pkg-config
+  find_package(PkgConfig QUIET)
+  if(PKG_CONFIG_FOUND)
+    pkg_check_modules(FAISS QUIET faiss)
+  endif()
+  if(NOT FAISS_FOUND)
+    message(WARNING "FAISS not found via cmake or pkg-config. "
+            "Please set FAISS_INCLUDE_DIR and FAISS_LIBRARIES manually.")
+    # 默认路径 (Docker 环境常见路径)
+    set(FAISS_INCLUDE_DIRS "/usr/local/include")
+    set(FAISS_LIBRARIES "faiss")
+  endif()
 endif()
-# FAISS — 因为我们在系统级安装了，直接用 REQUIRED 强制查找，最稳妥
-find_package(faiss REQUIRED)
 
 # yaml-cpp
 find_package(yaml-cpp REQUIRED)
@@ -42,6 +58,7 @@ find_package(yaml-cpp REQUIRED)
 # nlohmann_json — 用于图的 JSON 序列化
 find_package(nlohmann_json QUIET)
 if(NOT nlohmann_json_FOUND)
+  # 如果没有 cmake 模块, 假设头文件在标准路径中
   message(STATUS "nlohmann_json not found via cmake, assuming header-only in system include path")
 endif()
 
@@ -61,15 +78,16 @@ generate_messages(
 )
 
 ###############################################################################
-# catkin 包配置 (新增了 roslib)
+# catkin 包配置
 ###############################################################################
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES prism_topomap_lib
   CATKIN_DEPENDS
     roscpp rospy std_msgs sensor_msgs geometry_msgs nav_msgs
-    visualization_msgs tf cv_bridge message_runtime toposlam_msgs roslib
-  DEPENDS EIGEN3 OpenCV
+    visualization_msgs tf cv_bridge message_runtime toposlam_msgs
+    pcl_conversions pcl_ros
+  DEPENDS EIGEN3 OpenCV PCL
 )
 
 ###############################################################################
@@ -80,8 +98,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
+  ${FAISS_INCLUDE_DIRS}
   ${YAML_CPP_INCLUDE_DIR}
 )
+link_directories(${PCL_LIBRARY_DIRS})
 
 ###############################################################################
 # 构建静态库 (所有核心模块)
@@ -99,12 +120,12 @@ add_dependencies(prism_topomap_lib
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
 )
-# 强制把 faiss 链接进你的底层库
 target_link_libraries(prism_topomap_lib
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${FAISS_LIBRARIES}
   ${YAML_CPP_LIBRARIES}
-  faiss 
   Eigen3::Eigen
 )
 
@@ -118,11 +139,9 @@ add_dependencies(prism_topomap_cpp_node
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
 )
-# 强制把 faiss 也链接进你的节点程序
 target_link_libraries(prism_topomap_cpp_node
   prism_topomap_lib
   ${catkin_LIBRARIES}
-  faiss 
 )
 
 ###############################################################################

@@ -1,0 +1,2137 @@
+File: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/scripts/prism_topomap_node.py
+Intializing...
+File: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/scripts/prism_topomap.py
+Initializing done!
+No global pose!
+Rel pose of vcur is None, initialize it as (0.0, 0.0, 0.0)
+Still waiting for localization... Try to move forward-backward slightly
+Localization timed out. Add new vertex at start
+
+
+
+ Add new vertex (-0.003365360483865272, -0.000181705232504532, 0.002602936637566286) with idx 0 
+
+
+
+Localized in vertices: None. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: None. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: None. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: None. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: None. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: None. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localize from stamp 1517156142.8442087
+Localized in vertices: None. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: None. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Registration score of vertex 0 is 0.9891142512461363
+Localized in vertices: None. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+vertex_ids_unmatched: []
+Localize from stamp 1517156143.1444654
+Registration score of vertex 0 is 0.9683646164369839
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: []
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156145.3440099
+Registration score of vertex 0 is 0
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156147.5437138
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156149.5436058
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156151.5431173
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156153.5435438
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localize from stamp 1517156155.543253
+Registration score of vertex 0 is 0.9427819797545675
+No global pose!
+vertex_ids_unmatched: []
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156157.5428393
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Registration score of vertex 0 is 0.9695172286562931
+vertex_ids_unmatched: []
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+No global pose!
+No global pose!
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156159.543925
+Registration score of vertex 0 is 0
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localize from stamp 1517156161.5432694
+Registration score of vertex 0 is 0.9027384062532585
+vertex_ids_unmatched: []
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156163.5424013
+Registration score of vertex 0 is 0
+Localized in vertices: [0]. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156165.5426903
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156167.5424676
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156169.642599
+Registration score of vertex 0 is 0
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156171.5422933
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Too far from location center
+Changed: False
+Localization dt: 0.5002686977386475
+Reattach by localization
+Changed from localization: False
+No proper vertex to change. Add new vertex
+
+
+
+ Add new vertex (5.082262658847939, -0.029276622572112245, 0.04632978157132835) with idx 1 
+
+
+
+
+Add edge from (-0.003365360483865272, -0.000181705232504532) to (5.082262658847939, -0.029276622572112245) with rel pose (5.027067559456377, -0.038037210981628086, 0.04433027523919006)
+
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localize from stamp 1517156173.5428362
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Registration score of vertex 1 is 0
+Registration score of vertex 0 is 0
+vertex_ids_unmatched: [1, 0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156175.6420426
+Registration score of vertex 1 is 0.8325179035814815
+Registration score of vertex 0 is 0.23172217933762554
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0]
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+No global pose!
+No global pose!
+Localize from stamp 1517156177.4426813
+Registration score of vertex 1 is 0.7445619947465854
+Registration score of vertex 0 is 0
+vertex_ids_unmatched: [0]
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156179.5444992
+Localized in vertices: [1]. Actual: True
+Could not find proper edge to change
+Registration score of vertex 1 is 0
+Registration score of vertex 0 is 0
+vertex_ids_unmatched: [1, 0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Too far from location center
+Changed: False
+Localization dt: 1.0977013111114502
+Reattach by localization
+Changed from localization: False
+No proper vertex to change. Add new vertex
+
+
+
+ Add new vertex (10.258374701203088, 0.07296921061170265, 0.021346686727208672) with idx 2 
+
+
+
+
+Add edge from (5.082262658847939, -0.029276622572112245) to (10.258374701203088, 0.07296921061170265) with rel pose (5.002430918497312, -0.17594836880919879, -0.031136041537808662)
+
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localize from stamp 1517156181.5417686
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Registration score of vertex 2 is 0
+Registration score of vertex 1 is 0
+Registration score of vertex 0 is 0
+vertex_ids_unmatched: [2, 1, 0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156183.5421128
+Registration score of vertex 0 is 0
+Registration score of vertex 1 is 0
+Registration score of vertex 2 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0, 1, 2]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Low IoU 0.25327433628318585
+Changed: False
+Localization dt: 1.3994956016540527
+Reattach by localization
+Changed from localization: False
+No proper vertex to change. Add new vertex
+
+
+
+ Add new vertex (12.81805564187939, 1.3148205630504737, 1.609702583930151) with idx 3 
+
+
+
+
+Add edge from (10.258374701203088, 0.07296921061170265) to (12.81805564187939, 1.3148205630504737) with rel pose (2.4199550771044254, 1.1571494131880014, 1.582404256128906)
+
+No global pose!
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localize from stamp 1517156185.5412624
+Registration score of vertex 3 is 0
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Registration score of vertex 0 is 0
+Registration score of vertex 1 is 0
+Registration score of vertex 2 is 0
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+vertex_ids_unmatched: [3, 0, 1, 2]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Low IoU 0.29062255285826155
+Changed: False
+Localization dt: 0.40073561668395996
+Reattach by localization
+Changed from localization: False
+No proper vertex to change. Add new vertex
+
+
+
+ Add new vertex (12.631693832662116, 1.9925110580638967, 2.2302753239993347) with idx 4 
+
+
+
+
+Add edge from (12.81805564187939, 1.3148205630504737) to (12.631693832662116, 1.9925110580638967) with rel pose (0.6886771987064391, 0.16222399101749627, 0.6245434080370496)
+
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localize from stamp 1517156187.5414648
+Registration score of vertex 4 is 0
+Registration score of vertex 0 is 0
+Registration score of vertex 1 is 0
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Registration score of vertex 3 is 0
+Interpolation: [11.58466473  2.53846216  3.12727575] [11.52475365  2.5394418   3.14504298] [11.55414363  2.53896123  3.13632709]
+Interpolation: [11.1353408   2.70152361  3.12962912] [11.07542759  2.70236225  3.14739636] [11.10284805  2.70197843  3.13926483]
+Registration score of vertex 2 is 0
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Interpolation: [11.58466473  2.53846216  3.12727575] [11.52475365  2.5394418   3.14504298] [11.49623491  2.53990813  3.1535005 ]
+vertex_ids_unmatched: [4, 0, 1, 3, 2]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156189.5412278
+Registration score of vertex 4 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 0 is 0
+Registration score of vertex 3 is 0
+Registration score of vertex 1 is 0
+Registration score of vertex 2 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [4, 0, 3, 1, 2]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Interpolation: [11.05919597  2.50621336  3.16531165] [10.98935993  2.51400904  3.12250736] [11.01885008  2.5107171   3.14058263]
+Interpolation: [10.49174486  2.68716994  3.16071652] [10.46981709  2.69194145  3.13976836] [10.48016212  2.68969036  3.14965123]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156191.6410494
+Registration score of vertex 4 is 0.27571976607178267
+Registration score of vertex 0 is 0
+Registration score of vertex 3 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 1 is 0
+Registration score of vertex 2 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [4, 0, 3, 1, 2]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Low IoU 0.28568647806903713
+Changed: False
+Localization dt: 0.7004282474517822
+Reattach by localization
+Changed from localization: False
+No proper vertex to change. Add new vertex
+
+
+
+ Add new vertex (10.627059017624651, 2.5367098198259415, 3.061144158630739) with idx 5 
+
+
+
+
+Add edge from (12.631693832662116, 1.9925110580638967) to (10.627059017624651, 2.5367098198259415) with rel pose (1.7238003744752872, 1.2700996161796352, 0.8357686928490247)
+
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localize from stamp 1517156193.5417876
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Registration score of vertex 5 is 0
+Registration score of vertex 4 is 0
+Registration score of vertex 0 is 0
+Registration score of vertex 3 is 0
+Registration score of vertex 1 is 0
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+vertex_ids_unmatched: [5, 4, 0, 3, 1]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156195.5416691
+Registration score of vertex 4 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 5 is 0
+Registration score of vertex 3 is 0
+Registration score of vertex 0 is 0
+Registration score of vertex 1 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [4, 5, 3, 0, 1]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156197.5415628
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 4 is 0
+Registration score of vertex 5 is 0
+Registration score of vertex 3 is 0
+Registration score of vertex 0 is 0
+Registration score of vertex 1 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [4, 5, 3, 0, 1]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Moved outside vcur 5
+Changed: False
+Localization dt: 0.2995302677154541
+Reattach by localization
+Changed from localization: False
+No proper vertex to change. Add new vertex
+
+
+
+ Add new vertex (8.668332970442162, 4.859125717085405, 1.4844456728939455) with idx 6 
+
+
+
+
+Add edge from (10.627059017624651, 2.5367098198259415) to (8.668332970442162, 4.859125717085405) with rel pose (2.0173284530653355, -2.168458430969341, -1.5633745916590613)
+
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localize from stamp 1517156199.5410583
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Registration score of vertex 6 is 0
+Registration score of vertex 4 is 0
+No global pose!
+Registration score of vertex 5 is 0
+Registration score of vertex 3 is 0
+Registration score of vertex 0 is 0
+vertex_ids_unmatched: [6, 4, 5, 3, 0]
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156201.540997
+Registration score of vertex 6 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 4 is 0
+Registration score of vertex 3 is 0
+Registration score of vertex 5 is 0
+Registration score of vertex 1 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [6, 4, 3, 5, 1]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156203.5407622
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 6 is 0
+Registration score of vertex 4 is 0
+Registration score of vertex 5 is 0
+Registration score of vertex 3 is 0
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [6, 4, 5, 3, 0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156205.6413088
+Registration score of vertex 6 is 0
+Registration score of vertex 4 is 0
+Registration score of vertex 3 is 0
+Registration score of vertex 5 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 1 is 0
+vertex_ids_unmatched: [6, 4, 3, 5, 1]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156207.5407171
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 6 is 0
+Registration score of vertex 4 is 0
+Registration score of vertex 5 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 3 is 0.3316879002104973
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [6, 4, 5, 3, 0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+No global pose!
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156209.5406868
+Registration score of vertex 6 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 5 is 0
+Registration score of vertex 4 is 0
+Registration score of vertex 3 is 0
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [6, 5, 4, 3, 0]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Moved outside vcur 6
+Changed: False
+Localization dt: 0.7000749111175537
+Reattach by localization
+Changed from localization: False
+No proper vertex to change. Add new vertex
+
+
+
+ Add new vertex (10.981997510054128, 9.23850221985532, 0.11516882192525355) with idx 7 
+
+
+
+
+Add edge from (8.668332970442162, 4.859125717085405) to (10.981997510054128, 9.23850221985532) with rel pose (4.738384302393893, -1.46948184721422, -1.279682297877563)
+
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localize from stamp 1517156211.5404894
+Registration score of vertex 7 is 0
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Registration score of vertex 5 is 0
+Registration score of vertex 4 is 0
+Registration score of vertex 6 is 0
+Registration score of vertex 3 is 0
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+vertex_ids_unmatched: [7, 5, 4, 6, 3]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Low IoU 0.27133620689655175
+Changed: False
+Localization dt: 1.1998658180236816
+Reattach by localization
+Changed from localization: False
+No proper vertex to change. Add new vertex
+
+
+
+ Add new vertex (12.394118214905879, 9.042286611980163, -1.0685070851733056) with idx 8 
+
+
+
+
+Add edge from (10.981997510054128, 9.23850221985532) to (12.394118214905879, 9.042286611980163) with rel pose (1.3832058259057012, -0.35497587507141504, -1.179202869607606)
+
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Localize from stamp 1517156213.5406153
+Registration score of vertex 8 is 0
+Registration score of vertex 3 is 0
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+Registration score of vertex 1 is 0
+Registration score of vertex 5 is 0
+Localized in vertices: []. Actual: False
+Could not check loop closure - old localization
+Could not find proper edge to change
+vertex_ids_unmatched: [8, 3, 0, 1, 5]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156215.540013
+Registration score of vertex 8 is 0.7720394152433425
+Registration score of vertex 0 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 3 is 0
+Registration score of vertex 1 is 0
+Registration score of vertex 5 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0, 3, 1, 5]
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156217.6405056
+Registration score of vertex 8 is 0.7884048150072547
+Registration score of vertex 0 is 0
+Registration score of vertex 1 is 0
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Registration score of vertex 3 is 0
+Registration score of vertex 5 is 0
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0, 1, 3, 5]
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156219.5404792
+Registration score of vertex 8 is 0.7617464877471675
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Registration score of vertex 0 is 0.48292004897117163
+Registration score of vertex 3 is 0
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Registration score of vertex 1 is 0.6480270471059404
+Registration score of vertex 5 is 0
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [0, 3, 5]
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+No global pose!
+Localize from stamp 1517156221.443776
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Registration score of vertex 8 is 0.7337699647688504
+Registration score of vertex 0 is 0
+Registration score of vertex 5 is 0
+Registration score of vertex 1 is 0
+Localized in vertices: [8, 1]. Actual: True
+Could not find proper edge to change
+Registration score of vertex 3 is 0
+vertex_ids_unmatched: [0, 5, 1, 3]
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156223.5393062
+Registration score of vertex 8 is 0
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+Registration score of vertex 0 is 0
+Registration score of vertex 5 is 0
+Registration score of vertex 1 is 0
+Registration score of vertex 3 is 0
+Localized in vertices: [8]. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [8, 0, 5, 1, 3]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localize from stamp 1517156225.53976
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Registration score of vertex 8 is 0
+Registration score of vertex 0 is 0
+Registration score of vertex 6 is 0
+Registration score of vertex 5 is 0
+Registration score of vertex 1 is 0
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+vertex_ids_unmatched: [8, 0, 6, 5, 1]
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
+Could not find proper edge to change
+Localized in vertices: []. Actual: True
