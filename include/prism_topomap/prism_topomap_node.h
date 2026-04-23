@@ -59,7 +59,7 @@ private:
     };
     struct StampedCloud {
         double timestamp;
-        PointCloud cloud;
+        PointCloudPtr cloud;
     };
 
     struct SyncResult {
@@ -71,7 +71,7 @@ private:
         sensor_msgs::Image img_front;
         sensor_msgs::Image img_back;
         bool has_curbs;
-        PointCloud curbs;
+        PointCloudPtr curbs;
     };
 
     SyncResult getSyncPoseAndImages(double timestamp);

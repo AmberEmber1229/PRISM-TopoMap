@@ -1,10 +1,10 @@
 /**
  * @file utils.h
- * @brief 位姿工具函数和点云处理工具 (Eigen 实现)
+ * @brief Pose utilities and PCL-based point cloud processing
  *
- * 对应原 Python 文件: scripts/utils.py
- * 所有 2D 位姿以 Eigen::Vector3d [x, y, theta] 表示
- * 所有点云以 Eigen::MatrixXf (Nx3) 表示
+ * Corresponds to original Python: scripts/utils.py
+ * All 2D poses represented as Eigen::Vector3d [x, y, theta]
+ * All point clouds stored as pcl::PointCloud<pcl::PointXYZ>::Ptr
  */
 #pragma once
 
@@ -14,118 +14,111 @@
 #include <string>
 #include <sensor_msgs/PointCloud2.h>
 
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl_conversions/pcl_conversions.h>
+
 namespace prism_topomap {
 
 // ============================================================================
-// 类型定义
+// Type definitions
 // ============================================================================
 
-/// 2D 位姿: [x, y, theta]
+/// 2D pose: [x, y, theta]
 using Pose2D = Eigen::Vector3d;
 
-/// 点云矩阵: 每行 [x, y, z], 大小 Nx3
-using PointCloud = Eigen::MatrixXf;
+/// PCL point cloud types
+using PointCloudXYZ = pcl::PointCloud<pcl::PointXYZ>;
+using PointCloudPtr = PointCloudXYZ::Ptr;
 
 // ============================================================================
-// 角度工具
+// Angle utilities
 // ============================================================================
 
 /**
- * @brief 将角度归一化到 [-π, π] 范围
- * 对应 Python: normalize(angle)
+ * @brief Normalize angle to [-π, π]
  */
 double normalize(double angle);
 
 // ============================================================================
-// 2D 旋转
+// 2D rotation
 // ============================================================================
 
 /**
- * @brief 将 (x, y) 绕原点旋转 angle 弧度
- * 对应 Python: rotate(x, y, angle)
- * @return 旋转后的 (x_new, y_new)
+ * @brief Rotate (x, y) around origin by angle radians
+ * @return rotated (x_new, y_new)
  */
 Eigen::Vector2d rotate2D(double x, double y, double angle);
 
 // ============================================================================
-// 位姿运算
+// Pose operations
 // ============================================================================
 
 /**
- * @brief 计算从 from 到 to 的相对位姿
- * 对应 Python: get_rel_pose(x1,y1,theta1, x2,y2,theta2)
- *
- * @param from 参考位姿 [x1, y1, theta1]
- * @param to   目标位姿 [x2, y2, theta2]
- * @return 相对位姿 [rel_x, rel_y, rel_theta]
+ * @brief Compute relative pose from 'from' to 'to'
  */
 Pose2D getRelPose(const Pose2D& from, const Pose2D& to);
 
 /**
- * @brief 在当前位姿上叠加一个相对位移
- * 对应 Python: apply_pose_shift(pose, rel_x, rel_y, rel_theta)
- *
- * @param pose  当前位姿 [x, y, theta]
- * @param shift 相对位移 [rel_x, rel_y, rel_theta]
- * @return 新位姿 [new_x, new_y, new_theta]
+ * @brief Apply relative shift to a pose
  */
 Pose2D applyPoseShift(const Pose2D& pose, const Pose2D& shift);
 
 // ============================================================================
-// 点云处理
+// Point cloud processing (PCL-based)
 // ============================================================================
 
 /**
- * @brief 对点云的 xyz 坐标应用 3x3 旋转矩阵
- * 对应 Python: rotate_pcd(points, rotation_matrix)
- *
- * @param points         Nx3 或 Nx6 点云
- * @param rotation_matrix 3x3 旋转矩阵
- * @return 旋转后的点云 (仅旋转前3列, 保留后续列)
+ * @brief Apply 3x3 rotation matrix to point cloud xyz
  */
-PointCloud rotatePcd(const PointCloud& points,
-                     const Eigen::Matrix3f& rotation_matrix);
+PointCloudPtr rotatePcd(const PointCloudPtr& points,
+                        const Eigen::Matrix3f& rotation_matrix);
 
 /**
- * @brief 对点云应用 2D 变换 (x平移, y平移, 旋转)
- * 对应 Python: transform_pcd(points, x, y, theta)
+ * @brief Apply 2D transform (x, y, theta) to point cloud
  */
-PointCloud transformPcd(const PointCloud& points,
-                        double x, double y, double theta);
+PointCloudPtr transformPcd(const PointCloudPtr& points,
+                           double x, double y, double theta);
 
 /**
- * @brief 从 ROS PointCloud2 消息提取 xyz 坐标并旋转
- * 对应 Python: get_xyz_coords_from_msg(msg, fields, rotation)
+ * @brief Extract xyz from ROS PointCloud2 message and apply rotation
  *
- * @param msg      ROS PointCloud2 消息
- * @param fields   "xyz" 或 "xyzrgb"
- * @param rotation 3x3 旋转矩阵
- * @return Nx3 点云 (或 Nx6 如果 fields="xyzrgb")
+ * @param msg      ROS PointCloud2 message
+ * @param fields   "xyz" or "xyzrgb" (only xyz coords are kept)
+ * @param rotation 3x3 rotation matrix applied to xyz
+ * @return PCL point cloud pointer
  */
-PointCloud getXyzCoordsFromMsg(const sensor_msgs::PointCloud2& msg,
-                               const std::string& fields,
-                               const Eigen::Matrix3f& rotation);
+PointCloudPtr getXyzCoordsFromMsg(const sensor_msgs::PointCloud2& msg,
+                                  const std::string& fields,
+                                  const Eigen::Matrix3f& rotation);
 
 /**
- * @brief 去除地面和天花板的点
- * 对应 Python: remove_floor_and_ceil(cloud, floor_height, ceil_height)
+ * @brief Remove floor and ceiling points.
  *
- * 支持 floor_height/ceil_height 为固定值。
- * (原Python的'auto'模式在C++中暂不支持, 使用固定值)
+ * Supports 'auto' mode: pass NaN for floor_height or ceil_height to
+ * enable automatic detection via Z-axis histogram (matching original Python).
  *
- * @param cloud        Nx3 点云
- * @param floor_height 地面高度阈值 (低于此值的点被去除)
- * @param ceil_height  天花板高度阈值 (高于此值的点被去除)
- * @return 过滤后的点云
+ * @param cloud        Input point cloud
+ * @param floor_height Floor threshold (points below removed). NaN = auto.
+ * @param ceil_height  Ceiling threshold (points above removed). NaN = auto.
+ * @return Filtered point cloud
  */
-PointCloud removeFloorAndCeil(const PointCloud& cloud,
-                              float floor_height,
-                              float ceil_height);
+PointCloudPtr removeFloorAndCeil(const PointCloudPtr& cloud,
+                                 float floor_height,
+                                 float ceil_height);
 
 /**
- * @brief 绕 x 轴旋转点云 (垂直旋转)
- * 对应 Python: rotate_vertical(cloud, angle)
+ * @brief VoxelGrid downsampling
+ *
+ * @param cloud     Input point cloud
+ * @param leaf_size Voxel leaf size in meters
+ * @return Downsampled point cloud
  */
-PointCloud rotateVertical(const PointCloud& cloud, double angle);
+PointCloudPtr voxelDownsample(const PointCloudPtr& cloud, float leaf_size);
+
+/**
+ * @brief Rotate point cloud around X axis (vertical rotation)
+ */
+PointCloudPtr rotateVertical(const PointCloudPtr& cloud, double angle);
 
 } // namespace prism_topomap

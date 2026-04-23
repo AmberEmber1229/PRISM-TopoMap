@@ -33,22 +33,42 @@ find_package(OpenCV REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common filters segmentation io)
 add_definitions(${PCL_DEFINITIONS})
 
-# FAISS — 通过 pkg-config 或 cmake 查找
-# 如果 FAISS 安装在标准路径, find_package 可用;
-# 否则手动指定 FAISS_INCLUDE_DIR 和 FAISS_LIBRARIES
+# OpenMP (required by FAISS)
+find_package(OpenMP REQUIRED)
+
+# FAISS — 通过 cmake、pkg-config 或 find_library 查找
 find_package(faiss QUIET)
-if(NOT faiss_FOUND)
-  # 尝试 pkg-config
+if(faiss_FOUND)
+  # Modern FAISS cmake exports a target
+  if(TARGET faiss::faiss)
+    set(FAISS_LIBRARIES faiss::faiss)
+  elseif(TARGET faiss)
+    set(FAISS_LIBRARIES faiss)
+  endif()
+  message(STATUS "FAISS found via cmake: ${FAISS_LIBRARIES}")
+else()
+  # Try pkg-config
   find_package(PkgConfig QUIET)
   if(PKG_CONFIG_FOUND)
     pkg_check_modules(FAISS QUIET faiss)
   endif()
   if(NOT FAISS_FOUND)
-    message(WARNING "FAISS not found via cmake or pkg-config. "
-            "Please set FAISS_INCLUDE_DIR and FAISS_LIBRARIES manually.")
-    # 默认路径 (Docker 环境常见路径)
-    set(FAISS_INCLUDE_DIRS "/usr/local/include")
-    set(FAISS_LIBRARIES "faiss")
+    # Manual search using find_library
+    find_library(FAISS_LIB
+      NAMES faiss
+      PATHS /usr/local/lib /usr/lib /usr/lib/x86_64-linux-gnu
+      NO_DEFAULT_PATH
+    )
+    if(NOT FAISS_LIB)
+      find_library(FAISS_LIB NAMES faiss)
+    endif()
+    if(FAISS_LIB)
+      set(FAISS_LIBRARIES ${FAISS_LIB})
+      set(FAISS_INCLUDE_DIRS "/usr/local/include")
+      message(STATUS "FAISS found via find_library: ${FAISS_LIB}")
+    else()
+      message(FATAL_ERROR "FAISS library not found! Install via: apt install libfaiss-dev, or build from source.")
+    endif()
   endif()
 endif()
 
@@ -142,6 +162,7 @@ add_dependencies(prism_topomap_cpp_node
 target_link_libraries(prism_topomap_cpp_node
   prism_topomap_lib
   ${catkin_LIBRARIES}
+  ${FAISS_LIBRARIES}
 )
 
 ###############################################################################
