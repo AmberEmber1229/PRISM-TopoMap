@@ -119,20 +119,20 @@ void TopoSLAMModel::updateRelPoseByOdom(const Pose2D& cur_odom_pose) {
     if (!odom_initialized_) {
         odom_pose_ = cur_odom_pose;
         odom_initialized_ = true;
-        ROS_INFO("[ODOM] First odom received: (%.4f, %.4f, %.4f) — initializing odom_pose_",
-                 cur_odom_pose[0], cur_odom_pose[1], cur_odom_pose[2]);
+        // ROS_DEBUG("[ODOM] First odom received: (%.4f, %.4f, %.4f) — initializing odom_pose_",
+        //          cur_odom_pose[0], cur_odom_pose[1], cur_odom_pose[2]);
         return;
     }
     Pose2D rel_odom = getRelPose(odom_pose_, cur_odom_pose);
-    Pose2D old_rel_pose = rel_pose_of_vcur_;
+    // Pose2D old_rel_pose = rel_pose_of_vcur_;
     rel_pose_of_vcur_ = applyPoseShift(rel_pose_of_vcur_, rel_odom);
-    ROS_INFO("[ODOM] delta=(%.4f,%.4f,%.4f) odom_old=(%.4f,%.4f,%.4f) odom_new=(%.4f,%.4f,%.4f) "
-             "rel_pose: (%.4f,%.4f,%.4f) -> (%.4f,%.4f,%.4f)",
-             rel_odom[0], rel_odom[1], rel_odom[2],
-             odom_pose_[0], odom_pose_[1], odom_pose_[2],
-             cur_odom_pose[0], cur_odom_pose[1], cur_odom_pose[2],
-             old_rel_pose[0], old_rel_pose[1], old_rel_pose[2],
-             rel_pose_of_vcur_[0], rel_pose_of_vcur_[1], rel_pose_of_vcur_[2]);
+    // ROS_DEBUG("[ODOM] delta=(%.4f,%.4f,%.4f) odom_old=(%.4f,%.4f,%.4f) odom_new=(%.4f,%.4f,%.4f) "
+    //          "rel_pose: (%.4f,%.4f,%.4f) -> (%.4f,%.4f,%.4f)",
+    //          rel_odom[0], rel_odom[1], rel_odom[2],
+    //          odom_pose_[0], odom_pose_[1], odom_pose_[2],
+    //          cur_odom_pose[0], cur_odom_pose[1], cur_odom_pose[2],
+    //          old_rel_pose[0], old_rel_pose[1], old_rel_pose[2],
+    //          rel_pose_of_vcur_[0], rel_pose_of_vcur_[1], rel_pose_of_vcur_[2]);
     odom_pose_ = cur_odom_pose;
 }
 
@@ -159,7 +159,7 @@ void TopoSLAMModel::processObservations(
     if (desc_result.success) {
         cur_desc_ = desc_result.descriptor;
         // 确保描述符是正确维度
-        ROS_DEBUG("描述符提取成功, 维度=%lu", cur_desc_.size());
+        // ROS_DEBUG("描述符提取成功, 维度=%lu", cur_desc_.size());
     } else {
         cur_desc_.clear();
         ROS_WARN("Descriptor extraction failed!");
@@ -511,6 +511,7 @@ void TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
     }
 
     // 如果有定位匹配结果, 添加回环边
+    // 与 Python 原版 add_new_vertex 一致: 对每条候选边做距离校验
     const size_t n = std::min(vertex_ids.size(), rel_poses.size());
     for (size_t i = 0; i < n; ++i) {
         int vid = vertex_ids[i];
@@ -519,7 +520,35 @@ void TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
 
         Pose2D inv_rel = graph_.inverseTransform(rel_poses[i][0], rel_poses[i][1], rel_poses[i][2]);
         Pose2D pred_rel_pose = applyPoseShift(rel_pose_vcur_to_loc_, inv_rel);
+
+        // 仿照 Python 注释: if np.sqrt(pred_rel_pose[0]**2 + pred_rel_pose[1]**2) < 5
+        double pred_dist = std::sqrt(pred_rel_pose[0] * pred_rel_pose[0] +
+                                     pred_rel_pose[1] * pred_rel_pose[1]);
+        if (pred_dist > max_edge_length_) {
+            ROS_WARN("[NEWVTX] Rejecting loop edge %d->%d: pred_dist=%.1f > max_edge=%.1f",
+                     new_id, vid, pred_dist, max_edge_length_);
+            continue;
+        }
+
+        // 距离一致性校验: 预测距离应与两顶点全局坐标间的直接距离相近
+        double direct_dx = graph_.getVertex(new_id).pose_for_visualization[0] -
+                           graph_.getVertex(vid).pose_for_visualization[0];
+        double direct_dy = graph_.getVertex(new_id).pose_for_visualization[1] -
+                           graph_.getVertex(vid).pose_for_visualization[1];
+        double direct_dist = std::sqrt(direct_dx * direct_dx + direct_dy * direct_dy);
+        double ratio = std::max(pred_dist, direct_dist) / std::max(1e-6, std::min(pred_dist, direct_dist));
+        double abs_diff = std::abs(pred_dist - direct_dist);
+        if (abs_diff > 3.0 && ratio > 2.0) {
+            ROS_WARN("[NEWVTX] Rejecting inconsistent loop edge %d->%d: "
+                     "pred_dist=%.1f direct_dist=%.1f (ratio=%.1f, diff=%.1f)",
+                     new_id, vid, pred_dist, direct_dist, ratio, abs_diff);
+            continue;
+        }
+
         graph_.addEdge(new_id, vid, pred_rel_pose[0], pred_rel_pose[1], pred_rel_pose[2]);
+        ROS_INFO("Add loop edge (%d)->(%d) rel_pose=(%.2f,%.2f,%.2f) pred_dist=%.1f direct_dist=%.1f",
+                 new_id, vid, pred_rel_pose[0], pred_rel_pose[1], pred_rel_pose[2],
+                 pred_dist, direct_dist);
     }
 
     last_vertex_id_ = new_id;
@@ -649,16 +678,16 @@ void TopoSLAMModel::update(
     global_pose_for_visualization_ = global_pose;
 
     // =============================================
-    // TRACE: 打印 update() 入口参数
+    // TRACE: 打印 update() 入口参数 (调试时取消注释)
     // =============================================
-    ROS_INFO("[TRACE] update() entry: stamp=%.3f mode=%s "
-             "global_pose=(%.4f,%.4f,%.4f) cur_odom_pose=(%.4f,%.4f,%.4f) "
-             "odom_pose_=(%.4f,%.4f,%.4f) odom_init=%d last_vid=%d",
-             current_stamp_, mode_.c_str(),
-             global_pose[0], global_pose[1], global_pose[2],
-             cur_odom_pose[0], cur_odom_pose[1], cur_odom_pose[2],
-             odom_pose_[0], odom_pose_[1], odom_pose_[2],
-             odom_initialized_ ? 1 : 0, last_vertex_id_);
+    // ROS_DEBUG("[TRACE] update() entry: stamp=%.3f mode=%s "
+    //          "global_pose=(%.4f,%.4f,%.4f) cur_odom_pose=(%.4f,%.4f,%.4f) "
+    //          "odom_pose_=(%.4f,%.4f,%.4f) odom_init=%d last_vid=%d",
+    //          current_stamp_, mode_.c_str(),
+    //          global_pose[0], global_pose[1], global_pose[2],
+    //          cur_odom_pose[0], cur_odom_pose[1], cur_odom_pose[2],
+    //          odom_pose_[0], odom_pose_[1], odom_pose_[2],
+    //          odom_initialized_ ? 1 : 0, last_vertex_id_);
 
     // Step A: Odometry integration — grid_shift for grid transform
     // Python original: x,y,theta = get_rel_pose(*cur_odom_pose, *self.odom_pose)
@@ -671,9 +700,9 @@ void TopoSLAMModel::update(
     }
     updateRelPoseByOdom(cur_odom_pose);
 
-    ROS_INFO("[DIAG] grid_shift=(%.4f, %.4f, %.4f) rel_pose_vcur=(%.2f, %.2f, %.2f)",
-              grid_shift[0], grid_shift[1], grid_shift[2],
-              rel_pose_of_vcur_[0], rel_pose_of_vcur_[1], rel_pose_of_vcur_[2]);
+    // ROS_DEBUG("[DIAG] grid_shift=(%.4f, %.4f, %.4f) rel_pose_vcur=(%.2f, %.2f, %.2f)",
+    //           grid_shift[0], grid_shift[1], grid_shift[2],
+    //           rel_pose_of_vcur_[0], rel_pose_of_vcur_[1], rel_pose_of_vcur_[2]);
 
     // =============================================
     // 步骤 B: 观测处理 (描述符提取 + 栅格更新)

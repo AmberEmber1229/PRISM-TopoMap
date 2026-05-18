@@ -1,0 +1,1527 @@
+[33m[WARN] [1779105313.062998695, 1517156141.447761681]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=1). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105313.064190432, 1517156141.447761681]: GetDescriptor service call failed![0m
+[33m[WARN] [1779105313.065010281, 1517156141.447761681]: Descriptor extraction failed![0m
+[33m[WARN] [1779105313.163589218, 1517156141.548407787]: [THROTTLE] Skipping PCD frame (stamp=1517156141.544, diff=0.100s, skipped_total=1, queue=1, gt_buf=0, odom_buf=2)[0m
+[33m[WARN] [1779105315.258704605, 1517156143.645201909]: [THROTTLE] Skipping PCD frame (stamp=1517156143.644, diff=0.299s, skipped_total=17, queue=1, gt_buf=0, odom_buf=23)[0m
+[0m[INFO] [1779105287.733333077]: Loading config: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/config/scout_rosbag.yaml[0m
+[0m[INFO] [1779105287.752765445]: === PRISM-TopoMap C++ node initialized ===[0m
+[0m[INFO] [1779105287.752788271]:   Mode: mapping[0m
+[0m[INFO] [1779105287.752797207]:   PCD topic: /rslidar_points[0m
+[0m[INFO] [1779105287.752808712]:   Odom topic: /odom[0m
+[0m[INFO] [1779105287.752819768]:   use_odom for rel_pose: false[0m
+[0m[INFO] [1779105287.752830249]:   use_gt_pose: true[0m
+[0m[INFO] [1779105287.752842708]:   GT topic: /odom_gt[0m
+[0m[INFO] [1779105287.752853825]:   GT type: Odometry[0m
+[0m[INFO] [1779105287.752869685]: Waiting for Python inference services...[0m
+[0m[INFO] [1779105287.753127053]: waitForService: Service [/prism/get_descriptor] has not been advertised, waiting...[0m
+[0m[INFO] [1779105290.639856405]: waitForService: Service [/prism/get_descriptor] is now available.[0m
+[0m[INFO] [1779105290.639887500]: Descriptor service is ready.[0m
+[0m[INFO] [1779105290.640362940]: Registration service is ready.[0m
+[0m[INFO] [1779105290.640376672]: All Python inference services are ready.[0m
+[0m[INFO] [1779105290.640385151]: === PRISM-TopoMap C++ node running ===[0m
+[0m[INFO] [1779105312.991198039, 1517156141.377283408]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779105312.991251740, 1517156141.377283408]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779105313.001392489, 1517156141.387338378]: [DIAG] First odom msg received on topic: /odom[0m
+[0m[INFO] [1779105313.062970311, 1517156141.447761681]: [DIAG] First PCD msg received on topic: /rslidar_points[0m
+[0m[INFO] [1779105313.072778171, 1517156141.457818778]: 
+
+
+ ADD NEW VERTEX (-0.0, -0.0, 0.02) idx=0 
+
+
+[0m
+[0m[INFO] [1779105313.073225261, 1517156141.457818778]: [NEWVTX] new_id=0 global_pose=(-0.0368,-0.0037,0.0222) last_vtx=-1 last_gpose=(0.0000,0.0000,0.0000) pose_stamped=(0.0000,0.0000,0.0000) rel_pose_vcur=(0.0000,0.0000,0.0000) n_localized=0 n_rel_poses=0 has_vcur_to_loc=0[0m
+[0m[INFO] [1779105313.074335677, 1517156141.457818778]: Processed 1 frames[0m
+[0m[INFO] [1779105313.706617326, 1517156142.091816911]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105313.711819663, 1517156142.091816911]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.996, total_vtx=1[0m
+[0m[INFO] [1779105313.712952153, 1517156142.091816911]: Starting localization from stamp 1517156141.844[0m
+[0m[INFO] [1779105313.713080495, 1517156142.091816911]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105313.897127419, 1517156142.282977854]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.998, total_vtx=1[0m
+[0m[INFO] [1779105313.996840375, 1517156142.383498721]: Starting localization from stamp 1517156142.244[0m
+[0m[INFO] [1779105313.997294492, 1517156142.383498721]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105314.301771715, 1517156142.679304466]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105314.493684486, 1517156142.880667244]: Starting localization from stamp 1517156142.644[0m
+[0m[INFO] [1779105314.493870332, 1517156142.880667244]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105314.790778716, 1517156143.172450066]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105314.997978609, 1517156143.383684545]: vtx=0, rel_pose=(0.0,-0.0,-0.00), dist=0.0, IoU=0.999, total_vtx=1[0m
+[0m[INFO] [1779105314.999106824, 1517156143.383684545]: Starting localization from stamp 1517156143.344[0m
+[0m[INFO] [1779105314.999247124, 1517156143.383684545]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105315.399847893, 1517156143.786210795]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105315.500705884, 1517156143.886994023]: Starting localization from stamp 1517156143.744[0m
+[0m[INFO] [1779105315.500894491, 1517156143.886994023]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105315.893030798, 1517156144.27[33m[WARN] [1779105317.292565936, 1517156145.679499301]: [THROTTLE] Skipping PCD frame (stamp=1517156145.644, diff=0.100s, skipped_total=31, queue=1, gt_buf=0, odom_buf=43)[0m
+[33m[WARN] [1779105318.260300745, 1517156146.639961775]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=53). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105319.361684335, 1517156147.747121193]: [THROTTLE] Skipping PCD frame (stamp=1517156147.744, diff=0.300s, skipped_total=47, queue=1, gt_buf=0, odom_buf=64)[0m
+9658269]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.992, total_vtx=1[0m
+[0m[INFO] [1779105315.993634512, 1517156144.380281218]: Starting localization from stamp 1517156144.144[0m
+[0m[INFO] [1779105315.993830035, 1517156144.380281218]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105316.101949940, 1517156144.481895963]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.991, total_vtx=1[0m
+[0m[INFO] [1779105316.497372926, 1517156144.884476166]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.991, total_vtx=1[0m
+[0m[INFO] [1779105316.498491850, 1517156144.884476166]: Starting localization from stamp 1517156144.843[0m
+[0m[INFO] [1779105316.498623270, 1517156144.884476166]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105316.795331085, 1517156145.176490158]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.990, total_vtx=1[0m
+[0m[INFO] [1779105316.990802225, 1517156145.377705149]: Starting localization from stamp 1517156145.144[0m
+[0m[INFO] [1779105316.990995364, 1517156145.377705149]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105317.291088568, 1517156145.669441144]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105317.496364715, 1517156145.880747155]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.990, total_vtx=1[0m
+[0m[INFO] [1779105317.497483832, 1517156145.880747155]: Starting localization from stamp 1517156145.844[0m
+[0m[INFO] [1779105317.497593305, 1517156145.880747155]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105317.896378673, 1517156146.283256070]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105317.997732094, 1517156146.383924952]: Starting localization from stamp 1517156146.244[0m
+[0m[INFO] [1779105317.997931758, 1517156146.383924952]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105318.301700946, 1517156146.680218698]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.990, total_vtx=1[0m
+[0m[INFO] [1779105318.495695932, 1517156146.881617938]: Starting localization from stamp 1517156146.644[0m
+[0m[INFO] [1779105318.495954641, 1517156146.881617938]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105318.783566798, 1517156147.163406972]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105318.789053695, 1517156147.173467196]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.998, total_vtx=1[0m
+[0m[INFO] [1779105318.998424980, 1517156147.384698083]: Starting localization from stamp 1517156147.044[0m
+[0m[INFO] [1779105318.998832009, 1517156147.384698083]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105319.100164797, 1517156147.485284609]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105319.500381124, 1517156147.877928096]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.998, total_vtx=1[0m
+[0m[INFO] [1779105319.501605972, 1517156147.888072879]: Starting localization from stamp 1517156147.844[0m
+[0m[INFO] [1779105319.501745490, 1517156147.888072879]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105319.986573943, 1517156148.371229327]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.991, total_vtx=1[0m
+[0m[INFO] [1779105319.995347922, 1517156148.381286865]: Starting localization from stamp 1517156148.244[0m
+[0m[INFO] [1779105319.995660418, 1517156148.381286865]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105320.302915722, 1517156148.683110480]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105320.497490677, 1517156148.884280582]: Starting localization from stamp 1517156148.644[0m
+[0m[INFO] [1779105320.497809665, 1517156148.884280582]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105320.697943887, 1517156149.075348010]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105321.001007506, 1517156149.387318799]: Starting localization from stamp 1517156149.044[0m
+[0m[INFO] [1779105321.001646550, 1517156149.387318799]: FAISS index is empty, cannot loc[33m[WARN] [1779105321.588659057, 1517156149.971144709]: [THROTTLE] Skipping PCD frame (stamp=1517156149.944, diff=0.100s, skipped_total=63, queue=1, gt_buf=0, odom_buf=86)[0m
+[33m[WARN] [1779105323.362222301, 1517156151.742147167]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=104). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105323.658891200, 1517156152.044160493]: [THROTTLE] Skipping PCD frame (stamp=1517156152.044, diff=0.299s, skipped_total=79, queue=1, gt_buf=0, odom_buf=107)[0m
+[33m[WARN] [1779105325.787658706, 1517156154.167829338]: [THROTTLE] Skipping PCD frame (stamp=1517156154.144, diff=0.100s, skipped_total=94, queue=1, gt_buf=0, odom_buf=128)[0m
+alize[0m
+[0m[INFO] [1779105321.098479111, 1517156149.478133471]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.988, total_vtx=1[0m
+[0m[INFO] [1779105321.587009105, 1517156149.971144709]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.996, total_vtx=1[0m
+[0m[INFO] [1779105321.588164111, 1517156149.971144709]: Starting localization from stamp 1517156149.844[0m
+[0m[INFO] [1779105321.588320349, 1517156149.971144709]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105321.895483309, 1517156150.272847210]: vtx=0, rel_pose=(0.0,-0.0,0.00), dist=0.0, IoU=0.988, total_vtx=1[0m
+[0m[INFO] [1779105321.997294051, 1517156150.383508715]: Starting localization from stamp 1517156150.244[0m
+[0m[INFO] [1779105321.997482214, 1517156150.383508715]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105322.296534223, 1517156150.675296314]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.996, total_vtx=1[0m
+[0m[INFO] [1779105322.499637320, 1517156150.886618857]: Starting localization from stamp 1517156150.644[0m
+[0m[INFO] [1779105322.499830112, 1517156150.886618857]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105322.791312918, 1517156151.178348583]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.993, total_vtx=1[0m
+[0m[INFO] [1779105322.992625109, 1517156151.379548973]: Starting localization from stamp 1517156151.044[0m
+[0m[INFO] [1779105322.992822492, 1517156151.379548973]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105323.096429142, 1517156151.480186226]: vtx=0, rel_pose=(0.0,-0.0,0.00), dist=0.0, IoU=0.988, total_vtx=1[0m
+[0m[INFO] [1779105323.097552564, 1517156151.480186226]: Processed 27 frames[0m
+[0m[INFO] [1779105323.399213202, 1517156151.782411401]: vtx=0, rel_pose=(0.0,-0.0,0.00), dist=0.0, IoU=0.997, total_vtx=1[0m
+[0m[INFO] [1779105323.497048572, 1517156151.883154084]: Starting localization from stamp 1517156151.744[0m
+[0m[INFO] [1779105323.497337564, 1517156151.883154084]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105323.792793329, 1517156152.174900682]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105323.797699802, 1517156152.174900682]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.991, total_vtx=1[0m
+[0m[INFO] [1779105323.999991030, 1517156152.386240183]: Starting localization from stamp 1517156152.144[0m
+[0m[INFO] [1779105324.000187051, 1517156152.386240183]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105324.292752163, 1517156152.678010143]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.991, total_vtx=1[0m
+[0m[INFO] [1779105324.492844258, 1517156152.879165584]: Starting localization from stamp 1517156152.544[0m
+[0m[INFO] [1779105324.493029638, 1517156152.879165584]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105324.596313364, 1517156152.979705075]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105324.896321384, 1517156153.281494843]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.999, total_vtx=1[0m
+[0m[INFO] [1779105324.995271839, 1517156153.382074295]: Starting localization from stamp 1517156153.244[0m
+[0m[INFO] [1779105324.995478330, 1517156153.382074295]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105325.297108976, 1517156153.684169370]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.996, total_vtx=1[0m
+[0m[INFO] [1779105325.499574134, 1517156153.886155416]: Starting localization from stamp 1517156153.644[0m
+[0m[INFO] [1779105325.499758673, 1517156153.886155416]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105325.786029152, 1517156154.167829338]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.989, total_vtx=1[0m
+[0m[INFO] [1779105325.992642934, 1517156154.379064400]: Starting localization from stamp 1517156154.044[0m
+[0m[INFO] [1779105325.992860851, 1517156154.379064400]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105326.099729658, 1517156154.479709960]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.987, total_vtx=1[0m
+[0m[INFO] [1779105326.398508256, 1517156154.781460118]: vtx=0,[33m[WARN] [1779105327.958077264, 1517156156.342013737]: [THROTTLE] Skipping PCD frame (stamp=1517156156.343, diff=0.099s, skipped_total=110, queue=1, gt_buf=0, odom_buf=150)[0m
+[33m[WARN] [1779105328.658699598, 1517156157.039239934]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=157). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105329.992031564, 1517156158.377481859]: [THROTTLE] Skipping PCD frame (stamp=1517156158.343, diff=0.100s, skipped_total=125, queue=1, gt_buf=0, odom_buf=170)[0m
+ rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.991, total_vtx=1[0m
+[0m[INFO] [1779105326.495404045, 1517156154.882080831]: Starting localization from stamp 1517156154.743[0m
+[0m[INFO] [1779105326.495650979, 1517156154.882080831]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105326.792833775, 1517156155.174022129]: vtx=0, rel_pose=(-0.0,0.0,0.00), dist=0.0, IoU=0.983, total_vtx=1[0m
+[0m[INFO] [1779105326.998787108, 1517156155.385254160]: Starting localization from stamp 1517156155.044[0m
+[0m[INFO] [1779105326.999157996, 1517156155.385254160]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105327.103103352, 1517156155.486043882]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.980, total_vtx=1[0m
+[0m[INFO] [1779105327.500041742, 1517156155.879142175]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.994, total_vtx=1[0m
+[0m[INFO] [1779105327.501219161, 1517156155.879142175]: Starting localization from stamp 1517156155.844[0m
+[0m[INFO] [1779105327.501436727, 1517156155.879142175]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105327.896401471, 1517156156.281681243]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.992, total_vtx=1[0m
+[0m[INFO] [1779105327.995357846, 1517156156.382305197]: Starting localization from stamp 1517156156.244[0m
+[0m[INFO] [1779105327.995555189, 1517156156.382305197]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105328.397162098, 1517156156.777667532]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105328.491868374, 1517156156.878262974]: Starting localization from stamp 1517156156.643[0m
+[0m[INFO] [1779105328.492071869, 1517156156.878262974]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105328.698361182, 1517156157.079469172]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.994, total_vtx=1[0m
+[0m[INFO] [1779105328.995315755, 1517156157.381417535]: Starting localization from stamp 1517156157.044[0m
+[0m[INFO] [1779105328.995520459, 1517156157.381417535]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105329.091590054, 1517156157.472017397]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105329.096488818, 1517156157.482073326]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.990, total_vtx=1[0m
+[0m[INFO] [1779105329.494537881, 1517156157.874393538]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.994, total_vtx=1[0m
+[0m[INFO] [1779105329.497646909, 1517156157.884461942]: Starting localization from stamp 1517156157.843[0m
+[0m[INFO] [1779105329.497777618, 1517156157.884461942]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105329.990560749, 1517156158.377481859]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1779105329.992050489, 1517156158.377481859]: Starting localization from stamp 1517156158.243[0m
+[0m[INFO] [1779105329.992295943, 1517156158.377481859]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105330.197828564, 1517156158.578638487]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.997, total_vtx=1[0m
+[0m[INFO] [1779105330.494316459, 1517156158.880399891]: Starting localization from stamp 1517156158.544[0m
+[0m[INFO] [1779105330.494588056, 1517156158.880399891]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105330.598842317, 1517156158.981090333]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.993, total_vtx=1[0m
+[0m[INFO] [1779105331.089564913, 1517156159.476011796]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.992, total_vtx=1[0m
+[0m[INFO] [1779105331.090909878, 1517156159.476011796]: Starting localization from stamp 1517156159.343[0m
+[0m[INFO] [1779105331.091164489, 1517156159.476011796]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105331.299023493, 1517156159.677248620]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.977, total_vtx=1[0m
+[0m[INFO] [1779105331.491943062, 1517156159.878476846]: Starting localization from stamp 1517156159.643[0m
+[0m[INFO] [1779105331.492250955, 1517156159.878476846]: FAISS index is empty, cannot [33m[WARN] [1779105332.058281894, 1517156160.441851434]: [THROTTLE] Skipping PCD frame (stamp=1517156160.443, diff=0.099s, skipped_total=140, queue=1, gt_buf=0, odom_buf=191)[0m
+[33m[WARN] [1779105333.958441210, 1517156162.340848576]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=210). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105334.159779265, 1517156162.542277787]: [THROTTLE] Skipping PCD frame (stamp=1517156162.543, diff=0.199s, skipped_total=156, queue=1, gt_buf=0, odom_buf=212)[0m
+[33m[WARN] [1779105336.258402117, 1517156164.645112150]: [THROTTLE] Skipping PCD frame (stamp=1517156164.643, diff=0.101s, skipped_total=171, queue=1, gt_buf=0, odom_buf=233)[0m
+localize[0m
+[0m[INFO] [1779105331.602419367, 1517156159.989095666]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.970, total_vtx=1[0m
+[0m[INFO] [1779105332.004099181, 1517156160.381472273]: vtx=0, rel_pose=(0.1,-0.0,-0.00), dist=0.1, IoU=0.938, total_vtx=1[0m
+[0m[INFO] [1779105332.005240539, 1517156160.391533314]: Starting localization from stamp 1517156160.344[0m
+[0m[INFO] [1779105332.005361999, 1517156160.391533314]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105332.486980839, 1517156160.864354924]: vtx=0, rel_pose=(0.3,-0.0,-0.00), dist=0.3, IoU=0.936, total_vtx=1[0m
+[0m[INFO] [1779105332.498162240, 1517156160.884501713]: Starting localization from stamp 1517156160.743[0m
+[0m[INFO] [1779105332.498585347, 1517156160.884501713]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105332.798113944, 1517156161.176422144]: vtx=0, rel_pose=(0.5,-0.0,-0.00), dist=0.5, IoU=0.896, total_vtx=1[0m
+[0m[INFO] [1779105332.991700083, 1517156161.378100331]: Starting localization from stamp 1517156161.143[0m
+[0m[INFO] [1779105332.991894779, 1517156161.378100331]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105333.194414466, 1517156161.579515453]: vtx=0, rel_pose=(0.7,-0.0,-0.00), dist=0.7, IoU=0.889, total_vtx=1[0m
+[0m[INFO] [1779105333.195619737, 1517156161.579515453]: Processed 54 frames[0m
+[0m[INFO] [1779105333.490911792, 1517156161.877604130]: Starting localization from stamp 1517156161.543[0m
+[0m[INFO] [1779105333.491217201, 1517156161.877604130]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105333.693487167, 1517156162.078954123]: vtx=0, rel_pose=(0.9,-0.0,-0.01), dist=0.9, IoU=0.879, total_vtx=1[0m
+[0m[INFO] [1779105333.996263576, 1517156162.381091498]: vtx=0, rel_pose=(1.1,-0.0,-0.01), dist=1.1, IoU=0.874, total_vtx=1[0m
+[0m[INFO] [1779105333.997411061, 1517156162.381091498]: Starting localization from stamp 1517156162.343[0m
+[0m[INFO] [1779105333.997623280, 1517156162.381091498]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105334.389939556, 1517156162.773677062]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105334.396263250, 1517156162.773677062]: vtx=0, rel_pose=(1.3,-0.0,-0.01), dist=1.3, IoU=0.840, total_vtx=1[0m
+[0m[INFO] [1779105334.498058568, 1517156162.884251619]: Starting localization from stamp 1517156162.743[0m
+[0m[INFO] [1779105334.498241063, 1517156162.884251619]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105334.798678411, 1517156163.175881536]: vtx=0, rel_pose=(1.5,-0.0,-0.01), dist=1.5, IoU=0.803, total_vtx=1[0m
+[0m[INFO] [1779105335.001059972, 1517156163.387132645]: Starting localization from stamp 1517156163.143[0m
+[0m[INFO] [1779105335.001272894, 1517156163.387132645]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105335.292587427, 1517156163.678979125]: vtx=0, rel_pose=(1.6,-0.0,-0.01), dist=1.6, IoU=0.797, total_vtx=1[0m
+[0m[INFO] [1779105335.496339263, 1517156163.880191659]: vtx=0, rel_pose=(1.6,-0.0,-0.01), dist=1.6, IoU=0.796, total_vtx=1[0m
+[0m[INFO] [1779105335.497472923, 1517156163.880191659]: Starting localization from stamp 1517156163.843[0m
+[0m[INFO] [1779105335.497581278, 1517156163.880191659]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105335.798768183, 1517156164.181743494]: vtx=0, rel_pose=(1.6,-0.0,-0.01), dist=1.6, IoU=0.798, total_vtx=1[0m
+[0m[INFO] [1779105335.996934675, 1517156164.383080554]: Starting localization from stamp 1517156164.144[0m
+[0m[INFO] [1779105335.997125138, 1517156164.383080554]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105336.201494130, 1517156164.584636540]: vtx=0, rel_pose=(1.6,-0.0,-0.01), dist=1.6, IoU=0.782, total_vtx=1[0m
+[0m[INFO] [1779105336.586012769, 1517156164.967003925]: vtx=0, rel_pose=(1.7,-0.0,-0.01), dist=1.7, IoU=0.772, total_vtx=1[0m
+[0m[INFO] [1779105336.587363612, 1517156164.967003925]: Starting localization from stamp 1517156164.843[0m
+[0m[INFO] [1779105336.587599260, 1517156164.967003925]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105336.897309713, 15[33m[WARN] [1779105338.458694628, 1517156166.839113030]: [THROTTLE] Skipping PCD frame (stamp=1517156166.843, diff=0.101s, skipped_total=187, queue=1, gt_buf=0, odom_buf=255)[0m
+[33m[WARN] [1779105339.058089986, 1517156167.442834308]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=261). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105340.458193170, 1517156168.841423693]: [THROTTLE] Skipping PCD frame (stamp=1517156168.842, diff=0.300s, skipped_total=202, queue=1, gt_buf=0, odom_buf=275)[0m
+17156165.279923300]: vtx=0, rel_pose=(1.9,-0.0,-0.01), dist=1.9, IoU=0.777, total_vtx=1[0m
+[0m[INFO] [1779105336.994200726, 1517156165.380593049]: Starting localization from stamp 1517156165.243[0m
+[0m[INFO] [1779105336.994414004, 1517156165.380593049]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105337.296471719, 1517156165.682565195]: vtx=0, rel_pose=(2.1,-0.1,-0.01), dist=2.1, IoU=0.775, total_vtx=1[0m
+[0m[INFO] [1779105337.497483958, 1517156165.883660524]: Starting localization from stamp 1517156165.643[0m
+[0m[INFO] [1779105337.497706761, 1517156165.883660524]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105337.697539975, 1517156166.074737060]: vtx=0, rel_pose=(2.3,-0.1,-0.02), dist=2.3, IoU=0.770, total_vtx=1[0m
+[0m[INFO] [1779105338.082752879, 1517156166.466904917]: vtx=0, rel_pose=(2.4,-0.1,-0.02), dist=2.4, IoU=0.767, total_vtx=1[0m
+[0m[INFO] [1779105338.083910533, 1517156166.466904917]: Starting localization from stamp 1517156166.343[0m
+[0m[INFO] [1779105338.084045911, 1517156166.466904917]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105338.404396445, 1517156166.788834070]: vtx=0, rel_pose=(2.6,-0.1,-0.01), dist=2.6, IoU=0.718, total_vtx=1[0m
+[0m[INFO] [1779105338.492774189, 1517156166.879324294]: Starting localization from stamp 1517156166.742[0m
+[0m[INFO] [1779105338.493154448, 1517156166.879324294]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105338.702560499, 1517156167.080617446]: vtx=0, rel_pose=(2.7,-0.1,-0.01), dist=2.7, IoU=0.703, total_vtx=1[0m
+[0m[INFO] [1779105338.995886100, 1517156167.382504095]: Starting localization from stamp 1517156167.043[0m
+[0m[INFO] [1779105338.996685667, 1517156167.382504095]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105339.190996487, 1517156167.573644103]: vtx=0, rel_pose=(2.9,-0.1,0.00), dist=2.9, IoU=0.671, total_vtx=1[0m
+[0m[INFO] [1779105339.491845915, 1517156167.875338031]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105339.497396982, 1517156167.875338031]: vtx=0, rel_pose=(3.1,-0.1,0.02), dist=3.1, IoU=0.682, total_vtx=1[0m
+[0m[INFO] [1779105339.499168409, 1517156167.885401861]: Starting localization from stamp 1517156167.843[0m
+[0m[INFO] [1779105339.499356933, 1517156167.885401861]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105339.802248323, 1517156168.187631366]: vtx=0, rel_pose=(3.2,-0.1,0.03), dist=3.2, IoU=0.677, total_vtx=1[0m
+[0m[INFO] [1779105339.992580029, 1517156168.378785962]: Starting localization from stamp 1517156168.143[0m
+[0m[INFO] [1779105339.992779132, 1517156168.378785962]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105340.206423677, 1517156168.590023821]: vtx=0, rel_pose=(3.4,-0.1,0.03), dist=3.4, IoU=0.662, total_vtx=1[0m
+[0m[INFO] [1779105340.495503364, 1517156168.881769770]: Starting localization from stamp 1517156168.543[0m
+[0m[INFO] [1779105340.496266754, 1517156168.881769770]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105340.690952670, 1517156169.073318227]: vtx=0, rel_pose=(3.6,-0.1,0.04), dist=3.6, IoU=0.650, total_vtx=1[0m
+[0m[INFO] [1779105340.894271943, 1517156169.274602150]: vtx=0, rel_pose=(3.7,-0.1,0.04), dist=3.7, IoU=0.656, total_vtx=1[0m
+[0m[INFO] [1779105340.998896706, 1517156169.385202137]: Starting localization from stamp 1517156169.243[0m
+[0m[INFO] [1779105340.999329205, 1517156169.385202137]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105341.293326676, 1517156169.676905178]: vtx=0, rel_pose=(3.9,-0.1,0.04), dist=3.9, IoU=0.638, total_vtx=1[0m
+[0m[INFO] [1779105341.491304495, 1517156169.878089018]: Starting localization from stamp 1517156169.643[0m
+[0m[INFO] [1779105341.491629157, 1517156169.878089018]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105341.786483804, 1517156170.169812867]: vtx=0, rel_pose=(4.0,-0.1,0.04), dist=4.0, IoU=0.658, total_vtx=1[0m
+[0m[INFO] [1779105341.994970321, 1517156170.381099769]: Starting localization from stamp 1517156170.044[0m
+[0m[INFO] [1779105341.995187655, 1517156170.381099769]: FAISS i[33m[WARN] [1779105342.560091314, 1517156170.944368041]: [THROTTLE] Skipping PCD frame (stamp=1517156170.943, diff=0.100s, skipped_total=217, queue=1, gt_buf=0, odom_buf=296)[0m
+[33m[WARN] [1779105343.997663608, 1517156172.383103249]: GridRegistration service call failed![0m
+[33m[WARN] [1779105344.057642385, 1517156172.443433368]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=311). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105344.641489531, 1517156173.021123013]: [THROTTLE] Skipping PCD frame (stamp=1517156172.943, diff=0.100s, skipped_total=232, queue=1, gt_buf=0, odom_buf=316)[0m
+[INFO] [1779105289.011508, 0.000000]: === PRISM 推理服务节点初始化中... ===
+[INFO] [1779105289.012404, 0.000000]: 配置文件路径: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/config/scout_rosbag.yaml
+[INFO] [1779105289.051213, 0.000000]: 推理设备: cuda
+[INFO] [1779105290.631151, 0.000000]: 位置识别模型加载完成
+[INFO] [1779105290.632182, 0.000000]: 全局定位配准模型加载完成
+[INFO] [1779105290.632808, 0.000000]: 沿边配准模型加载完成
+[INFO] [1779105290.634302, 0.000000]: === PRISM 推理服务节点初始化完成 ===
+[INFO] [1779105290.634868, 0.000000]:   - 描述符提取服务: /prism/get_descriptor
+[INFO] [1779105290.635439, 0.000000]:   - 栅格配准服务: /prism/grid_registration
+[INFO] [1779105313.701479, 1517156142.081743]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105313.889494, 1517156142.272921]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105314.291415, 1517156142.669249]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105314.783897, 1517156143.162392]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105314.991619, 1517156143.373680]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105315.393123, 1517156143.776158]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105315.885788, 1517156144.269602]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105316.094545, 1517156144.471837]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105316.490647, 1517156144.874418]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105316.787739, 1517156145.166432]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105317.280765, 1517156145.659379]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105317.486830, 1517156145.870687]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105317.887132, 1517156146.273198]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105318.290854, 1517156146.670159]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105318.781424, 1517156147.163407]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105319.087797, 1517156147.465168]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105319.489371, 1517156147.867842]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105319.979692, 1517156148.361174]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105320.291781, 1517156148.673052]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105320.689335, 1517156149.075348]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105321.090605, 1517156149.468056]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105321.580199, 1517156149.961088]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105321.888583, 1517156150.272847]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105322.289211, 1517156150.675296]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105322.783297, 1517156151.168293]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105323.089258, 1517156151.470129]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105323.392390, 1517156151.772352]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105323.790334, 1517156152.174901]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105324.283645, 1517156152.667952]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105324.588902, 1517156152.969659]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105324.887798, 1517156153.271434]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105325.286962, 1517156153.664060]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105325.778258, 1517156154.157771]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105326.089845, 1517156154.469621]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105326.387990, 1517156154.771401]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105326.785814, 1517156155.163969]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105327.092495, 1517156155.475976]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105327.491089, 1517156155.869089]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105327.889132, 1517156156.271627]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105328.390213, 1517156156.767584]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105328.689951, 1517156157.069410]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105329.089119, 1517156157.472017]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105329.487133, 1517156157.864341]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105329.979000, 1517156158.357364]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105330.188608, 1517156158.568579]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105330.590109, 1517156158.970998]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105331.080415, 1517156159.465951]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105331.287814, 1517156159.667161]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105331.592361, 1517156159.979026]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105331.995082, 1517156160.381472]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105332.479858, 1517156160.864355]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105332.790179, 1517156161.176422]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105333.187199, 1517156161.569462]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105333.686718, 1517156162.068899]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105333.989379, 1517156162.371037]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105334.387042, 1517156162.773677]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105334.791785, 1517156163.175882]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105335.281868, 1517156163.658862]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105335.488554, 1517156163.870134]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105335.791198, 1517156164.171678]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105336.194319, 1517156164.574578]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105336.576944, 1517156164.956946]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105336.888001, 1517156165.269857]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105337.286030, 1517156165.672508]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105337.688162, 1517156166.074737]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105338.075819, 1517156166.456846]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105338.392226, 1517156166.778765]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105338.690606, 1517156167.070585]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105339.183615, 1517156167.563569]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105339.489381, 1517156167.875338]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105339.792010, 1517156168.177571]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105340.195516, 1517156168.579968]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105340.684082, 1517156169.063264]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105340.887702, 1517156169.274602]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105341.286237, 1517156169.666877]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105341.778548, 1517156170.159777]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105342.088203, 1517156170.471696]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105342.488850, 1517156170.873977]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105342.889449, 1517156171.276399]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105343.385434, 1517156171.769376]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105343.686715, 1517156172.071124]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105344.091695, 1517156172.473639]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105344.577036, 1517156172.956511]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105344.640152, 1517156173.021123]: [INFER-PY] gridRegistration type=localization score=0.290 trans=(455.02,325.10,-3.040 rad)
+[INFO] [1779105344.886312, 1517156173.265395]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105345.186212, 1517156173.567288]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105345.493233, 1517156173.879027]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105345.983303, 1517156174.361897]: [INFER-PY] getDescriptor OK, dim=256
+ndex is empty, cannot localize[0m
+[0m[INFO] [1779105342.095355698, 1517156170.481755139]: vtx=0, rel_pose=(4.2,-0.1,0.04), dist=4.2, IoU=0.664, total_vtx=1[0m
+[0m[INFO] [1779105342.495890197, 1517156170.873977181]: vtx=0, rel_pose=(4.4,-0.1,0.04), dist=4.4, IoU=0.647, total_vtx=1[0m
+[0m[INFO] [1779105342.497516357, 1517156170.884036896]: Starting localization from stamp 1517156170.843[0m
+[0m[INFO] [1779105342.497617428, 1517156170.884036896]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105342.896138509, 1517156171.276399047]: vtx=0, rel_pose=(4.6,-0.0,0.04), dist=4.6, IoU=0.627, total_vtx=1[0m
+[0m[INFO] [1779105343.000248753, 1517156171.387047142]: Starting localization from stamp 1517156171.243[0m
+[0m[INFO] [1779105343.000456308, 1517156171.387047142]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105343.393355646, 1517156171.779431909]: vtx=0, rel_pose=(4.8,-0.0,0.04), dist=4.8, IoU=0.594, total_vtx=1[0m
+[0m[INFO] [1779105343.394471685, 1517156171.779431909]: Processed 81 frames[0m
+[0m[INFO] [1779105343.493446562, 1517156171.879996988]: Starting localization from stamp 1517156171.643[0m
+[0m[INFO] [1779105343.493643997, 1517156171.879996988]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1779105343.694470419, 1517156172.081186711]: Too far from location center (dist=5.00 > 5.00)[0m
+[0m[INFO] [1779105343.694490593, 1517156172.081186711]: No recent localization. Add new vertex[0m
+[0m[INFO] [1779105343.694498966, 1517156172.081186711]: 
+
+
+ ADD NEW VERTEX (5.0, 0.1, 0.07) idx=1 
+
+
+[0m
+[0m[INFO] [1779105343.694646514, 1517156172.081186711]: [NEWVTX] new_id=1 global_pose=(4.9643,0.0690,0.0665) last_vtx=0 last_gpose=(-0.0368,-0.0037,0.0222) pose_stamped=(5.0015,-0.0383,0.0443) rel_pose_vcur=(5.0015,-0.0383,0.0443) n_localized=0 n_rel_poses=0 has_vcur_to_loc=0[0m
+[0m[INFO] [1779105343.694659864, 1517156172.081186711]: 
+Add edge (-0.0,-0.0)->(5.0,0.1) rel_pose=(5.0,-0.0,0.04)
+[0m
+[0m[INFO] [1779105343.694668877, 1517156172.081186711]: Add edge (0)->(1) rel_pose=(5.00,-0.04,0.04) dist=5.00[0m
+[0m[INFO] [1779105343.694675142, 1517156172.081186711]: vtx=1, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.637, total_vtx=2[0m
+[0m[INFO] [1779105343.996339195, 1517156172.383103249]: Starting localization from stamp 1517156172.043[0m
+[0m[INFO] [1779105343.998295449, 1517156172.383103249]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105344.098829015, 1517156172.483691990]: vtx=1, rel_pose=(0.2,-0.0,-0.00), dist=0.2, IoU=0.913, total_vtx=2[0m
+[0m[INFO] [1779105344.581122794, 1517156172.966575874]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105344.587160853, 1517156172.966575874]: vtx=1, rel_pose=(0.4,-0.0,-0.00), dist=0.4, IoU=0.884, total_vtx=2[0m
+[0m[INFO] [1779105344.588404834, 1517156172.966575874]: Starting localization from stamp 1517156172.843[0m
+[0m[INFO] [1779105344.641196863, 1517156173.021123013]: [INFER] gridRegistration type=localization score=0.290 trans=(455.02,325.10,-3.040 rad)[0m
+[0m[INFO] [1779105344.641218741, 1517156173.021123013]: Vertex 0 registration score: 0.290[0m
+[0m[INFO] [1779105344.897274564, 1517156173.275449394]: vtx=1, rel_pose=(0.6,-0.0,-0.00), dist=0.6, IoU=0.868, total_vtx=2[0m
+[0m[INFO] [1779105345.000110990, 1517156173.386118311]: Starting localization from stamp 1517156173.243[0m
+[0m[INFO] [1779105345.006588101, 1517156173.386118311]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105345.196858735, 1517156173.577347051]: vtx=1, rel_pose=(0.7,-0.0,-0.01), dist=0.7, IoU=0.831, total_vtx=2[0m
+[0m[INFO] [1779105345.502725334, 1517156173.889081318]: vtx=1, rel_pose=(0.8,-0.0,-0.01), dist=0.8, IoU=0.828, total_vtx=2[0m
+[0m[INFO] [1779105345.503860773, 1517156173.889081318]: Starting localization from stamp 1517156173.844[0m
+[0m[INFO] [1779105345.510370507, 1517156173.889081318]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105345.991953994, 1517156174.371953854]: vtx=1, rel_pose=(1.0,-0.0,-0.01), dist=1.0, IoU=0.806, total_vtx=2[0m
+[0m[INFO] [1779105345.996010425, 1517156174.382013043]:[33m[WARN] [1779105346.658433665, 1517156175.036478547]: [THROTTLE] Skipping PCD frame (stamp=1517156175.042, diff=0.100s, skipped_total=247, queue=1, gt_buf=0, odom_buf=337)[0m
+[33m[WARN] [1779105348.657582075, 1517156177.038107911]: [THROTTLE] Skipping PCD frame (stamp=1517156177.043, diff=0.200s, skipped_total=262, queue=1, gt_buf=0, odom_buf=357)[0m
+[33m[WARN] [1779105349.157466895, 1517156177.541256522]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=362). Falling back to /odom for global_pose.[0m
+ Starting localization from stamp 1517156174.243[0m
+[0m[INFO] [1779105346.005110733, 1517156174.392070456]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105346.202169125, 1517156174.583231755]: vtx=1, rel_pose=(1.2,-0.0,-0.01), dist=1.2, IoU=0.821, total_vtx=2[0m
+[0m[INFO] [1779105346.499108602, 1517156174.885574365]: Starting localization from stamp 1517156174.545[0m
+[0m[INFO] [1779105346.505761740, 1517156174.885574365]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105346.601006844, 1517156174.986203677]: vtx=1, rel_pose=(1.4,-0.0,-0.01), dist=1.4, IoU=0.780, total_vtx=2[0m
+[0m[INFO] [1779105347.001177437, 1517156175.378513142]: vtx=1, rel_pose=(1.6,-0.0,-0.01), dist=1.6, IoU=0.792, total_vtx=2[0m
+[0m[INFO] [1779105347.002755961, 1517156175.388581868]: Starting localization from stamp 1517156175.342[0m
+[0m[INFO] [1779105347.010645475, 1517156175.388581868]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105347.501333409, 1517156175.881463980]: vtx=1, rel_pose=(1.8,-0.0,-0.01), dist=1.8, IoU=0.786, total_vtx=2[0m
+[0m[INFO] [1779105347.503558445, 1517156175.881463980]: Starting localization from stamp 1517156175.742[0m
+[0m[INFO] [1779105347.511458412, 1517156175.891527087]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105347.697567665, 1517156176.082757632]: vtx=1, rel_pose=(1.9,-0.0,-0.02), dist=1.9, IoU=0.793, total_vtx=2[0m
+[0m[INFO] [1779105347.998043376, 1517156176.384439720]: Starting localization from stamp 1517156176.043[0m
+[0m[INFO] [1779105348.009580565, 1517156176.394492405]: [INFER] gridRegistration type=localization score=0.788 trans=(419.21,364.48,3.115 rad)[0m
+[0m[INFO] [1779105348.009603565, 1517156176.394492405]: Vertex 0 registration score: 0.788[0m
+[0m[INFO] [1779105348.098237032, 1517156176.484967937]: vtx=1, rel_pose=(2.1,-0.1,-0.02), dist=2.1, IoU=0.749, total_vtx=2[0m
+[0m[INFO] [1779105348.596570075, 1517156176.977662480]: vtx=1, rel_pose=(2.3,-0.1,-0.02), dist=2.3, IoU=0.706, total_vtx=2[0m
+[0m[INFO] [1779105348.597750104, 1517156176.977662480]: Starting localization from stamp 1517156176.842[0m
+[0m[INFO] [1779105348.611122873, 1517156176.997851161]: [INFER] gridRegistration type=localization score=0.723 trans=(417.08,360.91,3.125 rad)[0m
+[0m[INFO] [1779105348.611149197, 1517156176.997851161]: Vertex 0 registration score: 0.723[0m
+[0m[INFO] [1779105348.794365750, 1517156177.179045064]: vtx=1, rel_pose=(2.4,-0.1,-0.02), dist=2.4, IoU=0.676, total_vtx=2[0m
+[0m[INFO] [1779105348.993894681, 1517156177.380219660]: Starting localization from stamp 1517156177.143[0m
+[0m[INFO] [1779105349.000181901, 1517156177.380219660]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105349.195581258, 1517156177.581492917]: vtx=1, rel_pose=(2.8,-0.1,-0.03), dist=2.8, IoU=0.691, total_vtx=2[0m
+[0m[INFO] [1779105349.497040645, 1517156177.883435795]: Starting localization from stamp 1517156177.542[0m
+[0m[INFO] [1779105349.504850982, 1517156177.883435795]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105349.681802439, 1517156178.064625069]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105349.687696178, 1517156178.074683883]: vtx=1, rel_pose=(3.6,-0.1,-0.03), dist=3.6, IoU=0.428, total_vtx=2[0m
+[0m[INFO] [1779105349.894982864, 1517156178.275820811]: vtx=1, rel_pose=(4.0,-0.1,-0.03), dist=4.0, IoU=0.402, total_vtx=2[0m
+[0m[INFO] [1779105350.000336613, 1517156178.386566178]: Starting localization from stamp 1517156178.243[0m
+[0m[INFO] [1779105350.014087420, 1517156178.396650781]: [INFER] gridRegistration type=localization score=0.620 trans=(398.04,360.64,3.130 rad)[0m
+[0m[INFO] [1779105350.014124721, 1517156178.396650781]: Vertex 0 registration score: 0.620[0m
+[0m[INFO] [1779105350.293895075, 1517156178.678386423]: vtx=1, rel_pose=(4.2,-0.1,-0.03), dist=4.2, IoU=0.372, total_vtx=2[0m
+[0m[INFO] [1779105350.493619441, 1517156178.879570041]: Starting localization from stamp 1517156178.643[0m
+[0m[INFO] [1779105350.503349948, 1517156178.889624391]: [INFER] gridRegistration type=localization score=0.354 trans=(168.[33m[WARN] [1779105350.757578144, 1517156179.141053020]: [THROTTLE] Skipping PCD frame (stamp=1517156179.142, diff=0.099s, skipped_total=277, queue=1, gt_buf=0, odom_buf=378)[0m
+[33m[WARN] [1779105352.794393903, 1517156181.173887238]: [THROTTLE] Skipping PCD frame (stamp=1517156181.142, diff=0.100s, skipped_total=292, queue=1, gt_buf=0, odom_buf=398)[0m
+37,447.26,2.271 rad)[0m
+[0m[INFO] [1779105350.503374072, 1517156178.889624391]: Vertex 0 registration score: 0.354[0m
+[0m[INFO] [1779105350.695621682, 1517156179.080690896]: vtx=1, rel_pose=(4.2,-0.1,-0.03), dist=4.2, IoU=0.359, total_vtx=2[0m
+[0m[INFO] [1779105350.996243110, 1517156179.382427457]: Starting localization from stamp 1517156179.043[0m
+[0m[INFO] [1779105351.003843189, 1517156179.382427457]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105351.188712260, 1517156179.573644982]: vtx=1, rel_pose=(4.2,-0.1,-0.03), dist=4.2, IoU=0.359, total_vtx=2[0m
+[0m[INFO] [1779105351.497937210, 1517156179.875753474]: vtx=1, rel_pose=(4.2,-0.1,-0.03), dist=4.2, IoU=0.326, total_vtx=2[0m
+[0m[INFO] [1779105351.499089522, 1517156179.885810461]: Starting localization from stamp 1517156179.842[0m
+[0m[INFO] [1779105351.508118185, 1517156179.885810461]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105351.895496945, 1517156180.278256215]: vtx=1, rel_pose=(4.6,-0.2,-0.03), dist=4.6, IoU=0.591, total_vtx=2[0m
+[0m[INFO] [1779105351.991875295, 1517156180.378881987]: Starting localization from stamp 1517156180.242[0m
+[0m[INFO] [1779105352.003520478, 1517156180.388938138]: [INFER] gridRegistration type=localization score=0.322 trans=(413.05,332.91,-3.044 rad)[0m
+[0m[INFO] [1779105352.003548260, 1517156180.388938138]: Vertex 0 registration score: 0.322[0m
+[0m[INFO] [1779105352.300797502, 1517156180.680799565]: vtx=1, rel_pose=(5.0,-0.2,-0.03), dist=5.0, IoU=0.559, total_vtx=2[0m
+[0m[INFO] [1779105352.495922834, 1517156180.882084891]: Starting localization from stamp 1517156180.642[0m
+[0m[INFO] [1779105352.505460852, 1517156180.892143978]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105352.792451950, 1517156181.173887238]: Too far from location center (dist=5.38 > 5.00)[0m
+[0m[INFO] [1779105352.792497951, 1517156181.173887238]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1779105352.792509784, 1517156181.173887238]: 
+
+
+ ADD NEW VERTEX (10.3, 0.2, 0.03) idx=2 
+
+
+[0m
+[0m[INFO] [1779105352.792778239, 1517156181.173887238]: [NEWVTX] new_id=2 global_pose=(10.3374,0.2326,0.0327) last_vtx=1 last_gpose=(4.9643,0.0690,0.0665) pose_stamped=(5.3720,-0.1940,-0.0338) rel_pose_vcur=(5.3720,-0.1940,-0.0338) n_localized=0 n_rel_poses=0 has_vcur_to_loc=1[0m
+[0m[INFO] [1779105352.792788823, 1517156181.173887238]: 
+Add edge (5.0,0.1)->(10.3,0.2) rel_pose=(5.4,-0.2,-0.03)
+[0m
+[0m[INFO] [1779105352.792798305, 1517156181.173887238]: Add edge (1)->(2) rel_pose=(5.37,-0.19,-0.03) dist=5.38[0m
+[0m[INFO] [1779105352.792806054, 1517156181.173887238]: vtx=2, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.611, total_vtx=3[0m
+[0m[INFO] [1779105352.998115870, 1517156181.385130438]: Starting localization from stamp 1517156181.042[0m
+[0m[INFO] [1779105353.010178406, 1517156181.395183674]: [INFER] gridRegistration type=localization score=0.649 trans=(3.57,6.77,0.040 rad)[0m
+[0m[INFO] [1779105353.010203123, 1517156181.395183674]: Vertex 1 registration score: 0.649[0m
+[0m[INFO] [1779105353.020210595, 1517156181.405274961]: [INFER] gridRegistration type=localization score=0.719 trans=(387.58,360.55,3.130 rad)[0m
+[0m[INFO] [1779105353.020230861, 1517156181.405274961]: Vertex 0 registration score: 0.719[0m
+[0m[INFO] [1779105353.093851460, 1517156181.475788642]: 
+
+
+=== LOOP CLOSURE FOUND! connect 1 and 2 through current ===
+
+
+[0m
+[0m[INFO] [1779105353.093889139, 1517156181.475788642]: Found loop closure. Add new vertex to close loop[0m
+[0m[INFO] [1779105353.093905523, 1517156181.475788642]: 
+
+
+ ADD NEW VERTEX (10.8, 0.2, 0.03) idx=3 
+
+
+[0m
+[0m[INFO] [1779105353.094185333, 1517156181.475788642]: [NEWVTX] new_id=3 global_pose=(10.7819,0.2383,0.0307) last_vtx=2 last_gpose=(10.3374,0.2326,0.0327) pose_stamped=(0.4445,-0.0088,-0.0020) rel_pose_vcur=(0.4445,-0.0088,-0.0020) n_localized=3 n_rel_poses=3 has_vcur_to_loc=1[0m
+[0m[INFO] [1779105353.094196370, 1517156181.475788642]: 
+Add edge (10.3,0.2)->(10.8,0.2) rel_pose=(0.4,-0.0,-0.00)
+[0m
+[0m[INFO] [1779105353.094206487, 1517156181.475788642]:[33m[WARN] [1779105353.094223297, 1517156181.475788642]: [NEWVTX] Rejecting inconsistent loop edge 3->1: pred_dist=1.5 direct_dist=5.8 (ratio=3.9, diff=4.3)[0m
+[33m[WARN] [1779105353.094234476, 1517156181.475788642]: [NEWVTX] Rejecting inconsistent loop edge 3->0: pred_dist=2.5 direct_dist=10.8 (ratio=4.3, diff=8.3)[0m
+[33m[WARN] [1779105354.159274053, 1517156182.542124625]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=412). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105354.857139660, 1517156183.236261801]: [THROTTLE] Skipping PCD frame (stamp=1517156183.241, diff=0.300s, skipped_total=308, queue=1, gt_buf=0, odom_buf=419)[0m
+ Add edge (2)->(3) rel_pose=(0.44,-0.01,-0.00) dist=0.44[0m
+[0m[INFO] [1779105353.094242715, 1517156181.475788642]: Add loop edge (3)->(2) rel_pose=(-0.44,0.01,0.00) pred_dist=0.4 direct_dist=0.4[0m
+[0m[INFO] [1779105353.498966696, 1517156181.878188417]: vtx=3, rel_pose=(0.5,-0.0,-0.00), dist=0.5, IoU=0.807, total_vtx=4[0m
+[0m[INFO] [1779105353.500217835, 1517156181.878188417]: Processed 108 frames[0m
+[0m[INFO] [1779105353.500251638, 1517156181.878188417]: Starting localization from stamp 1517156181.842[0m
+[0m[INFO] [1779105353.512890794, 1517156181.898302720]: [INFER] gridRegistration type=localization score=0.795 trans=(8.53,0.02,0.000 rad)[0m
+[0m[INFO] [1779105353.512910863, 1517156181.898302720]: Vertex 2 registration score: 0.795[0m
+[0m[INFO] [1779105353.519844428, 1517156181.898302720]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105353.526562932, 1517156181.908358111]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105353.893593072, 1517156182.280581247]: vtx=3, rel_pose=(0.6,-0.0,0.04), dist=0.6, IoU=0.695, total_vtx=4[0m
+[0m[INFO] [1779105353.994808376, 1517156182.381130213]: Starting localization from stamp 1517156182.242[0m
+[0m[INFO] [1779105354.003609859, 1517156182.381130213]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105354.016503925, 1517156182.401249962]: [INFER] gridRegistration type=localization score=0.754 trans=(23.11,-12.66,-0.071 rad)[0m
+[0m[INFO] [1779105354.016524401, 1517156182.401249962]: Vertex 2 registration score: 0.754[0m
+[0m[INFO] [1779105354.023248274, 1517156182.401249962]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105354.304683251, 1517156182.682971943]: vtx=3, rel_pose=(0.7,-0.0,0.18), dist=0.7, IoU=0.633, total_vtx=4[0m
+[0m[INFO] [1779105354.497933564, 1517156182.884232974]: Starting localization from stamp 1517156182.542[0m
+[0m[INFO] [1779105354.509763373, 1517156182.894288700]: [INFER] gridRegistration type=localization score=0.270 trans=(293.60,424.45,2.739 rad)[0m
+[0m[INFO] [1779105354.509797048, 1517156182.894288700]: Vertex 0 registration score: 0.270[0m
+[0m[INFO] [1779105354.522135431, 1517156182.904346032]: [INFER] gridRegistration type=localization score=0.721 trans=(51.53,-32.88,-0.205 rad)[0m
+[0m[INFO] [1779105354.522156457, 1517156182.904346032]: Vertex 2 registration score: 0.721[0m
+[0m[INFO] [1779105354.529893609, 1517156182.914400439]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105354.600926910, 1517156182.984802135]: vtx=3, rel_pose=(0.9,0.0,0.42), dist=0.9, IoU=0.621, total_vtx=4[0m
+[0m[INFO] [1779105354.990758891, 1517156183.377202231]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105354.995817236, 1517156183.377202231]: vtx=3, rel_pose=(1.1,0.1,0.69), dist=1.1, IoU=0.629, total_vtx=4[0m
+[0m[INFO] [1779105355.001203033, 1517156183.387262269]: Starting localization from stamp 1517156183.342[0m
+[0m[INFO] [1779105355.008723954, 1517156183.387262269]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105355.022167637, 1517156183.407380298]: [INFER] gridRegistration type=localization score=0.536 trans=(169.76,-70.28,-0.683 rad)[0m
+[0m[INFO] [1779105355.022189075, 1517156183.407380298]: Vertex 2 registration score: 0.536[0m
+[0m[INFO] [1779105355.036361332, 1517156183.417435653]: [INFER] gridRegistration type=localization score=0.488 trans=(223.87,-71.96,-0.677 rad)[0m
+[0m[INFO] [1779105355.036382859, 1517156183.417435653]: Vertex 1 registration score: 0.488[0m
+[0m[INFO] [1779105355.495768387, 1517156183.880212384]: vtx=3, rel_pose=(1.3,0.3,0.94), dist=1.3, IoU=0.639, total_vtx=4[0m
+[0m[INFO] [1779105355.497136130, 1517156183.880212384]: Starting localization from stamp 1517156183.742[0m
+[0m[INFO] [1779105355.504599026, 1517156183.890266521]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105355.517911126, 1517156183.900321252]: [INFER] gridRegistration type=localization score=0.518 trans=(223.15,-67.22,-0.887 rad)[0m
+[0m[INFO] [1779105355.517947267, 1517156183.900321252]: Vertex 2 registration score: 0.518[0m
+[0m[INFO] [1779105355.527794143,[33m[WARN] [1779105357.003895832, 1517156185.381945171]: [THROTTLE] Skipping PCD frame (stamp=1517156185.342, diff=0.100s, skipped_total=323, queue=1, gt_buf=0, odom_buf=440)[0m
+ 1517156183.910378622]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105355.801440422, 1517156184.182152428]: vtx=3, rel_pose=(1.4,0.6,1.12), dist=1.6, IoU=0.602, total_vtx=4[0m
+[0m[INFO] [1779105355.997098784, 1517156184.383492992]: Starting localization from stamp 1517156184.142[0m
+[0m[INFO] [1779105356.004273039, 1517156184.383492992]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105356.015788080, 1517156184.393595884]: [INFER] gridRegistration type=localization score=0.505 trans=(268.89,-55.16,-1.064 rad)[0m
+[0m[INFO] [1779105356.015818437, 1517156184.393595884]: Vertex 2 registration score: 0.505[0m
+[0m[INFO] [1779105356.024701988, 1517156184.403652887]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105356.205248947, 1517156184.584748301]: vtx=3, rel_pose=(1.6,0.9,1.33), dist=1.8, IoU=0.489, total_vtx=4[0m
+[0m[INFO] [1779105356.495649464, 1517156184.878995533]: vtx=3, rel_pose=(1.6,1.1,1.50), dist=1.9, IoU=0.365, total_vtx=4[0m
+[0m[INFO] [1779105356.496845930, 1517156184.878995533]: Starting localization from stamp 1517156184.842[0m
+[0m[INFO] [1779105356.506664965, 1517156184.889050002]: [INFER] gridRegistration type=localization score=0.305 trans=(100.14,82.23,0.000 rad)[0m
+[0m[INFO] [1779105356.506686704, 1517156184.889050002]: Vertex 0 registration score: 0.305[0m
+[0m[INFO] [1779105356.517255438, 1517156184.899106169]: [INFER] gridRegistration type=localization score=0.550 trans=(68.94,393.33,1.672 rad)[0m
+[0m[INFO] [1779105356.517291039, 1517156184.899106169]: Vertex 2 registration score: 0.550[0m
+[0m[INFO] [1779105356.529008717, 1517156184.909169081]: [INFER] gridRegistration type=localization score=0.324 trans=(98.35,405.77,1.805 rad)[0m
+[0m[INFO] [1779105356.529035441, 1517156184.909169081]: Vertex 1 registration score: 0.324[0m
+[0m[INFO] [1779105357.002435270, 1517156185.381945171]: Low IoU 0.204 < 0.300[0m
+[0m[INFO] [1779105357.002452689, 1517156185.381945171]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1779105357.002461033, 1517156185.381945171]: 
+
+
+ ADD NEW VERTEX (12.4, 1.6, 1.77) idx=4 
+
+
+[0m
+[0m[INFO] [1779105357.002555229, 1517156185.381945171]: [NEWVTX] new_id=4 global_pose=(12.3631,1.6363,1.7672) last_vtx=3 last_gpose=(10.7819,0.2383,0.0307) pose_stamped=(1.6234,1.3488,1.7365) rel_pose_vcur=(1.6234,1.3488,1.7365) n_localized=0 n_rel_poses=0 has_vcur_to_loc=1[0m
+[0m[INFO] [1779105357.002565115, 1517156185.381945171]: 
+Add edge (10.8,0.2)->(12.4,1.6) rel_pose=(1.6,1.3,1.74)
+[0m
+[0m[INFO] [1779105357.002573886, 1517156185.381945171]: Add edge (3)->(4) rel_pose=(1.62,1.35,1.74) dist=2.11[0m
+[0m[INFO] [1779105357.002581580, 1517156185.381945171]: vtx=4, rel_pose=(0.0,-0.0,0.00), dist=0.0, IoU=0.204, total_vtx=5[0m
+[0m[INFO] [1779105357.003914888, 1517156185.381945171]: Starting localization from stamp 1517156185.242[0m
+[0m[INFO] [1779105357.015331790, 1517156185.402056438]: [INFER] gridRegistration type=localization score=0.315 trans=(-46.59,346.03,1.331 rad)[0m
+[0m[INFO] [1779105357.015356404, 1517156185.402056438]: Vertex 3 registration score: 0.315[0m
+[0m[INFO] [1779105357.024104539, 1517156185.402056438]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105357.034230548, 1517156185.412118217]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105357.041763545, 1517156185.422174183]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105357.296066798, 1517156185.673913068]: vtx=4, rel_pose=(0.3,0.0,0.25), dist=0.3, IoU=0.519, total_vtx=5[0m
+[0m[INFO] [1779105357.499155148, 1517156185.885321571]: Starting localization from stamp 1517156185.643[0m
+[0m[INFO] [1779105357.508313898, 1517156185.895375418]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105357.515266341, 1517156185.895375418]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105357.527277350, 1517156185.905430956]: [INFER] gridRegistration type=localization score=0.241 trans=(393.24,43.53,-1.860 rad)[0m
+[0m[INFO] [1779105357.527310259, 1517156185.905430956]: Vertex 1 registration score: 0.241[0m
+[0m[INFO] [1779105357.[33m[WARN] [1779105359.157391304, 1517156187.535820272]: [THROTTLE] Skipping PCD frame (stamp=1517156187.541, diff=0.099s, skipped_total=339, queue=1, gt_buf=0, odom_buf=462)[0m
+[33m[WARN] [1779105359.456710122, 1517156187.837545530]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=465). Falling back to /odom for global_pose.[0m
+538145439, 1517156185.915488871]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105357.697609560, 1517156186.076502225]: vtx=4, rel_pose=(0.6,0.1,0.50), dist=0.6, IoU=0.423, total_vtx=5[0m
+[0m[INFO] [1779105357.997253643, 1517156186.378633322]: vtx=4, rel_pose=(0.8,0.2,0.70), dist=0.8, IoU=0.403, total_vtx=5[0m
+[0m[INFO] [1779105357.998609896, 1517156186.378633322]: Starting localization from stamp 1517156186.342[0m
+[0m[INFO] [1779105358.012639529, 1517156186.398742063]: [INFER] gridRegistration type=localization score=0.505 trans=(-28.14,165.55,0.708 rad)[0m
+[0m[INFO] [1779105358.012660248, 1517156186.398742063]: Vertex 3 registration score: 0.505[0m
+[0m[INFO] [1779105358.019761523, 1517156186.398742063]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105358.031430474, 1517156186.408795961]: [INFER] gridRegistration type=localization score=0.451 trans=(-21.86,164.16,0.701 rad)[0m
+[0m[INFO] [1779105358.031456226, 1517156186.408795961]: Vertex 2 registration score: 0.451[0m
+[0m[INFO] [1779105358.041543323, 1517156186.418852556]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105358.388152848, 1517156186.771045110]: vtx=4, rel_pose=(1.0,0.4,0.89), dist=1.0, IoU=0.392, total_vtx=5[0m
+[0m[INFO] [1779105358.495201029, 1517156186.881693173]: Starting localization from stamp 1517156186.642[0m
+[0m[INFO] [1779105358.505967109, 1517156186.891756150]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105358.515111194, 1517156186.901819805]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105358.524014628, 1517156186.901819805]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105358.532863845, 1517156186.911878476]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105358.694493858, 1517156187.072814478]: vtx=4, rel_pose=(1.1,0.6,1.15), dist=1.3, IoU=0.402, total_vtx=5[0m
+[0m[INFO] [1779105358.998965098, 1517156187.384918943]: Starting localization from stamp 1517156187.042[0m
+[0m[INFO] [1779105359.013082680, 1517156187.394979125]: [INFER] gridRegistration type=localization score=0.218 trans=(-170.05,-19.85,0.000 rad)[0m
+[0m[INFO] [1779105359.013104259, 1517156187.394979125]: Vertex 3 registration score: 0.218[0m
+[0m[INFO] [1779105359.020569111, 1517156187.405034661]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105359.028561832, 1517156187.415089130]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105359.038248639, 1517156187.425150329]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105359.095506743, 1517156187.475456716]: vtx=4, rel_pose=(1.2,0.8,1.31), dist=1.5, IoU=0.380, total_vtx=5[0m
+[0m[INFO] [1779105359.496145097, 1517156187.877770669]: vtx=4, rel_pose=(1.3,1.1,1.38), dist=1.7, IoU=0.335, total_vtx=5[0m
+[0m[INFO] [1779105359.497308532, 1517156187.877770669]: Starting localization from stamp 1517156187.842[0m
+[0m[INFO] [1779105359.508567414, 1517156187.887830418]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105359.518047555, 1517156187.897890472]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105359.525249845, 1517156187.907976995]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105359.533474395, 1517156187.918030631]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105359.989879800, 1517156188.370704722]: Low IoU 0.249 < 0.300[0m
+[0m[INFO] [1779105359.989903195, 1517156188.370704722]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1779105359.989916134, 1517156188.370704722]: 
+
+
+ ADD NEW VERTEX (10.8, 2.7, -3.06) idx=5 
+
+
+[0m
+[0m[INFO] [1779105359.990046768, 1517156188.370704722]: [NEWVTX] new_id=5 global_pose=(10.8046,2.7006,-3.0622) last_vtx=4 last_gpose=(12.3631,1.6363,1.7672) pose_stamped=(1.3479,1.3209,1.4538) rel_pose_vcur=(1.3479,1.3209,1.4538) n_localized=0 n_rel_poses=0 has_vcur_to_loc=1[0m
+[0m[INFO] [1779105359.990059339, 1517156188.370704722]: 
+Add edge (12.4,1.6)->(10.8,2.7) rel_pose=(1.3,1.3,1.45)
+[0m
+[0m[INFO] [1779105359.990071163, 1517156188.370704722]: Add edge (4)->(5) rel_pose=(1.35,1.32,1.45) dist=1.89[0m
+[0m[INFO] [1779105359.990082429, 15171[33m[WARN] [1779105361.156193524, 1517156189.537770135]: [THROTTLE] Skipping PCD frame (stamp=1517156189.541, diff=0.100s, skipped_total=354, queue=1, gt_buf=0, odom_buf=482)[0m
+56188.370704722]: vtx=5, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.249, total_vtx=6[0m
+[0m[INFO] [1779105359.994648218, 1517156188.380760896]: Starting localization from stamp 1517156188.242[0m
+[0m[INFO] [1779105360.003594386, 1517156188.380760896]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105360.014470761, 1517156188.400847409]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105360.024479170, 1517156188.410904595]: [INFER] gridRegistration type=localization score=0.261 trans=(366.21,344.94,-3.134 rad)[0m
+[0m[INFO] [1779105360.024503657, 1517156188.410904595]: Vertex 0 registration score: 0.261[0m
+[0m[INFO] [1779105360.031717667, 1517156188.410904595]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105360.039585884, 1517156188.420960826]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105360.291404288, 1517156188.672433440]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105360.296134719, 1517156188.682489345]: vtx=5, rel_pose=(0.0,-0.0,0.01), dist=0.0, IoU=0.874, total_vtx=6[0m
+[0m[INFO] [1779105360.497413468, 1517156188.883823120]: Starting localization from stamp 1517156188.642[0m
+[0m[INFO] [1779105360.510402874, 1517156188.893876795]: [INFER] gridRegistration type=localization score=0.681 trans=(336.89,-20.03,-1.374 rad)[0m
+[0m[INFO] [1779105360.510437543, 1517156188.893876795]: Vertex 4 registration score: 0.681[0m
+[0m[INFO] [1779105360.519698353, 1517156188.903942418]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105360.527239467, 1517156188.913995190]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105360.534837505, 1517156188.913995190]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105360.542934724, 1517156188.924015704]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105360.692378175, 1517156189.074860475]: vtx=5, rel_pose=(0.1,-0.0,0.00), dist=0.1, IoU=0.864, total_vtx=6[0m
+[0m[INFO] [1779105361.000543083, 1517156189.386875648]: Starting localization from stamp 1517156189.041[0m
+[0m[INFO] [1779105361.013987021, 1517156189.396929292]: [INFER] gridRegistration type=localization score=0.665 trans=(331.33,-22.67,-1.350 rad)[0m
+[0m[INFO] [1779105361.014023471, 1517156189.396929292]: Vertex 4 registration score: 0.665[0m
+[0m[INFO] [1779105361.024274840, 1517156189.407001893]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105361.034744986, 1517156189.417090115]: [INFER] gridRegistration type=localization score=0.413 trans=(364.38,373.11,3.029 rad)[0m
+[0m[INFO] [1779105361.034768994, 1517156189.417090115]: Vertex 0 registration score: 0.413[0m
+[0m[INFO] [1779105361.042663660, 1517156189.427146216]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105361.054050350, 1517156189.437205367]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105361.094162654, 1517156189.477428721]: vtx=5, rel_pose=(0.1,-0.0,0.00), dist=0.1, IoU=0.858, total_vtx=6[0m
+[0m[INFO] [1779105361.487958143, 1517156189.869701064]: vtx=5, rel_pose=(0.1,-0.0,0.00), dist=0.1, IoU=0.856, total_vtx=6[0m
+[0m[INFO] [1779105361.493266785, 1517156189.879777169]: Starting localization from stamp 1517156189.743[0m
+[0m[INFO] [1779105361.505096889, 1517156189.889861712]: [INFER] gridRegistration type=localization score=0.658 trans=(331.90,-21.42,-1.351 rad)[0m
+[0m[INFO] [1779105361.505116560, 1517156189.889861712]: Vertex 4 registration score: 0.658[0m
+[0m[INFO] [1779105361.514446203, 1517156189.899918624]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105361.523959891, 1517156189.909974746]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105361.532145753, 1517156189.909974746]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105361.540167356, 1517156189.920027681]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105361.798600477, 1517156190.181630549]: vtx=5, rel_pose=(0.1,-0.0,0.00), dist=0.1, IoU=0.855, total_vtx=6[0m
+[0m[INFO] [1779105361.996909892, 1517156190.383078204]: Starting localization from stamp 1517156190.141[0m
+[0m[INFO] [1779105362.007184367, 1517156190.393133718]: Vertex 4 regi[33m[WARN] [1779105363.256660857, 1517156191.642627028]: [THROTTLE] Skipping PCD frame (stamp=1517156191.641, diff=0.099s, skipped_total=369, queue=1, gt_buf=0, odom_buf=503)[0m
+[INFO] [1779105346.191200, 1517156174.573169]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105346.590284, 1517156174.976142]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105346.990088, 1517156175.368423]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105347.491753, 1517156175.871402]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105347.688865, 1517156176.072696]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105348.008541, 1517156176.394492]: [INFER-PY] gridRegistration type=localization score=0.788 trans=(419.21,364.48,3.115 rad)
+[INFO] [1779105348.090474, 1517156176.474898]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105348.589525, 1517156176.967602]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105348.608560, 1517156176.987789]: [INFER-PY] gridRegistration type=localization score=0.723 trans=(417.08,360.91,3.125 rad)
+[INFO] [1779105348.786749, 1517156177.168959]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105349.188591, 1517156177.571438]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105349.678259, 1517156178.064625]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105349.887397, 1517156178.265765]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105350.012958, 1517156178.396651]: [INFER-PY] gridRegistration type=localization score=0.620 trans=(398.04,360.64,3.130 rad)
+[INFO] [1779105350.286846, 1517156178.668330]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105350.502393, 1517156178.879570]: [INFER-PY] gridRegistration type=localization score=0.354 trans=(168.37,447.26,2.271 rad)
+[INFO] [1779105350.688699, 1517156179.070633]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105351.179183, 1517156179.563583]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105351.487933, 1517156179.865668]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105351.885089, 1517156180.268194]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105352.002551, 1517156180.388938]: [INFER-PY] gridRegistration type=localization score=0.322 trans=(413.05,332.91,-3.044 rad)
+[INFO] [1779105352.291202, 1517156180.670739]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105352.784506, 1517156181.163795]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105353.009089, 1517156181.395184]: [INFER-PY] gridRegistration type=localization score=0.649 trans=(3.57,6.77,0.040 rad)
+[INFO] [1779105353.019222, 1517156181.405275]: [INFER-PY] gridRegistration type=localization score=0.719 trans=(387.58,360.55,3.130 rad)
+[INFO] [1779105353.086489, 1517156181.465735]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105353.490929, 1517156181.868130]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105353.511914, 1517156181.898303]: [INFER-PY] gridRegistration type=localization score=0.795 trans=(8.53,0.02,0.000 rad)
+[INFO] [1779105353.887152, 1517156182.270423]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105354.015528, 1517156182.401250]: [INFER-PY] gridRegistration type=localization score=0.754 trans=(23.11,-12.66,-0.071 rad)
+[INFO] [1779105354.295199, 1517156182.672957]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105354.508285, 1517156182.894289]: [INFER-PY] gridRegistration type=localization score=0.270 trans=(293.60,424.45,2.739 rad)
+[INFO] [1779105354.521097, 1517156182.904346]: [INFER-PY] gridRegistration type=localization score=0.721 trans=(51.53,-32.88,-0.205 rad)
+[INFO] [1779105354.594054, 1517156182.974746]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105354.988383, 1517156183.367148]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105355.021064, 1517156183.407380]: [INFER-PY] gridRegistration type=localization score=0.536 trans=(169.76,-70.28,-0.683 rad)
+[INFO] [1779105355.035256, 1517156183.417436]: [INFER-PY] gridRegistration type=localization score=0.488 trans=(223.87,-71.96,-0.677 rad)
+[INFO] [1779105355.487177, 1517156183.870156]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105355.516280, 1517156183.900321]: [INFER-PY] gridRegistration type=localization score=0.518 trans=(223.15,-67.22,-0.887 rad)
+[INFO] [1779105355.793990, 1517156184.172067]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105356.014235, 1517156184.393596]: [INFER-PY] gridRegistration type=localization score=0.505 trans=(268.89,-55.16,-1.064 rad)
+[INFO] [1779105356.198503, 1517156184.584748]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105356.486108, 1517156184.868925]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105356.505609, 1517156184.889050]: [INFER-PY] gridRegistration type=localization score=0.305 trans=(100.14,82.23,0.000 rad)
+[INFO] [1779105356.515567, 1517156184.899106]: [INFER-PY] gridRegistration type=localization score=0.550 trans=(68.94,393.33,1.672 rad)
+[INFO] [1779105356.527923, 1517156184.909169]: [INFER-PY] gridRegistration type=localization score=0.324 trans=(98.35,405.77,1.805 rad)
+[INFO] [1779105356.995503, 1517156185.381945]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105357.014086, 1517156185.392000]: [INFER-PY] gridRegistration type=localization score=0.315 trans=(-46.59,346.03,1.331 rad)
+[INFO] [1779105357.286319, 1517156185.663841]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105357.525589, 1517156185.905431]: [INFER-PY] gridRegistration type=localization score=0.241 trans=(393.24,43.53,-1.860 rad)
+[INFO] [1779105357.687324, 1517156186.066440]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105357.987857, 1517156186.368571]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105358.011469, 1517156186.388688]: [INFER-PY] gridRegistration type=localization score=0.505 trans=(-28.14,165.55,0.708 rad)
+[INFO] [1779105358.029752, 1517156186.408796]: [INFER-PY] gridRegistration type=localization score=0.451 trans=(-21.86,164.16,0.701 rad)
+[INFO] [1779105358.381591, 1517156186.760952]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105358.688151, 1517156187.072814]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105359.012025, 1517156187.394979]: [INFER-PY] gridRegistration type=localization score=0.218 trans=(-170.05,-19.85,0.000 rad)
+[INFO] [1779105359.088281, 1517156187.465402]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105359.489041, 1517156187.867716]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105359.982914, 1517156188.360648]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105360.023520, 1517156188.400847]: [INFER-PY] gridRegistration type=localization score=0.261 trans=(366.21,344.94,-3.134 rad)
+[INFO] [1779105360.289157, 1517156188.672433]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105360.508846, 1517156188.893877]: [INFER-PY] gridRegistration type=localization score=0.681 trans=(336.89,-20.03,-1.374 rad)
+[INFO] [1779105360.685518, 1517156189.064807]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105361.012552, 1517156189.396929]: [INFER-PY] gridRegistration type=localization score=0.665 trans=(331.33,-22.67,-1.350 rad)
+[INFO] [1779105361.033687, 1517156189.417090]: [INFER-PY] gridRegistration type=localization score=0.413 trans=(364.38,373.11,3.029 rad)
+[INFO] [1779105361.087001, 1517156189.467371]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105361.478006, 1517156189.859558]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105361.504148, 1517156189.889862]: [INFER-PY] gridRegistration type=localization score=0.658 trans=(331.90,-21.42,-1.351 rad)
+[INFO] [1779105361.791464, 1517156190.171572]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105362.088453, 1517156190.473675]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105362.479645, 1517156190.865920]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105362.793144, 1517156191.179472]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105363.185684, 1517156191.572182]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105363.533139, 1517156191.914723]: [INFER-PY] gridRegistration type=localization score=0.174 trans=(-80.93,-13.05,0.000 rad)
+[INFO] [1779105363.586623, 1517156191.965035]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105363.987696, 1517156192.367427]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105364.020280, 1517156192.397619]: [INFER-PY] gridRegistration type=localization score=0.321 trans=(12.30,29.42,0.009 rad)
+stration score: 0.000[0m
+[0m[INFO] [1779105362.015430687, 1517156190.393133718]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105362.023773494, 1517156190.403196780]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105362.031618601, 1517156190.413262346]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105362.040042011, 1517156190.423321799]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105362.096257296, 1517156190.473674710]: vtx=5, rel_pose=(0.1,-0.0,0.00), dist=0.1, IoU=0.860, total_vtx=6[0m
+[0m[INFO] [1779105362.489332671, 1517156190.875979794]: vtx=5, rel_pose=(0.1,-0.0,0.00), dist=0.1, IoU=0.833, total_vtx=6[0m
+[0m[INFO] [1779105362.498970590, 1517156190.886032941]: Starting localization from stamp 1517156190.742[0m
+[0m[INFO] [1779105362.507285342, 1517156190.886032941]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105362.516286603, 1517156190.896089464]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105362.526590612, 1517156190.906149105]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105362.535675891, 1517156190.916206314]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105362.543072348, 1517156190.926263053]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105362.800103796, 1517156191.179472182]: vtx=5, rel_pose=(0.3,-0.0,-0.04), dist=0.3, IoU=0.730, total_vtx=6[0m
+[0m[INFO] [1779105362.994379501, 1517156191.380631875]: Starting localization from stamp 1517156191.142[0m
+[0m[INFO] [1779105363.003733254, 1517156191.390684822]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105363.011906241, 1517156191.390684822]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105363.020159548, 1517156191.400740832]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105363.029164140, 1517156191.410795760]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105363.037109499, 1517156191.420853292]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105363.197417487, 1517156191.582267714]: vtx=5, rel_pose=(0.4,-0.0,-0.11), dist=0.4, IoU=0.679, total_vtx=6[0m
+[0m[INFO] [1779105363.497895246, 1517156191.884049584]: Starting localization from stamp 1517156191.542[0m
+[0m[INFO] [1779105363.506654281, 1517156191.884049584]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105363.514806861, 1517156191.894103147]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105363.521902466, 1517156191.904667390]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105363.534153979, 1517156191.914723218]: [INFER] gridRegistration type=localization score=0.174 trans=(-80.93,-13.05,0.000 rad)[0m
+[0m[INFO] [1779105363.534174363, 1517156191.914723218]: Vertex 2 registration score: 0.174[0m
+[0m[INFO] [1779105363.541767019, 1517156191.924780821]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105363.597408490, 1517156191.975091621]: vtx=5, rel_pose=(0.5,-0.0,-0.12), dist=0.5, IoU=0.517, total_vtx=6[0m
+[0m[INFO] [1779105363.598609275, 1517156191.985148635]: Processed 135 frames[0m
+[0m[INFO] [1779105363.998052164, 1517156192.377487108]: vtx=5, rel_pose=(0.6,-0.1,-0.14), dist=0.6, IoU=0.443, total_vtx=6[0m
+[0m[INFO] [1779105363.999652751, 1517156192.377487108]: Starting localization from stamp 1517156192.242[0m
+[0m[INFO] [1779105364.010439721, 1517156192.387561133]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105364.021623169, 1517156192.407680669]: [INFER] gridRegistration type=localization score=0.321 trans=(12.30,29.42,0.009 rad)[0m
+[0m[INFO] [1779105364.021664555, 1517156192.407680669]: Vertex 3 registration score: 0.321[0m
+[0m[INFO] [1779105364.031027941, 1517156192.417738029]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105364.041470164, 1517156192.427795006]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105364.051921378, 1517156192.437851150]: [INFER] gridRegistration type=localization score=0.377 trans=(24.08,-32.05,-0.262 rad)[0m
+[0m[INFO] [1779105364.051942112, 1517156192.437851150]: Vertex 1 registration score: 0.377[0m
+[0m[INFO] [1779105364.295318267, 151715[33m[WARN] [1779105364.557973944, 1517156192.940785124]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=516). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105365.496384689, 1517156193.877421589]: [THROTTLE] Skipping PCD frame (stamp=1517156193.841, diff=0.100s, skipped_total=385, queue=1, gt_buf=0, odom_buf=525)[0m
+6192.679222273]: vtx=5, rel_pose=(0.8,-0.1,-0.14), dist=0.8, IoU=0.374, total_vtx=6[0m
+[0m[INFO] [1779105364.493716973, 1517156192.880383531]: Starting localization from stamp 1517156192.641[0m
+[0m[INFO] [1779105364.505587258, 1517156192.890457381]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105364.514220958, 1517156192.900516989]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105364.520927779, 1517156192.900516989]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105364.531123869, 1517156192.910601090]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105364.541916141, 1517156192.920656198]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105364.602145305, 1517156192.981043976]: vtx=5, rel_pose=(0.9,-0.1,-0.14), dist=0.9, IoU=0.373, total_vtx=6[0m
+[0m[INFO] [1779105364.997904254, 1517156193.383838403]: vtx=5, rel_pose=(1.0,-0.1,-0.15), dist=1.0, IoU=0.367, total_vtx=6[0m
+[0m[INFO] [1779105364.999163809, 1517156193.383838403]: Starting localization from stamp 1517156193.342[0m
+[0m[INFO] [1779105365.009630475, 1517156193.393865000]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105365.019008897, 1517156193.403921405]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105365.026126059, 1517156193.403921405]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105365.033797634, 1517156193.413974035]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105365.043577623, 1517156193.424029356]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105365.490406106, 1517156193.877421589]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105365.494961344, 1517156193.877421589]: vtx=5, rel_pose=(1.1,-0.1,-0.15), dist=1.1, IoU=0.356, total_vtx=6[0m
+[0m[INFO] [1779105365.496410411, 1517156193.877421589]: Starting localization from stamp 1517156193.742[0m
+[0m[INFO] [1779105365.505901453, 1517156193.887482960]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105365.515451549, 1517156193.897540102]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105365.523047875, 1517156193.907596311]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105365.531046173, 1517156193.917609231]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105365.539664390, 1517156193.917609231]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105365.797580032, 1517156194.179185969]: vtx=5, rel_pose=(1.3,-0.2,-0.17), dist=1.3, IoU=0.356, total_vtx=6[0m
+[0m[INFO] [1779105365.993368033, 1517156194.380345583]: Starting localization from stamp 1517156194.141[0m
+[0m[INFO] [1779105366.002734389, 1517156194.380345583]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105366.014248078, 1517156194.400491944]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105366.022508214, 1517156194.400491944]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105366.030267353, 1517156194.410550423]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105366.037878351, 1517156194.420604619]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105366.093596279, 1517156194.470927403]: vtx=5, rel_pose=(1.5,-0.2,-0.22), dist=1.5, IoU=0.322, total_vtx=6[0m
+[0m[INFO] [1779105366.497534915, 1517156194.883869594]: vtx=5, rel_pose=(1.7,-0.3,-0.40), dist=1.8, IoU=0.338, total_vtx=6[0m
+[0m[INFO] [1779105366.498734823, 1517156194.883869594]: Starting localization from stamp 1517156194.842[0m
+[0m[INFO] [1779105366.507135963, 1517156194.893926127]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105366.520040730, 1517156194.904002299]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105366.527955614, 1517156194.914054894]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105366.535640303, 1517156194.914054894]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105366.544836424, 1517156194.924074651]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105366.989745263, 1517156195.376645827]: vtx=5, rel_pose=(2.0,-0.4,-0.69), dist=2.0, IoU=0.341, total_vtx=6[0m
+[0m[INFO] [1779105367.000650245, 1517156195.386705163]: Starting locali[33m[WARN] [1779105367.656152783, 1517156196.040738870]: [THROTTLE] Skipping PCD frame (stamp=1517156196.041, diff=0.101s, skipped_total=401, queue=1, gt_buf=0, odom_buf=547)[0m
+zation from stamp 1517156195.241[0m
+[0m[INFO] [1779105367.010707056, 1517156195.396793472]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105367.020258857, 1517156195.406831458]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105367.027628690, 1517156195.406831458]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105367.035562515, 1517156195.416917389]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105367.043587420, 1517156195.426979880]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105367.196824781, 1517156195.577982021]: vtx=5, rel_pose=(2.1,-0.5,-0.91), dist=2.1, IoU=0.339, total_vtx=6[0m
+[0m[INFO] [1779105367.493614215, 1517156195.879731085]: Starting localization from stamp 1517156195.542[0m
+[0m[INFO] [1779105367.504141886, 1517156195.889785134]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105367.513751199, 1517156195.899845702]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105367.527309302, 1517156195.909932232]: [INFER] gridRegistration type=localization score=0.351 trans=(474.41,287.84,-2.920 rad)[0m
+[0m[INFO] [1779105367.527336913, 1517156195.909932232]: Vertex 0 registration score: 0.351[0m
+[0m[INFO] [1779105367.535162573, 1517156195.919987232]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105367.545419315, 1517156195.930048520]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1779105367.596786428, 1517156195.980341487]: vtx=5, rel_pose=(2.2,-0.6,-1.15), dist=2.3, IoU=0.330, total_vtx=6[0m
+[0m[INFO] [1779105367.893864455, 1517156196.272183457]: Low IoU 0.284 < 0.300[0m
+[0m[INFO] [1779105367.893885608, 1517156196.272183457]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1779105367.893894261, 1517156196.272183457]: 
+
+
+ ADD NEW VERTEX (8.5, 3.4, 1.98) idx=6 
+
+
+[0m
+[0m[INFO] [1779105367.894016128, 1517156196.272183457]: [NEWVTX] new_id=6 global_pose=(8.4758,3.3650,1.9793) last_vtx=5 last_gpose=(10.8046,2.7006,-3.0622) pose_stamped=(2.2688,-0.8471,-1.2417) rel_pose_vcur=(2.2688,-0.8471,-1.2417) n_localized=0 n_rel_poses=0 has_vcur_to_loc=1[0m
+[0m[INFO] [1779105367.894030012, 1517156196.272183457]: 
+Add edge (10.8,2.7)->(8.5,3.4) rel_pose=(2.3,-0.8,-1.24)
+[0m
+[0m[INFO] [1779105367.894037597, 1517156196.272183457]: Add edge (5)->(6) rel_pose=(2.27,-0.85,-1.24) dist=2.42[0m
+[0m[INFO] [1779105367.894045018, 1517156196.272183457]: vtx=6, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.284, total_vtx=7[0m
+[0m[INFO] [1779105367.996435550, 1517156196.382901630]: Starting localization from stamp 1517156196.241[0m
+[0m[INFO] [1779105368.006140526, 1517156196.392985879]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105368.014525607, 1517156196.392985879]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105368.023870269, 1517156196.403044548]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105368.031523043, 1517156196.413106503]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105368.038905046, 1517156196.423160586]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105368.295916565, 1517156196.674875947]: vtx=6, rel_pose=(0.3,-0.0,-0.08), dist=0.3, IoU=0.788, total_vtx=7[0m
+[0m[INFO] [1779105368.499271854, 1517156196.886112684]: Starting localization from stamp 1517156196.541[0m
+[0m[INFO] [1779105368.508798736, 1517156196.886112684]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105368.516855322, 1517156196.896168714]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105368.526266413, 1517156196.906258719]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105368.533998094, 1517156196.916315955]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105368.542024507, 1517156196.926374107]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105368.596103752, 1517156196.976657293]: vtx=6, rel_pose=(0.6,-0.1,-0.21), dist=0.6, IoU=0.682, total_vtx=7[0m
+[0m[INFO] [1779105368.999079379, 1517156197.378990946]: vtx=6, rel_pose=(1.0,-0.2,-0.33), dist=1.0, IoU=0.620, total_vtx=7[0m
+[0m[INFO] [1779105369.000353325, 1517156197.378990946]: Starting localization fro[33m[WARN] [1779105369.656840389, 1517156198.043294708]: [THROTTLE] Skipping PCD frame (stamp=1517156198.041, diff=0.299s, skipped_total=416, queue=1, gt_buf=0, odom_buf=567)[0m
+[33m[WARN] [1779105369.759256195, 1517156198.143933597]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=568). Falling back to /odom for global_pose.[0m
+m stamp 1517156197.341[0m
+[0m[INFO] [1779105369.010118043, 1517156197.389078326]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105369.018992386, 1517156197.399137192]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105369.029278381, 1517156197.409208309]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105369.037300142, 1517156197.419276876]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105369.045149385, 1517156197.429333433]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105369.400278945, 1517156197.781582114]: vtx=6, rel_pose=(1.4,-0.3,-0.44), dist=1.5, IoU=0.535, total_vtx=7[0m
+[0m[INFO] [1779105369.495691377, 1517156197.882204167]: Starting localization from stamp 1517156197.742[0m
+[0m[INFO] [1779105369.506600965, 1517156197.892260017]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105369.514459432, 1517156197.892260017]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105369.522121181, 1517156197.902313545]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105369.532159278, 1517156197.912380233]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105369.540615910, 1517156197.922438634]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105369.892623632, 1517156198.274700771]: vtx=6, rel_pose=(1.8,-0.6,-0.48), dist=1.9, IoU=0.512, total_vtx=7[0m
+[0m[INFO] [1779105369.998843882, 1517156198.385369655]: Starting localization from stamp 1517156198.142[0m
+[0m[INFO] [1779105370.007993709, 1517156198.385369655]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105370.016328567, 1517156198.395424727]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105370.024406052, 1517156198.405484368]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105370.035074546, 1517156198.415546035]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105370.044200949, 1517156198.425605786]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105370.199878691, 1517156198.586637047]: vtx=6, rel_pose=(2.2,-0.8,-0.40), dist=2.4, IoU=0.498, total_vtx=7[0m
+[0m[INFO] [1779105370.495594587, 1517156198.878557113]: vtx=6, rel_pose=(2.6,-0.9,-0.29), dist=2.7, IoU=0.502, total_vtx=7[0m
+[0m[INFO] [1779105370.496816676, 1517156198.878557113]: Starting localization from stamp 1517156198.841[0m
+[0m[INFO] [1779105370.507007873, 1517156198.888657809]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105370.514754206, 1517156198.898713483]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105370.522591730, 1517156198.908770214]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105370.531015809, 1517156198.908770214]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105370.539218208, 1517156198.918786049]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105370.787315728, 1517156199.170307867]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105370.792175081, 1517156199.170307867]: vtx=6, rel_pose=(3.0,-1.0,-0.17), dist=3.1, IoU=0.501, total_vtx=7[0m
+[0m[INFO] [1779105370.995161009, 1517156199.381623785]: Starting localization from stamp 1517156199.141[0m
+[0m[INFO] [1779105371.006707477, 1517156199.391683483]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105371.015371758, 1517156199.401739272]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105371.022727357, 1517156199.401739272]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105371.029787606, 1517156199.411870277]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105371.039132961, 1517156199.421929916]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105371.188183117, 1517156199.572811354]: vtx=6, rel_pose=(3.4,-1.1,-0.07), dist=3.5, IoU=0.500, total_vtx=7[0m
+[0m[INFO] [1779105371.492333491, 1517156199.874650767]: vtx=6, rel_pose=(4.0,-1.1,0.06), dist=4.1, IoU=0.487, total_vtx=7[0m
+[0m[INFO] [1779105371.498522929, 1517156199.884707971]: Starting localization from stamp 1517156199.841[0m
+[0m[INFO] [1779105371.509200208, 1517156199.894761965]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105371.517085052, 1517[33m[WARN] [1779105371.856399812, 1517156200.236765224]: [THROTTLE] Skipping PCD frame (stamp=1517156200.241, diff=0.100s, skipped_total=431, queue=1, gt_buf=0, odom_buf=589)[0m
+156199.894761965]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105371.528558934, 1517156199.914901433]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105371.539954020, 1517156199.924971262]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105371.548292256, 1517156199.935025166]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105371.799025929, 1517156200.176395066]: vtx=6, rel_pose=(4.3,-1.0,0.22), dist=4.5, IoU=0.526, total_vtx=7[0m
+[0m[INFO] [1779105371.991388050, 1517156200.377535055]: Starting localization from stamp 1517156200.141[0m
+[0m[INFO] [1779105372.001227176, 1517156200.387593159]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105372.011291647, 1517156200.397648876]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105372.019184434, 1517156200.397648876]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105372.027329778, 1517156200.407706596]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105372.035460077, 1517156200.417767394]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105372.295943792, 1517156200.679389262]: vtx=6, rel_pose=(4.8,-0.9,0.47), dist=4.9, IoU=0.540, total_vtx=7[0m
+[0m[INFO] [1779105372.495194337, 1517156200.881103645]: Starting localization from stamp 1517156200.541[0m
+[0m[INFO] [1779105372.504543288, 1517156200.891194463]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105372.515902506, 1517156200.901252806]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105372.523880480, 1517156200.901252806]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105372.531162569, 1517156200.911310069]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105372.540468758, 1517156200.921372497]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105372.596437255, 1517156200.981716621]: Too far from location center (dist=5.27 > 5.00)[0m
+[0m[INFO] [1779105372.596455369, 1517156200.981716621]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1779105372.596463516, 1517156200.981716621]: 
+
+
+ ADD NEW VERTEX (7.0, 8.4, 2.63) idx=7 
+
+
+[0m
+[0m[INFO] [1779105372.596572644, 1517156200.981716621]: [NEWVTX] new_id=7 global_pose=(6.9940,8.4174,2.6314) last_vtx=6 last_gpose=(8.4758,3.3650,1.9793) pose_stamped=(5.2253,-0.6471,0.6521) rel_pose_vcur=(5.2253,-0.6471,0.6521) n_localized=0 n_rel_poses=0 has_vcur_to_loc=1[0m
+[0m[INFO] [1779105372.596581875, 1517156200.981716621]: 
+Add edge (8.5,3.4)->(7.0,8.4) rel_pose=(5.2,-0.6,0.65)
+[0m
+[0m[INFO] [1779105372.596588483, 1517156200.981716621]: Add edge (6)->(7) rel_pose=(5.23,-0.65,0.65) dist=5.27[0m
+[0m[INFO] [1779105372.596594979, 1517156200.981716621]: vtx=7, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.521, total_vtx=8[0m
+[0m[INFO] [1779105373.001261678, 1517156201.384169880]: vtx=7, rel_pose=(0.5,0.0,0.14), dist=0.5, IoU=0.777, total_vtx=8[0m
+[0m[INFO] [1779105373.002588232, 1517156201.384169880]: Starting localization from stamp 1517156201.341[0m
+[0m[INFO] [1779105373.017966182, 1517156201.404286626]: [INFER] gridRegistration type=localization score=0.754 trans=(235.47,-75.77,-0.784 rad)[0m
+[0m[INFO] [1779105373.017986684, 1517156201.404286626]: Vertex 6 registration score: 0.754[0m
+[0m[INFO] [1779105373.026150054, 1517156201.404286626]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105373.033774119, 1517156201.414340127]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105373.048055240, 1517156201.434477806]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105373.056738559, 1517156201.434477806]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105373.296057966, 1517156201.675887780]: vtx=7, rel_pose=(0.6,0.0,0.16), dist=0.6, IoU=0.768, total_vtx=8[0m
+[0m[INFO] [1779105373.500136205, 1517156201.887164373]: Starting localization from stamp 1517156201.641[0m
+[0m[INFO] [1779105373.517831349, 1517156201.897222370]: [INFER] gridRegistration type=localization score=0.765 trans=(238.33,-76.86,-0.798 rad)[0m
+[0m[INFO] [1779105373.517856965, 1517156201.897222370]: Vertex 6 registration score: 0.765[0m
+[0m[INFO] [17[33m[WARN] [1779105373.856466870, 1517156202.239238215]: [THROTTLE] Skipping PCD frame (stamp=1517156202.241, diff=0.201s, skipped_total=446, queue=1, gt_buf=0, odom_buf=609)[0m
+[33m[WARN] [1779105375.056568557, 1517156203.436392854]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=621). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105375.956976308, 1517156204.333755800]: [THROTTLE] Skipping PCD frame (stamp=1517156204.341, diff=0.200s, skipped_total=461, queue=1, gt_buf=0, odom_buf=630)[0m
+79105373.526052288, 1517156201.907283958]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105373.534292275, 1517156201.917340810]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105373.546199744, 1517156201.927395663]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105373.554780442, 1517156201.937455069]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105373.788519587, 1517156202.168844899]: vtx=7, rel_pose=(0.6,0.0,0.10), dist=0.6, IoU=0.689, total_vtx=8[0m
+[0m[INFO] [1779105373.789890321, 1517156202.168844899]: Processed 163 frames[0m
+[0m[INFO] [1779105373.995158894, 1517156202.380063050]: vtx=7, rel_pose=(0.6,0.0,-0.10), dist=0.6, IoU=0.669, total_vtx=8[0m
+[0m[INFO] [1779105373.996371860, 1517156202.380063050]: Starting localization from stamp 1517156202.341[0m
+[0m[INFO] [1779105374.010925266, 1517156202.390118257]: [INFER] gridRegistration type=localization score=0.759 trans=(144.01,-60.45,-0.420 rad)[0m
+[0m[INFO] [1779105374.010963843, 1517156202.390118257]: Vertex 6 registration score: 0.759[0m
+[0m[INFO] [1779105374.022979736, 1517156202.400180660]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105374.033118753, 1517156202.410240213]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105374.041158190, 1517156202.420294075]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105374.051805241, 1517156202.430357229]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105374.292595837, 1517156202.671781238]: vtx=7, rel_pose=(0.6,0.1,-0.34), dist=0.6, IoU=0.665, total_vtx=8[0m
+[0m[INFO] [1779105374.496730891, 1517156202.883057031]: Starting localization from stamp 1517156202.641[0m
+[0m[INFO] [1779105374.508105067, 1517156202.893111038]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105374.519548360, 1517156202.903158765]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105374.528428377, 1517156202.913215511]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105374.536253916, 1517156202.923269742]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105374.544715293, 1517156202.923269742]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105374.696476390, 1517156203.074248982]: vtx=7, rel_pose=(0.6,-0.0,-0.75), dist=0.6, IoU=0.642, total_vtx=8[0m
+[0m[INFO] [1779105374.999367660, 1517156203.386108101]: Starting localization from stamp 1517156203.041[0m
+[0m[INFO] [1779105375.008755308, 1517156203.386108101]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105375.019419217, 1517156203.406226665]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105375.027665580, 1517156203.406226665]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105375.035596881, 1517156203.416282904]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105375.043196466, 1517156203.426337754]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105375.196824297, 1517156203.577190142]: vtx=7, rel_pose=(0.6,-0.0,-1.18), dist=0.6, IoU=0.635, total_vtx=8[0m
+[0m[INFO] [1779105375.495327529, 1517156203.880784856]: vtx=7, rel_pose=(0.6,-0.0,-1.66), dist=0.6, IoU=0.618, total_vtx=8[0m
+[0m[INFO] [1779105375.496545942, 1517156203.880784856]: Starting localization from stamp 1517156203.841[0m
+[0m[INFO] [1779105375.506094096, 1517156203.890838459]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105375.519261755, 1517156203.900897946]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105375.529567070, 1517156203.910955224]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105375.536654126, 1517156203.921008851]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105375.546939947, 1517156203.931065348]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105375.790394982, 1517156204.172572507]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105375.795523196, 1517156204.172572507]: vtx=7, rel_pose=(0.6,-0.1,-1.99), dist=0.6, IoU=0.624, total_vtx=8[0m
+[0m[INFO] [1779105375.997780190, 1517156204.384785387]: Starting localization from stamp 1517156204.141[0m
+[0m[INFO] [1779105376.009713863, 151715620[33m[WARN] [1779105378.056704736, 1517156206.437764329]: [THROTTLE] Skipping PCD frame (stamp=1517156206.440, diff=0.100s, skipped_total=476, queue=1, gt_buf=0, odom_buf=651)[0m
+4.394840385]: [INFER] gridRegistration type=localization score=0.683 trans=(47.21,352.05,1.532 rad)[0m
+[0m[INFO] [1779105376.009744867, 1517156204.394840385]: Vertex 6 registration score: 0.683[0m
+[0m[INFO] [1779105376.022033991, 1517156204.404903242]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105376.034581431, 1517156204.414962057]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105376.042480287, 1517156204.425020944]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105376.051139174, 1517156204.435077609]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105376.195938079, 1517156204.575953442]: vtx=7, rel_pose=(0.5,-0.3,-2.44), dist=0.6, IoU=0.611, total_vtx=8[0m
+[0m[INFO] [1779105376.490735642, 1517156204.877762677]: Starting localization from stamp 1517156204.541[0m
+[0m[INFO] [1779105376.499702003, 1517156204.877762677]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105376.508302497, 1517156204.887820196]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105376.516763450, 1517156204.897876737]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105376.526399393, 1517156204.907937871]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105376.533820250, 1517156204.918001457]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105376.688803267, 1517156205.068956227]: vtx=7, rel_pose=(0.5,-0.3,-2.76), dist=0.6, IoU=0.686, total_vtx=8[0m
+[0m[INFO] [1779105376.997946318, 1517156205.381081109]: vtx=7, rel_pose=(0.4,-0.4,-2.77), dist=0.5, IoU=0.749, total_vtx=8[0m
+[0m[INFO] [1779105376.999195013, 1517156205.381081109]: Starting localization from stamp 1517156205.341[0m
+[0m[INFO] [1779105377.011705321, 1517156205.391136126]: [INFER] gridRegistration type=localization score=0.746 trans=(186.19,422.34,2.163 rad)[0m
+[0m[INFO] [1779105377.011731476, 1517156205.391136126]: Vertex 6 registration score: 0.746[0m
+[0m[INFO] [1779105377.020550244, 1517156205.401197095]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105377.029653328, 1517156205.411263028]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105377.037390219, 1517156205.421318489]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105377.044089318, 1517156205.421318489]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105377.296747474, 1517156205.683201000]: vtx=7, rel_pose=(0.3,-0.4,-2.68), dist=0.5, IoU=0.763, total_vtx=8[0m
+[0m[INFO] [1779105377.498594575, 1517156205.884603302]: Starting localization from stamp 1517156205.641[0m
+[0m[INFO] [1779105377.513032176, 1517156205.894655950]: [INFER] gridRegistration type=localization score=0.771 trans=(158.57,414.29,2.054 rad)[0m
+[0m[INFO] [1779105377.513054253, 1517156205.894655950]: Vertex 6 registration score: 0.771[0m
+[0m[INFO] [1779105377.523954124, 1517156205.904712045]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105377.534340647, 1517156205.914771172]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105377.541608880, 1517156205.924830223]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105377.549108449, 1517156205.934883494]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105377.784386146, 1517156206.166231807]: vtx=7, rel_pose=(0.1,-0.5,-2.51), dist=0.5, IoU=0.716, total_vtx=8[0m
+[0m[INFO] [1779105377.993460284, 1517156206.377394356]: vtx=7, rel_pose=(-0.1,-0.6,-2.41), dist=0.6, IoU=0.695, total_vtx=8[0m
+[0m[INFO] [1779105377.994702925, 1517156206.377394356]: Starting localization from stamp 1517156206.341[0m
+[0m[INFO] [1779105378.004359227, 1517156206.387451777]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105378.013827215, 1517156206.397507582]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105378.022509789, 1517156206.407564379]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105378.032630475, 1517156206.417653567]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105378.041961329, 1517156206.427711249]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105378.393044185, 1517156206.779810434]: vtx=7, rel_pose=(-0.2,-0.8,-2.29),[33m[WARN] [1779105380.056418768, 1517156208.439987540]: [THROTTLE] Skipping PCD frame (stamp=1517156208.440, diff=0.299s, skipped_total=491, queue=1, gt_buf=0, odom_buf=671)[0m
+[33m[WARN] [1779105380.157752224, 1517156208.540548565]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=672). Falling back to /odom for global_pose.[0m
+ dist=0.8, IoU=0.687, total_vtx=8[0m
+[0m[INFO] [1779105378.494254636, 1517156206.880433428]: Starting localization from stamp 1517156206.741[0m
+[0m[INFO] [1779105378.512733990, 1517156206.890488373]: [INFER] gridRegistration type=localization score=0.799 trans=(71.06,361.94,1.666 rad)[0m
+[0m[INFO] [1779105378.512768545, 1517156206.890488373]: Vertex 6 registration score: 0.799[0m
+[0m[INFO] [1779105378.522678262, 1517156206.900549924]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105378.533655183, 1517156206.920695118]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105378.543667653, 1517156206.930748380]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105378.550934365, 1517156206.930748380]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105378.794243279, 1517156207.172192728]: vtx=7, rel_pose=(-0.4,-1.0,-2.23), dist=1.1, IoU=0.661, total_vtx=8[0m
+[0m[INFO] [1779105378.996732674, 1517156207.383386053]: Starting localization from stamp 1517156207.141[0m
+[0m[INFO] [1779105379.013352670, 1517156207.393443994]: [INFER] gridRegistration type=localization score=0.791 trans=(60.90,351.61,1.622 rad)[0m
+[0m[INFO] [1779105379.013393337, 1517156207.393443994]: Vertex 6 registration score: 0.791[0m
+[0m[INFO] [1779105379.022618348, 1517156207.403782172]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105379.030835417, 1517156207.413840434]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105379.041158715, 1517156207.423904052]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105379.049076985, 1517156207.433959342]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105379.195603172, 1517156207.574769460]: vtx=7, rel_pose=(-0.5,-1.2,-2.21), dist=1.3, IoU=0.657, total_vtx=8[0m
+[0m[INFO] [1779105379.496080561, 1517156207.876751866]: vtx=7, rel_pose=(-0.7,-1.4,-2.23), dist=1.6, IoU=0.637, total_vtx=8[0m
+[0m[INFO] [1779105379.500033890, 1517156207.886785648]: Starting localization from stamp 1517156207.840[0m
+[0m[INFO] [1779105379.515179448, 1517156207.896843755]: [INFER] gridRegistration type=localization score=0.736 trans=(70.48,351.44,1.662 rad)[0m
+[0m[INFO] [1779105379.515202248, 1517156207.896843755]: Vertex 6 registration score: 0.736[0m
+[0m[INFO] [1779105379.524077751, 1517156207.906903353]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105379.532411974, 1517156207.916959426]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105379.543613087, 1517156207.927025515]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105379.552050188, 1517156207.937082603]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105379.799686843, 1517156208.178514883]: vtx=7, rel_pose=(-0.9,-1.6,-2.36), dist=1.9, IoU=0.613, total_vtx=8[0m
+[0m[INFO] [1779105379.993165293, 1517156208.379648190]: Starting localization from stamp 1517156208.141[0m
+[0m[INFO] [1779105380.006821141, 1517156208.389703884]: [INFER] gridRegistration type=localization score=0.726 trans=(103.06,374.74,1.841 rad)[0m
+[0m[INFO] [1779105380.006878436, 1517156208.389703884]: Vertex 6 registration score: 0.726[0m
+[0m[INFO] [1779105380.017715545, 1517156208.399764175]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105380.025556922, 1517156208.409823381]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105380.033408365, 1517156208.419877029]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105380.044068300, 1517156208.429933328]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105380.292631513, 1517156208.671378220]: vtx=7, rel_pose=(-1.1,-1.8,-2.44), dist=2.1, IoU=0.660, total_vtx=8[0m
+[0m[INFO] [1779105380.496360610, 1517156208.882571518]: Starting localization from stamp 1517156208.541[0m
+[0m[INFO] [1779105380.512890318, 1517156208.892626413]: [INFER] gridRegistration type=localization score=0.771 trans=(106.30,374.27,1.844 rad)[0m
+[0m[INFO] [1779105380.512989665, 1517156208.892626413]: Vertex 6 registration score: 0.771[0m
+[0m[INFO] [1779105380.522838780, 1517156208.902683420]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105[33m[WARN] [1779105382.055452823, 1517156210.442414261]: [THROTTLE] Skipping PCD frame (stamp=1517156210.440, diff=0.300s, skipped_total=506, queue=1, gt_buf=0, odom_buf=691)[0m
+380.530419870, 1517156208.912743031]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105380.540537037, 1517156208.922817328]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105380.553053734, 1517156208.932872378]: [INFER] gridRegistration type=localization score=0.452 trans=(-37.88,206.98,0.833 rad)[0m
+[0m[INFO] [1779105380.553073710, 1517156208.932872378]: Vertex 3 registration score: 0.452[0m
+[0m[INFO] [1779105380.596994051, 1517156208.983106652]: vtx=7, rel_pose=(-1.3,-2.0,-2.46), dist=2.4, IoU=0.670, total_vtx=8[0m
+[0m[INFO] [1779105380.991179620, 1517156209.375641311]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105380.995698602, 1517156209.375641311]: vtx=7, rel_pose=(-1.5,-2.2,-2.47), dist=2.7, IoU=0.663, total_vtx=8[0m
+[0m[INFO] [1779105380.999077608, 1517156209.385694235]: Starting localization from stamp 1517156209.341[0m
+[0m[INFO] [1779105381.012583353, 1517156209.395721944]: [INFER] gridRegistration type=localization score=0.558 trans=(112.87,368.11,1.857 rad)[0m
+[0m[INFO] [1779105381.012641410, 1517156209.395721944]: Vertex 6 registration score: 0.558[0m
+[0m[INFO] [1779105381.024513541, 1517156209.405780741]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105381.032315518, 1517156209.415836758]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105381.039965342, 1517156209.425923223]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105381.049846087, 1517156209.435992191]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105381.405307550, 1517156209.788186535]: vtx=7, rel_pose=(-1.7,-2.3,-2.43), dist=2.8, IoU=0.571, total_vtx=8[0m
+[0m[INFO] [1779105381.492261040, 1517156209.878773043]: Starting localization from stamp 1517156209.741[0m
+[0m[INFO] [1779105381.501741667, 1517156209.888856941]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105381.510211767, 1517156209.888856941]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105381.520090608, 1517156209.898946392]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105381.528331149, 1517156209.909011723]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105381.535497193, 1517156209.919068685]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105381.903492423, 1517156210.281467945]: vtx=7, rel_pose=(-1.9,-2.5,-2.41), dist=3.1, IoU=0.452, total_vtx=8[0m
+[0m[INFO] [1779105381.995973327, 1517156210.382048017]: Starting localization from stamp 1517156210.141[0m
+[0m[INFO] [1779105382.005557167, 1517156210.392105040]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105382.015997726, 1517156210.402191463]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105382.025996555, 1517156210.412248251]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105382.036551022, 1517156210.422301686]: [INFER] gridRegistration type=localization score=0.381 trans=(-29.35,223.17,0.915 rad)[0m
+[0m[INFO] [1779105382.036572995, 1517156210.422301686]: Vertex 3 registration score: 0.381[0m
+[0m[INFO] [1779105382.044839395, 1517156210.422301686]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105382.193999524, 1517156210.573208935]: vtx=7, rel_pose=(-2.1,-2.7,-2.39), dist=3.4, IoU=0.367, total_vtx=8[0m
+[0m[INFO] [1779105382.500120476, 1517156210.886570889]: Starting localization from stamp 1517156210.541[0m
+[0m[INFO] [1779105382.509111933, 1517156210.886570889]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105382.520624910, 1517156210.906716810]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105382.530259477, 1517156210.916801002]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105382.538136010, 1517156210.916801002]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105382.545384550, 1517156210.926857877]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105382.596567010, 1517156210.977162677]: Low IoU 0.280 < 0.300[0m
+[0m[INFO] [1779105382.596586495, 1517156210.977162677]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1779105382.596595234, 1517156210.977162677]: 
+
+
+ ADD NEW VERTEX (10.5, 9.8, 0.24) idx=8 [33m[WARN] [1779105384.157943258, 1517156212.537053870]: [THROTTLE] Skipping PCD frame (stamp=1517156212.540, diff=0.101s, skipped_total=521, queue=1, gt_buf=0, odom_buf=712)[0m
+
+
+
+[0m
+[0m[INFO] [1779105382.596716472, 1517156210.977162677]: [NEWVTX] new_id=8 global_pose=(10.4798,9.7596,0.2358) last_vtx=7 last_gpose=(6.9940,8.4174,2.6314) pose_stamped=(-2.3865,-2.8735,-2.3956) rel_pose_vcur=(-2.3865,-2.8735,-2.3956) n_localized=0 n_rel_poses=0 has_vcur_to_loc=1[0m
+[0m[INFO] [1779105382.596734016, 1517156210.977162677]: 
+Add edge (7.0,8.4)->(10.5,9.8) rel_pose=(-2.4,-2.9,-2.40)
+[0m
+[0m[INFO] [1779105382.596745441, 1517156210.977162677]: Add edge (7)->(8) rel_pose=(-2.39,-2.87,-2.40) dist=3.74[0m
+[0m[INFO] [1779105382.596757257, 1517156210.977162677]: vtx=8, rel_pose=(-0.0,0.0,0.00), dist=0.0, IoU=0.280, total_vtx=9[0m
+[0m[INFO] [1779105383.089492497, 1517156211.470106195]: vtx=8, rel_pose=(0.3,-0.0,-0.15), dist=0.3, IoU=0.622, total_vtx=9[0m
+[0m[INFO] [1779105383.090731684, 1517156211.470106195]: Starting localization from stamp 1517156211.341[0m
+[0m[INFO] [1779105383.099473444, 1517156211.480168528]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105383.108384927, 1517156211.490224495]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105383.118656756, 1517156211.500278166]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105383.128736534, 1517156211.510338640]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105383.136183732, 1517156211.520394785]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105383.395873643, 1517156211.782043584]: vtx=8, rel_pose=(0.5,-0.1,-0.42), dist=0.5, IoU=0.579, total_vtx=9[0m
+[0m[INFO] [1779105383.496010903, 1517156211.883043451]: Starting localization from stamp 1517156211.740[0m
+[0m[INFO] [1779105383.504514339, 1517156211.883043451]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105383.513952330, 1517156211.893101956]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105383.525128001, 1517156211.903163596]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105383.532619654, 1517156211.913222736]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105383.540038188, 1517156211.923277445]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105383.694890634, 1517156212.074191959]: vtx=8, rel_pose=(0.6,-0.1,-0.64), dist=0.6, IoU=0.538, total_vtx=9[0m
+[0m[INFO] [1779105383.999435328, 1517156212.386183626]: Starting localization from stamp 1517156212.041[0m
+[0m[INFO] [1779105384.008356584, 1517156212.386183626]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105384.019027523, 1517156212.396237608]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105384.030583982, 1517156212.416382520]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105384.039098236, 1517156212.416382520]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105384.047238605, 1517156212.426441065]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105384.092345323, 1517156212.476723729]: vtx=8, rel_pose=(0.8,-0.2,-0.93), dist=0.8, IoU=0.509, total_vtx=9[0m
+[0m[INFO] [1779105384.093693451, 1517156212.476723729]: Processed 191 frames[0m
+[0m[INFO] [1779105384.488712067, 1517156212.869028258]: vtx=8, rel_pose=(0.8,-0.3,-1.14), dist=0.9, IoU=0.488, total_vtx=9[0m
+[0m[INFO] [1779105384.492379450, 1517156212.879086257]: Starting localization from stamp 1517156212.740[0m
+[0m[INFO] [1779105384.506255988, 1517156212.889141510]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105384.514783699, 1517156212.899195767]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105384.524553960, 1517156212.909260673]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105384.534060642, 1517156212.919320475]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105384.542419247, 1517156212.929380825]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105384.797089741, 1517156213.180971485]: vtx=8, rel_pose=(0.9,-0.5,-1.42), dist=1.0, IoU=0.346, total_vtx=9[0m
+[0m[INFO] [1779105384.995692823, 1517156213.382155584]: Starting localization from stamp 1517156213.140[0m
+[0m[INFO] [1779105385.003698973, 1517156213.382155584]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105385.011[33m[WARN] [1779105385.456113864, 1517156213.834868112]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=725). Falling back to /odom for global_pose.[0m
+[33m[WARN] [1779105386.255413501, 1517156214.633741141]: [THROTTLE] Skipping PCD frame (stamp=1517156214.640, diff=0.099s, skipped_total=536, queue=1, gt_buf=0, odom_buf=733)[0m
+402183, 1517156213.392210389]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105385.023763494, 1517156213.402267862]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105385.033347339, 1517156213.412331789]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1779105385.041440744, 1517156213.422388124]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105385.194122126, 1517156213.573357386]: Low IoU 0.247 < 0.300[0m
+[0m[INFO] [1779105385.194149445, 1517156213.573357386]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1779105385.194162038, 1517156213.573357386]: 
+
+
+ ADD NEW VERTEX (11.5, 9.4, -1.41) idx=9 
+
+
+[0m
+[0m[INFO] [1779105385.194301817, 1517156213.573357386]: [NEWVTX] new_id=9 global_pose=(11.5071,9.3755,-1.4054) last_vtx=8 last_gpose=(10.4798,9.7596,0.2358) pose_stamped=(0.9091,-0.6135,-1.6412) rel_pose_vcur=(0.9091,-0.6135,-1.6412) n_localized=0 n_rel_poses=0 has_vcur_to_loc=1[0m
+[0m[INFO] [1779105385.194314447, 1517156213.573357386]: 
+Add edge (10.5,9.8)->(11.5,9.4) rel_pose=(0.9,-0.6,-1.64)
+[0m
+[0m[INFO] [1779105385.194326950, 1517156213.573357386]: Add edge (8)->(9) rel_pose=(0.91,-0.61,-1.64) dist=1.10[0m
+[0m[INFO] [1779105385.194339884, 1517156213.573357386]: vtx=9, rel_pose=(-0.0,0.0,0.00), dist=0.0, IoU=0.247, total_vtx=10[0m
+[0m[INFO] [1779105385.495591987, 1517156213.875091911]: vtx=9, rel_pose=(0.1,0.0,-0.12), dist=0.1, IoU=0.863, total_vtx=10[0m
+[0m[INFO] [1779105385.498453308, 1517156213.885152661]: Starting localization from stamp 1517156213.841[0m
+[0m[INFO] [1779105385.512157542, 1517156213.895237404]: [INFER] gridRegistration type=localization score=0.654 trans=(60.51,392.69,1.829 rad)[0m
+[0m[INFO] [1779105385.512177187, 1517156213.895237404]: Vertex 8 registration score: 0.654[0m
+[0m[INFO] [1779105385.519635675, 1517156213.905293189]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105385.529698477, 1517156213.915346723]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105385.539105817, 1517156213.925436775]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105385.545894227, 1517156213.925436775]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105385.997058321, 1517156214.382351057]: vtx=9, rel_pose=(0.2,-0.0,-0.25), dist=0.2, IoU=0.766, total_vtx=10[0m
+[0m[INFO] [1779105385.998627590, 1517156214.382351057]: Starting localization from stamp 1517156214.240[0m
+[0m[INFO] [1779105386.013099843, 1517156214.392407495]: [INFER] gridRegistration type=localization score=0.499 trans=(19.02,359.44,1.630 rad)[0m
+[0m[INFO] [1779105386.013122962, 1517156214.392407495]: Vertex 8 registration score: 0.499[0m
+[0m[INFO] [1779105386.021447058, 1517156214.402469345]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105386.033067864, 1517156214.412538452]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105386.041931667, 1517156214.422602859]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105386.048517208, 1517156214.432660126]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105386.194592686, 1517156214.573402176]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105386.199960902, 1517156214.583463361]: vtx=9, rel_pose=(0.2,-0.0,-0.26), dist=0.2, IoU=0.739, total_vtx=10[0m
+[0m[INFO] [1779105386.498889000, 1517156214.885292421]: Starting localization from stamp 1517156214.540[0m
+[0m[INFO] [1779105386.509335099, 1517156214.895345743]: [INFER] gridRegistration type=localization score=0.648 trans=(61.64,391.97,1.837 rad)[0m
+[0m[INFO] [1779105386.509354552, 1517156214.895345743]: Vertex 8 registration score: 0.648[0m
+[0m[INFO] [1779105386.516598432, 1517156214.895345743]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105386.523448657, 1517156214.905403229]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105386.533836684, 1517156214.915462960]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105386.541210547, 1517156214.925519857]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105386.597911253, 1517156214.975829851]: vtx=9, rel_pose=(0.2,-0.0,-0.22), dist=0.2, I[INFO] [1779105364.050700, 1517156192.427795]: [INFER-PY] gridRegistration type=localization score=0.377 trans=(24.08,-32.05,-0.262 rad)
+[INFO] [1779105364.287175, 1517156192.669163]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105364.591321, 1517156192.970984]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105364.990907, 1517156193.373747]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105365.487859, 1517156193.867365]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105365.790391, 1517156194.169128]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105366.086543, 1517156194.470927]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105366.490579, 1517156194.873812]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105366.980236, 1517156195.366579]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105367.187710, 1517156195.567925]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105367.526120, 1517156195.909932]: [INFER-PY] gridRegistration type=localization score=0.351 trans=(474.41,287.84,-2.920 rad)
+[INFO] [1779105367.589681, 1517156195.970282]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105367.885516, 1517156196.272183]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105368.285603, 1517156196.664821]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105368.585584, 1517156196.966598]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105368.988336, 1517156197.368935]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105369.389744, 1517156197.771521]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105369.884681, 1517156198.264642]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105370.189190, 1517156198.566516]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105370.486125, 1517156198.868498]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105370.785157, 1517156199.170308]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105371.181478, 1517156199.562758]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105371.485663, 1517156199.864598]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105371.791758, 1517156200.176395]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105372.289345, 1517156200.669331]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105372.589687, 1517156200.971660]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105372.994143, 1517156201.374113]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105373.016742, 1517156201.394228]: [INFER-PY] gridRegistration type=localization score=0.754 trans=(235.47,-75.77,-0.784 rad)
+[INFO] [1779105373.289346, 1517156201.675888]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105373.516725, 1517156201.897222]: [INFER-PY] gridRegistration type=localization score=0.765 trans=(238.33,-76.86,-0.798 rad)
+[INFO] [1779105373.778138, 1517156202.158783]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105373.987825, 1517156202.370006]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105374.009119, 1517156202.390118]: [INFER-PY] gridRegistration type=localization score=0.759 trans=(144.01,-60.45,-0.420 rad)
+[INFO] [1779105374.285332, 1517156202.671781]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105374.689611, 1517156203.074249]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105375.186468, 1517156203.567136]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105375.485729, 1517156203.870726]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105375.787886, 1517156204.172573]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105376.008757, 1517156204.394840]: [INFER-PY] gridRegistration type=localization score=0.683 trans=(47.21,352.05,1.532 rad)
+[INFO] [1779105376.187199, 1517156204.565869]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105376.679201, 1517156205.058892]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105376.989025, 1517156205.371022]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105377.010499, 1517156205.391136]: [INFER-PY] gridRegistration type=localization score=0.746 trans=(186.19,422.34,2.163 rad)
+[INFO] [1779105377.286286, 1517156205.672950]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105377.511959, 1517156205.894656]: [INFER-PY] gridRegistration type=localization score=0.771 trans=(158.57,414.29,2.054 rad)
+[INFO] [1779105377.776996, 1517156206.156177]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105377.985689, 1517156206.367349]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105378.384845, 1517156206.769752]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105378.511649, 1517156206.890488]: [INFER-PY] gridRegistration type=localization score=0.799 trans=(71.06,361.94,1.666 rad)
+[INFO] [1779105378.786803, 1517156207.172193]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105379.012264, 1517156207.393444]: [INFER-PY] gridRegistration type=localization score=0.791 trans=(60.90,351.61,1.622 rad)
+[INFO] [1779105379.188734, 1517156207.574769]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105379.489016, 1517156207.866697]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105379.514015, 1517156207.896844]: [INFER-PY] gridRegistration type=localization score=0.736 trans=(70.48,351.44,1.662 rad)
+[INFO] [1779105379.791895, 1517156208.178515]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105380.005336, 1517156208.389704]: [INFER-PY] gridRegistration type=localization score=0.726 trans=(103.06,374.74,1.841 rad)
+[INFO] [1779105380.285513, 1517156208.671378]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105380.511489, 1517156208.892627]: [INFER-PY] gridRegistration type=localization score=0.771 trans=(106.30,374.27,1.844 rad)
+[INFO] [1779105380.551984, 1517156208.932872]: [INFER-PY] gridRegistration type=localization score=0.452 trans=(-37.88,206.98,0.833 rad)
+[INFO] [1779105380.590356, 1517156208.973101]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105380.988957, 1517156209.375641]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105381.010764, 1517156209.395722]: [INFER-PY] gridRegistration type=localization score=0.558 trans=(112.87,368.11,1.857 rad)
+[INFO] [1779105381.397576, 1517156209.778124]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105381.896351, 1517156210.281468]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105382.035470, 1517156210.422302]: [INFER-PY] gridRegistration type=localization score=0.381 trans=(-29.35,223.17,0.915 rad)
+[INFO] [1779105382.186960, 1517156210.573209]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105382.589703, 1517156210.967104]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105383.080844, 1517156211.460050]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105383.386618, 1517156211.771983]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105383.685007, 1517156212.064138]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105384.082492, 1517156212.466638]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105384.479892, 1517156212.858936]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105384.784962, 1517156213.170914]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105385.184360, 1517156213.563300]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105385.485214, 1517156213.865037]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105385.511126, 1517156213.895237]: [INFER-PY] gridRegistration type=localization score=0.654 trans=(60.51,392.69,1.829 rad)
+[INFO] [1779105385.986467, 1517156214.369744]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105386.011963, 1517156214.392407]: [INFER-PY] gridRegistration type=localization score=0.499 trans=(19.02,359.44,1.630 rad)
+[INFO] [1779105386.190115, 1517156214.573402]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105386.508346, 1517156214.885293]: [INFER-PY] gridRegistration type=localization score=0.648 trans=(61.64,391.97,1.837 rad)
+[INFO] [1779105386.588119, 1517156214.965771]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105386.988379, 1517156215.368070]: [INFER-PY] getDescriptor OK, dim=256
+[INFO] [1779105387.010384, 1517156215.388187]: [INFER-PY] gridRegistration type=localization score=0.590 trans=(12.09,354.73,1.590 rad)
+[INFO] [1779105387.477865, 1517156215.860962]: [INFER-PY] getDescriptor OK, dim=256
+[33m[WARN] [1779105388.255669096, 1517156216.635524767]: [THROTTLE] Skipping PCD frame (stamp=1517156216.640, diff=0.200s, skipped_total=551, queue=1, gt_buf=0, odom_buf=753)[0m
+oU=0.707, total_vtx=10[0m
+[0m[INFO] [1779105386.998564043, 1517156215.378129528]: vtx=9, rel_pose=(0.2,-0.0,-0.10), dist=0.2, IoU=0.714, total_vtx=10[0m
+[0m[INFO] [1779105386.999780557, 1517156215.378129528]: Starting localization from stamp 1517156215.340[0m
+[0m[INFO] [1779105387.011370028, 1517156215.398241209]: [INFER] gridRegistration type=localization score=0.590 trans=(12.09,354.73,1.590 rad)[0m
+[0m[INFO] [1779105387.011389735, 1517156215.398241209]: Vertex 8 registration score: 0.590[0m
+[0m[INFO] [1779105387.018322761, 1517156215.398241209]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105387.024675297, 1517156215.408297864]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105387.033467809, 1517156215.418355750]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105387.041798919, 1517156215.428414910]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105387.485072965, 1517156215.871015710]: vtx=9, rel_pose=(0.2,-0.0,0.02), dist=0.2, IoU=0.720, total_vtx=10[0m
+[0m[INFO] [1779105387.494957749, 1517156215.881074213]: Starting localization from stamp 1517156215.740[0m
+[0m[INFO] [1779105387.510106875, 1517156215.891132455]: [INFER] gridRegistration type=localization score=0.518 trans=(-14.61,322.44,1.422 rad)[0m
+[0m[INFO] [1779105387.510135559, 1517156215.891132455]: Vertex 8 registration score: 0.518[0m
+[0m[INFO] [1779105387.520596197, 1517156215.901189811]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105387.528115793, 1517156215.911246452]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105387.537445056, 1517156215.921304279]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105387.544642658, 1517156215.931361539]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105387.693257581, 1517156216.072225178]: vtx=9, rel_pose=(0.2,-0.0,0.06), dist=0.2, IoU=0.758, total_vtx=10[0m
+[0m[INFO] [1779105387.998163960, 1517156216.384043402]: Starting localization from stamp 1517156216.040[0m
+[0m[INFO] [1779105388.011070706, 1517156216.394096928]: [INFER] gridRegistration type=localization score=0.507 trans=(-13.50,323.43,1.429 rad)[0m
+[0m[INFO] [1779105388.011090688, 1517156216.394096928]: Vertex 8 registration score: 0.507[0m
+[0m[INFO] [1779105388.018991785, 1517156216.404150827]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105388.026244406, 1517156216.404150827]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105388.035181336, 1517156216.414204595]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105388.043419843, 1517156216.424263205]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105388.091036596, 1517156216.474536220]: vtx=9, rel_pose=(0.2,-0.0,0.05), dist=0.2, IoU=0.761, total_vtx=10[0m
+[0m[INFO] [1779105388.496816631, 1517156216.876844816]: vtx=9, rel_pose=(0.2,-0.0,0.05), dist=0.2, IoU=0.757, total_vtx=10[0m
+[0m[INFO] [1779105388.500388391, 1517156216.886903994]: Starting localization from stamp 1517156216.840[0m
+[0m[INFO] [1779105388.514659127, 1517156216.896985199]: [INFER] gridRegistration type=localization score=0.663 trans=(9.02,351.44,1.567 rad)[0m
+[0m[INFO] [1779105388.514678920, 1517156216.896985199]: Vertex 8 registration score: 0.663[0m
+[0m[INFO] [1779105388.522015339, 1517156216.907038764]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105388.529524263, 1517156216.907038764]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105388.539156643, 1517156216.917091710]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105388.549464479, 1517156216.927151791]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105388.886189799, 1517156217.269232711]: vtx=9, rel_pose=(0.2,-0.0,0.07), dist=0.2, IoU=0.720, total_vtx=10[0m
+[0m[INFO] [1779105388.993576774, 1517156217.379891608]: Starting localization from stamp 1517156217.141[0m
+[0m[INFO] [1779105389.007443286, 1517156217.389948453]: [INFER] gridRegistration type=localization score=0.616 trans=(-6.07,334.19,1.481 rad)[0m
+[0m[INFO] [1779105389.007476823, 1517156217.389948453]: Vertex 8 registration score: 0.616[0m
+[0[33m[WARN] [1779105390.255466204, 1517156218.637367492]: [THROTTLE] Skipping PCD frame (stamp=1517156218.640, diff=0.099s, skipped_total=565, queue=1, gt_buf=0, odom_buf=773)[0m
+[33m[WARN] [1779105390.557906063, 1517156218.939343933]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=776). Falling back to /odom for global_pose.[0m
+m[INFO] [1779105389.016487621, 1517156217.400005691]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105389.025958692, 1517156217.410063561]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105389.031860970, 1517156217.410063561]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105389.040114459, 1517156217.420118694]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105389.193833798, 1517156217.571004095]: vtx=9, rel_pose=(0.2,-0.1,0.15), dist=0.2, IoU=0.762, total_vtx=10[0m
+[0m[INFO] [1779105389.492991815, 1517156217.872679477]: vtx=9, rel_pose=(0.2,-0.0,0.15), dist=0.2, IoU=0.738, total_vtx=10[0m
+[0m[INFO] [1779105389.496453662, 1517156217.882747603]: Starting localization from stamp 1517156217.841[0m
+[0m[INFO] [1779105389.504486103, 1517156217.882747603]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105389.514332052, 1517156217.892801731]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105389.522727916, 1517156217.902860852]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105389.530499227, 1517156217.912919417]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105389.536922811, 1517156217.922990177]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105389.997839284, 1517156218.375806399]: vtx=9, rel_pose=(0.4,-0.0,0.15), dist=0.4, IoU=0.724, total_vtx=10[0m
+[0m[INFO] [1779105389.999351248, 1517156218.385861908]: Starting localization from stamp 1517156218.240[0m
+[0m[INFO] [1779105390.007145922, 1517156218.385861908]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105390.016813604, 1517156218.395915977]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105390.024218626, 1517156218.405980915]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105390.031151532, 1517156218.416039476]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105390.038887515, 1517156218.416039476]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105390.193351038, 1517156218.576983324]: vtx=9, rel_pose=(0.5,-0.0,0.14), dist=0.5, IoU=0.706, total_vtx=10[0m
+[0m[INFO] [1779105390.492237457, 1517156218.878926930]: Starting localization from stamp 1517156218.541[0m
+[0m[INFO] [1779105390.499858621, 1517156218.878926930]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105390.507286519, 1517156218.889013569]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105390.516721281, 1517156218.899071887]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105390.528559547, 1517156218.909136912]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105390.536442116, 1517156218.919189848]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105390.595610678, 1517156218.979578492]: vtx=9, rel_pose=(0.6,-0.0,0.13), dist=0.6, IoU=0.646, total_vtx=10[0m
+[0m[INFO] [1779105391.089706791, 1517156219.472597491]: vtx=9, rel_pose=(0.7,0.0,0.07), dist=0.7, IoU=0.648, total_vtx=10[0m
+[0m[INFO] [1779105391.090900946, 1517156219.472597491]: Starting localization from stamp 1517156219.341[0m
+[0m[INFO] [1779105391.101955666, 1517156219.482655426]: [INFER] gridRegistration type=localization score=0.600 trans=(356.77,-35.89,-1.529 rad)[0m
+[0m[INFO] [1779105391.101977309, 1517156219.482655426]: Vertex 8 registration score: 0.600[0m
+[0m[INFO] [1779105391.109990635, 1517156219.492711073]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105391.118942254, 1517156219.502823345]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105391.126410168, 1517156219.512880774]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105391.134228717, 1517156219.512880774]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105391.391903857, 1517156219.774689365]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105391.396694060, 1517156219.774689365]: vtx=9, rel_pose=(0.8,0.0,-0.01), dist=0.8, IoU=0.664, total_vtx=10[0m
+[0m[INFO] [1779105391.498742961, 1517156219.885300679]: Starting localization from stamp 1517156219.740[0m
+[0m[INFO] [1779105391.509855413, 1517156219.895358194]: [INFER] gridRegistration type=localization score=0.612[33m[WARN] [1779105392.256057762, 1517156220.639859131]: [THROTTLE] Skipping PCD frame (stamp=1517156220.640, diff=0.299s, skipped_total=580, queue=1, gt_buf=0, odom_buf=793)[0m
+ trans=(338.03,-50.65,-1.432 rad)[0m
+[0m[INFO] [1779105391.509905472, 1517156219.895358194]: Vertex 8 registration score: 0.612[0m
+[0m[INFO] [1779105391.521251275, 1517156219.905413553]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105391.532292686, 1517156219.915468459]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105391.540521320, 1517156219.925522880]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105391.548563984, 1517156219.935579839]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105391.692518897, 1517156220.076519614]: vtx=9, rel_pose=(0.9,0.0,-0.05), dist=0.9, IoU=0.625, total_vtx=10[0m
+[0m[INFO] [1779105391.995632899, 1517156220.378246023]: vtx=9, rel_pose=(1.0,-0.0,-0.07), dist=1.0, IoU=0.551, total_vtx=10[0m
+[0m[INFO] [1779105391.996834973, 1517156220.378246023]: Starting localization from stamp 1517156220.341[0m
+[0m[INFO] [1779105392.004502295, 1517156220.388301558]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105392.011781000, 1517156220.398354176]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105392.019865667, 1517156220.398354176]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105392.028281503, 1517156220.408412621]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105392.037246535, 1517156220.418473259]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105392.498032816, 1517156220.881300315]: vtx=9, rel_pose=(1.2,-0.0,-0.09), dist=1.2, IoU=0.567, total_vtx=10[0m
+[0m[INFO] [1779105392.499444975, 1517156220.881300315]: Starting localization from stamp 1517156220.740[0m
+[0m[INFO] [1779105392.507816591, 1517156220.891355679]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105392.515287171, 1517156220.901412463]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105392.523333438, 1517156220.901412463]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105392.531355024, 1517156220.911472777]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105392.539412847, 1517156220.921532142]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105392.694176487, 1517156221.072569956]: vtx=9, rel_pose=(1.4,-0.0,-0.09), dist=1.4, IoU=0.551, total_vtx=10[0m
+[0m[INFO] [1779105392.997984464, 1517156221.384666428]: Starting localization from stamp 1517156221.040[0m
+[0m[INFO] [1779105393.005836659, 1517156221.384666428]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105393.013282423, 1517156221.394751912]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105393.025211927, 1517156221.404810772]: [INFER] gridRegistration type=localization score=0.603 trans=(393.09,310.25,-2.891 rad)[0m
+[0m[INFO] [1779105393.025245222, 1517156221.404810772]: Vertex 0 registration score: 0.603[0m
+[0m[INFO] [1779105393.037693678, 1517156221.414868136]: [INFER] gridRegistration type=localization score=0.297 trans=(26.18,-12.10,-0.160 rad)[0m
+[0m[INFO] [1779105393.037715136, 1517156221.414868136]: Vertex 4 registration score: 0.297[0m
+[0m[INFO] [1779105393.045821253, 1517156221.424926991]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105393.100164462, 1517156221.485246091]: vtx=9, rel_pose=(1.7,-0.1,-0.09), dist=1.7, IoU=0.570, total_vtx=10[0m
+[0m[INFO] [1779105393.498167531, 1517156221.877752463]: vtx=9, rel_pose=(1.9,-0.1,-0.04), dist=1.9, IoU=0.502, total_vtx=10[0m
+[0m[INFO] [1779105393.499393621, 1517156221.877752463]: Starting localization from stamp 1517156221.842[0m
+[0m[INFO] [1779105393.508596125, 1517156221.887817510]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105393.516842057, 1517156221.897872420]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105393.524152488, 1517156221.907927618]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105393.534163810, 1517156221.917988925]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105393.543055623, 1517156221.928052621]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1779105393.990893064, 1517156222.370714675]: vtx=9, rel_pose=(2.2,-0.1,0.05), dist=2.2, IoU=0.492, total_vtx=10[0m
+[0m[INFO] [1779105393.9[33m[WARN] [1779105394.256666891, 1517156222.643141247]: [THROTTLE] Skipping PCD frame (stamp=1517156222.641, diff=0.102s, skipped_total=594, queue=1, gt_buf=0, odom_buf=813)[0m
+[33m[WARN] [1779105395.655286537, 1517156224.041342042]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=827). Falling back to /odom for global_pose.[0m
+94523624, 1517156222.380777607]: Starting localization from stamp 1517156222.239[0m
+[0m[INFO] [1779105394.007946651, 1517156222.391474149]: [INFER] gridRegistration type=localization score=0.525 trans=(65.33,381.62,1.879 rad)[0m
+[0m[INFO] [1779105394.007968318, 1517156222.391474149]: Vertex 8 registration score: 0.525[0m
+[0m[INFO] [1779105394.017092026, 1517156222.401555816]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105394.024355328, 1517156222.401555816]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105394.034535947, 1517156222.411614798]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105394.051864151, 1517156222.431728487]: [INFER] gridRegistration type=localization score=0.507 trans=(52.45,-9.81,-0.048 rad)[0m
+[0m[INFO] [1779105394.051888929, 1517156222.431728487]: Vertex 2 registration score: 0.507[0m
+[0m[INFO] [1779105394.195059103, 1517156222.572675335]: vtx=9, rel_pose=(2.3,-0.1,0.07), dist=2.4, IoU=0.557, total_vtx=10[0m
+[0m[INFO] [1779105394.196384121, 1517156222.582742888]: Processed 219 frames[0m
+[0m[INFO] [1779105394.498657661, 1517156222.884626085]: Starting localization from stamp 1517156222.540[0m
+[0m[INFO] [1779105394.512687727, 1517156222.894681832]: [INFER] gridRegistration type=localization score=0.621 trans=(21.40,344.07,1.660 rad)[0m
+[0m[INFO] [1779105394.512708439, 1517156222.894681832]: Vertex 8 registration score: 0.621[0m
+[0m[INFO] [1779105394.521523457, 1517156222.904735870]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105394.528699786, 1517156222.914782004]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105394.538023231, 1517156222.914782004]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105394.549810230, 1517156222.934949343]: [INFER] gridRegistration type=localization score=0.535 trans=(61.51,-16.47,-0.080 rad)[0m
+[0m[INFO] [1779105394.549836400, 1517156222.934949343]: Vertex 2 registration score: 0.535[0m
+[0m[INFO] [1779105394.598227988, 1517156222.975174624]: vtx=9, rel_pose=(2.6,-0.1,0.09), dist=2.6, IoU=0.531, total_vtx=10[0m
+[0m[INFO] [1779105394.890714794, 1517156223.276917979]: vtx=9, rel_pose=(2.8,-0.1,0.10), dist=2.8, IoU=0.533, total_vtx=10[0m
+[0m[INFO] [1779105394.991275690, 1517156223.377444541]: Starting localization from stamp 1517156223.240[0m
+[0m[INFO] [1779105395.000230501, 1517156223.377444541]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105395.010902944, 1517156223.397571770]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105395.019135273, 1517156223.397571770]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105395.027053366, 1517156223.407630777]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105395.039029958, 1517156223.417689343]: [INFER] gridRegistration type=localization score=0.088 trans=(422.52,251.04,-1.577 rad)[0m
+[0m[INFO] [1779105395.039063812, 1517156223.417689343]: Vertex 7 registration score: 0.088[0m
+[0m[INFO] [1779105395.393030074, 1517156223.779759999]: vtx=9, rel_pose=(3.1,-0.0,0.10), dist=3.1, IoU=0.549, total_vtx=10[0m
+[0m[INFO] [1779105395.493747856, 1517156223.880436409]: Starting localization from stamp 1517156223.640[0m
+[0m[INFO] [1779105395.501626219, 1517156223.880436409]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105395.512706733, 1517156223.890492304]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105395.521417528, 1517156223.900550108]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105395.528195231, 1517156223.910611843]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105395.540016066, 1517156223.920666661]: [INFER] gridRegistration type=localization score=0.329 trans=(164.41,501.25,2.315 rad)[0m
+[0m[INFO] [1779105395.540071414, 1517156223.920666661]: Vertex 7 registration score: 0.329[0m
+[0m[INFO] [1779105395.696431648, 1517156224.081575476]: vtx=9, rel_pose=(3.3,-0.0,0.11), dist=3.3, IoU=0.548, total_vtx=10[0m
+[0m[INFO] [1779105395.997009156, 1517156224.383306955]: Starting localization from stamp 1517156224.040[0m
+[0m[INFO] [1779105396.008780807, 1517156224.39[33m[WARN] [1779105396.458171907, 1517156224.835773859]: [THROTTLE] Skipping PCD frame (stamp=1517156224.840, diff=0.101s, skipped_total=610, queue=1, gt_buf=0, odom_buf=835)[0m
+3362936]: [INFER] gridRegistration type=localization score=0.262 trans=(-27.94,45.07,0.190 rad)[0m
+[0m[INFO] [1779105396.008808029, 1517156224.393362936]: Vertex 8 registration score: 0.262[0m
+[0m[INFO] [1779105396.021338357, 1517156224.403419911]: [INFER] gridRegistration type=localization score=0.212 trans=(31.24,21.04,0.000 rad)[0m
+[0m[INFO] [1779105396.021372415, 1517156224.403419911]: Vertex 5 registration score: 0.212[0m
+[0m[INFO] [1779105396.028501478, 1517156224.413477915]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105396.035991020, 1517156224.413477915]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105396.045694590, 1517156224.423539069]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105396.092562756, 1517156224.473832729]: vtx=9, rel_pose=(3.4,-0.0,0.11), dist=3.4, IoU=0.543, total_vtx=10[0m
+[0m[INFO] [1779105396.391266029, 1517156224.775468990]: [INFER] getDescriptor OK, dim=256[0m
+[0m[INFO] [1779105396.395896149, 1517156224.775468990]: vtx=9, rel_pose=(3.3,-0.0,0.17), dist=3.3, IoU=0.512, total_vtx=10[0m
+[0m[INFO] [1779105396.499269539, 1517156224.886112388]: Starting localization from stamp 1517156224.740[0m
+[0m[INFO] [1779105396.507781971, 1517156224.886112388]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105396.517687497, 1517156224.896170558]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105396.524754200, 1517156224.906229857]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105396.531038250, 1517156224.916283989]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105396.539167721, 1517156224.916283989]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105396.807458700, 1517156225.187996581]: vtx=9, rel_pose=(3.3,-0.0,0.37), dist=3.3, IoU=0.525, total_vtx=10[0m
+[0m[INFO] [1779105396.992632259, 1517156225.379261526]: Starting localization from stamp 1517156225.040[0m
+[0m[INFO] [1779105397.000683089, 1517156225.379261526]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105397.008393694, 1517156225.389317147]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105397.018232635, 1517156225.399376356]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105397.027028183, 1517156225.409430538]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105397.035537845, 1517156225.419485452]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105397.092534760, 1517156225.469817072]: vtx=9, rel_pose=(3.3,-0.0,0.71), dist=3.3, IoU=0.559, total_vtx=10[0m
+[0m[INFO] [1779105397.395409748, 1517156225.781741720]: vtx=9, rel_pose=(3.3,-0.0,0.97), dist=3.3, IoU=0.553, total_vtx=10[0m
+[0m[INFO] [1779105397.495519277, 1517156225.882286398]: Starting localization from stamp 1517156225.740[0m
+[0m[INFO] [1779105397.503878425, 1517156225.882286398]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105397.511283677, 1517156225.892343217]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105397.519272383, 1517156225.902401129]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105397.529628741, 1517156225.912458862]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105397.537585360, 1517156225.922512863]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105397.697382276, 1517156226.083607547]: vtx=9, rel_pose=(3.3,-0.0,1.23), dist=3.3, IoU=0.544, total_vtx=10[0m
+[0m[INFO] [1779105397.998732005, 1517156226.385431382]: Starting localization from stamp 1517156226.040[0m
+[0m[INFO] [1779105398.006698819, 1517156226.385431382]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105398.014676485, 1517156226.395486550]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105398.026893253, 1517156226.405545989]: [INFER] gridRegistration type=localization score=0.390 trans=(108.04,395.48,1.920 rad)[0m
+[0m[INFO] [1779105398.026914665, 1517156226.405545989]: Vertex 0 registration score: 0.390[0m
+[0m[INFO] [1779105398.034978942, 1517156226.415603406]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105398.042309969, 1517156226.425662269]: Vertex 4 registration score: 0.000[0m
+[0[33m[WARN] [1779105398.455172472, 1517156226.837963126]: [THROTTLE] Skipping PCD frame (stamp=1517156226.839, diff=0.100s, skipped_total=624, queue=1, gt_buf=0, odom_buf=855)[0m
+[33m[WARN] [1779105400.454445375, 1517156228.840607887]: [THROTTLE] Skipping PCD frame (stamp=1517156228.839, diff=0.100s, skipped_total=639, queue=1, gt_buf=0, odom_buf=875)[0m
+[33m[WARN] [1779105400.656569193, 1517156229.041878699]: [SYNC] GT pose configured but topic /odom_gt has no data (gt_buf=0, odom_buf=877). Falling back to /odom for global_pose.[0m
+m[INFO] [1779105398.191363868, 1517156226.576582548]: vtx=9, rel_pose=(3.3,0.0,1.57), dist=3.3, IoU=0.539, total_vtx=10[0m
+[0m[INFO] [1779105398.394021675, 1517156226.777631234]: vtx=9, rel_pose=(3.3,0.0,1.84), dist=3.3, IoU=0.520, total_vtx=10[0m
+[0m[INFO] [1779105398.491993216, 1517156226.878273850]: Starting localization from stamp 1517156226.740[0m
+[0m[INFO] [1779105398.502348655, 1517156226.888329897]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105398.510217935, 1517156226.888329897]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105398.517944144, 1517156226.898383909]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105398.532369402, 1517156226.918470152]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105398.539924876, 1517156226.918470152]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1779105398.799697432, 1517156227.179902296]: vtx=9, rel_pose=(3.3,0.0,2.21), dist=3.3, IoU=0.500, total_vtx=10[0m
+[0m[INFO] [1779105398.994649148, 1517156227.381119800]: Starting localization from stamp 1517156227.140[0m
+[0m[INFO] [1779105399.003293906, 1517156227.381119800]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105399.010976782, 1517156227.391175463]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105399.018386361, 1517156227.401232331]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105399.029434284, 1517156227.411288264]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105399.038355577, 1517156227.421352015]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105399.200353100, 1517156227.582485596]: vtx=9, rel_pose=(3.3,0.0,2.57), dist=3.3, IoU=0.498, total_vtx=10[0m
+[0m[INFO] [1779105399.498582157, 1517156227.884455537]: Starting localization from stamp 1517156227.540[0m
+[0m[INFO] [1779105399.506592834, 1517156227.884455537]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105399.514473090, 1517156227.894509787]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105399.521776362, 1517156227.904568374]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105399.530476332, 1517156227.914622961]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105399.540955675, 1517156227.924651004]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105399.686847785, 1517156228.065412312]: vtx=9, rel_pose=(3.2,0.0,2.92), dist=3.2, IoU=0.500, total_vtx=10[0m
+[0m[INFO] [1779105400.002951612, 1517156228.387616116]: vtx=9, rel_pose=(3.1,0.0,3.26), dist=3.1, IoU=0.575, total_vtx=10[0m
+[0m[INFO] [1779105400.004246715, 1517156228.387616116]: Starting localization from stamp 1517156228.340[0m
+[0m[INFO] [1779105400.014186880, 1517156228.397671912]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105400.021926881, 1517156228.407687073]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105400.031014281, 1517156228.417743045]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105400.039703403, 1517156228.417743045]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105400.049587443, 1517156228.427807383]: [INFER] gridRegistration type=localization score=0.295 trans=(228.42,-105.96,-0.880 rad)[0m
+[0m[INFO] [1779105400.049607289, 1517156228.427807383]: Vertex 2 registration score: 0.295[0m
+[0m[INFO] [1779105400.394180876, 1517156228.780247617]: vtx=9, rel_pose=(3.0,0.0,3.52), dist=3.0, IoU=0.554, total_vtx=10[0m
+[0m[INFO] [1779105400.494625332, 1517156228.880858702]: Starting localization from stamp 1517156228.740[0m
+[0m[INFO] [1779105400.504956379, 1517156228.890915045]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1779105400.515724084, 1517156228.900973642]: Vertex 5 registration score: 0.000[0m
+[0m[INFO] [1779105400.522494896, 1517156228.900973642]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1779105400.529778715, 1517156228.911031129]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1779105400.541024031, 1517156228.921094460]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1779105400.693967587, 1517156229.072067610]: vtx=9, rel_pose=(2.9,-0.0,3.55), dist=2.9, IoU=0.527, tota[33m[WARN] [1779105402.699972600, 1517156231.084299531]: [THROTTLE] Skipping PCD frame (stamp=1517156231.040, diff=0.101s, skipped_total=655, queue=1, gt_buf=0, odom_buf=897)[0m

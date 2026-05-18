@@ -25,6 +25,7 @@ topomap:
   localization_timeout: 0.0
   rel_pose_correction_frequency: 0.5
   drift_coef: 0.3
+  pcd_process_interval: 0.3
 place_recognition:
   model: minkloc3d
   #weights_path: /home/kirill/TopoSLAM/OpenPlaceRecognition/weights/place_recognition/habitat_multimodal_resnet18-gem-seqgem_minkloc3dv2.pth

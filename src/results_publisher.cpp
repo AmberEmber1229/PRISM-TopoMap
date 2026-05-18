@@ -434,17 +434,26 @@ void ResultsPublisher::unfreeze() {
 // ============================================================================
 // publishTfFromOdom
 // ============================================================================
-void ResultsPublisher::publishTfFromOdom(double x, double y, double theta,
-                                          const ros::Time& stamp,
-                                          const std::string& odom_frame) {
+void ResultsPublisher::publishTfFromOdom(const nav_msgs::Odometry::ConstPtr& msg) {
+    // 与 Python 原版一致: 使用消息中的 frame_id 和 child_frame_id
+    double x = msg->pose.pose.position.x;
+    double y = msg->pose.pose.position.y;
+    tf::Quaternion q(msg->pose.pose.orientation.x,
+                     msg->pose.pose.orientation.y,
+                     msg->pose.pose.orientation.z,
+                     msg->pose.pose.orientation.w);
+    double roll, pitch, yaw;
+    tf::Matrix3x3(q).getRPY(roll, pitch, yaw);
+
     tf::Transform transform;
     transform.setOrigin(tf::Vector3(x, y, 0.0));
-    tf::Quaternion q;
-    q.setRPY(0, 0, theta);
+    q.setRPY(0, 0, yaw);
     transform.setRotation(q);
 
     tf_broadcaster_.sendTransform(
-        tf::StampedTransform(transform, stamp, map_frame_, odom_frame));
+        tf::StampedTransform(transform, msg->header.stamp,
+                             msg->header.frame_id,       // parent frame
+                             msg->child_frame_id));      // child frame
 }
 
 } // namespace prism_topomap

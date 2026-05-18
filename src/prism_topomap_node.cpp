@@ -80,6 +80,10 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
         }
     }
 
+    // --- topomap params (node-level) ---
+    auto topomap_config = config_["topomap"];
+    pcd_process_interval_ = topomap_config["pcd_process_interval"].as<double>(0.1);
+
     // --- visualization ---
     auto viz_config = config_["visualization"];
     map_frame_ = viz_config["map_frame"].as<std::string>("map");
@@ -187,9 +191,9 @@ void PRISMTopomapNode::odomCallback(const nav_msgs::Odometry::ConstPtr& msg) {
     double theta = tf::getYaw(q);
     odom_poses_.push_back({stamp, Pose2D(x, y, theta)});
 
-    // 可选: 从里程计发布 TF
+    // 可选: 从里程计发布 TF (与 Python 一致: 传递完整消息, 使用消息中的 frame_id)
     if (publish_tf_from_odom_) {
-        results_publisher_->publishTfFromOdom(x, y, theta, msg->header.stamp);
+        results_publisher_->publishTfFromOdom(msg);
     }
     processPcdQueue();
 }
@@ -353,7 +357,7 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
             if (getNearestPose(odom_poses_, result.odom_pose, odom_diff) &&
                 odom_diff <= kPoseSyncTolerance) {
                 // 成功从 /odom 获取里程计位姿
-                ROS_DEBUG("[SYNC] odom_pose from /odom topic (diff=%.3fs)", odom_diff);
+                // ROS_DEBUG("[SYNC] odom_pose from /odom topic (diff=%.3fs)", odom_diff);
             } else {
                 // 里程计数据不可用, 回退到 global_pose 并警告
                 ROS_WARN_THROTTLE(5.0,
@@ -364,10 +368,10 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
                 result.odom_pose = result.global_pose;
             }
         }
-        ROS_INFO("[SYNC] odom_source=%s odom_pose=(%.4f,%.4f,%.4f) global_pose=(%.4f,%.4f,%.4f)",
-                 (!odom_poses_.empty() ? "odom_topic" : "gt_fallback"),
-                 result.odom_pose[0], result.odom_pose[1], result.odom_pose[2],
-                 result.global_pose[0], result.global_pose[1], result.global_pose[2]);
+        // ROS_DEBUG("[SYNC] odom_source=%s odom_pose=(%.4f,%.4f,%.4f) global_pose=(%.4f,%.4f,%.4f)",
+        //          (!odom_poses_.empty() ? "odom_topic" : "gt_fallback"),
+        //          result.odom_pose[0], result.odom_pose[1], result.odom_pose[2],
+        //          result.global_pose[0], result.global_pose[1], result.global_pose[2]);
 
         result.valid = true;
     } /* legacy sync logic retained for reference:
@@ -518,7 +522,7 @@ void PRISMTopomapNode::processPcdQueue() {
         // 对齐 Python 逻辑：控制处理帧率约为 2Hz
         static double last_processed_stamp = 0.0;
         static int skipped_count = 0;
-        if (last_processed_stamp > 0.0 && (stamp - last_processed_stamp) < 0.5) {
+        if (last_processed_stamp > 0.0 && (stamp - last_processed_stamp) < pcd_process_interval_) {
             // 距离上一帧处理不足 0.5s，直接丢弃该帧
             skipped_count++;
             ROS_WARN_THROTTLE(2.0,
@@ -551,8 +555,8 @@ void PRISMTopomapNode::processPcdQueue() {
         last_processed_stamp = stamp;
         frame_cnt_++;
 
-        ROS_INFO("[DIAG] sync.global_pose=(%.4f, %.4f, %.4f) stamp=%.3f",
-                 sync.global_pose[0], sync.global_pose[1], sync.global_pose[2], stamp);
+        // ROS_DEBUG("[DIAG] sync.global_pose=(%.4f, %.4f, %.4f) stamp=%.3f",
+        //          sync.global_pose[0], sync.global_pose[1], sync.global_pose[2], stamp);
 
         // 2. Parse point cloud
         PointCloudPtr cur_cloud = getXyzCoordsFromMsg(*msg, pcd_fields_, pcd_rotation_);

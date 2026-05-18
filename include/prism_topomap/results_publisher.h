@@ -15,6 +15,7 @@
 #include <tf/transform_broadcaster.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <nav_msgs/OccupancyGrid.h>
+#include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <std_msgs/Bool.h>
@@ -66,10 +67,8 @@ public:
     void freeze();
     void unfreeze();
 
-    // === 从里程计发布 TF ===
-    void publishTfFromOdom(double x, double y, double theta,
-                           const ros::Time& stamp,
-                           const std::string& odom_frame = "odom");
+    // === 从里程计发布 TF (与 Python 一致: 使用消息中的 frame_id) ===
+    void publishTfFromOdom(const nav_msgs::Odometry::ConstPtr& msg);
 
 private:
     // 辅助: 将 LocalGrid 转为 OccupancyGrid 消息

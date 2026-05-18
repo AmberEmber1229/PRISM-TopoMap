@@ -126,6 +126,7 @@ private:
     bool use_gt_pose_pose_stamped_ = false;
     std::string map_frame_;
     bool publish_tf_from_odom_ = false;
+    double pcd_process_interval_ = 0.1;
 
     // 导航
     bool has_metric_goal_ = false;
