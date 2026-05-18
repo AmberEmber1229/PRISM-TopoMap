@@ -19,7 +19,8 @@ class OdometryPublisher:
         self.tf_buffer = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer)
         self.rate = rospy.Rate(10)
-        self.odometry_publisher = rospy.Publisher('/odom_gt', Odometry, latch=True, queue_size=100)
+        self.odom_gt_topic = rospy.get_param('~odom_gt_topic', '/odom_gt_generated')
+        self.odometry_publisher = rospy.Publisher(self.odom_gt_topic, Odometry, latch=True, queue_size=100)
         if self.publish_tf_from_odom:
             odom_sub = rospy.Subscriber(self.odometry_topic, Odometry, self.odom_callback)
             self.tfbr = tf2_ros.TransformBroadcaster()

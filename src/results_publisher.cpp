@@ -6,6 +6,8 @@
  */
 #include "prism_topomap/results_publisher.h"
 #include <tf/transform_datatypes.h>
+#include <sstream>
+#include <iomanip>
 
 namespace prism_topomap {
 
@@ -91,90 +93,114 @@ void ResultsPublisher::publishGraph(const TopologicalGraph& graph,
     for (int i = 0; i < graph.numVertices(); ++i) {
         const auto& v = graph.getVertex(i);
 
+        // 顶点标记 — 使用 POINTS 与 Python 原版一致
         visualization_msgs::Marker vertex_marker;
         vertex_marker.header.frame_id = map_frame_;
         vertex_marker.header.stamp = now;
         vertex_marker.ns = "vertices";
         vertex_marker.id = marker_id++;
-        vertex_marker.type = visualization_msgs::Marker::SPHERE;
+        vertex_marker.type = visualization_msgs::Marker::POINTS;
         vertex_marker.action = visualization_msgs::Marker::ADD;
-        vertex_marker.pose.position.x = v.pose_for_visualization[0];
-        vertex_marker.pose.position.y = v.pose_for_visualization[1];
-        vertex_marker.pose.position.z = 0.0;
         vertex_marker.pose.orientation.w = 1.0;
 
-        double size = (i == last_vertex_id) ? 0.7 : 0.3;
-        vertex_marker.scale.x = size;
-        vertex_marker.scale.y = size;
-        vertex_marker.scale.z = size;
+        double vtx_size = (i == last_vertex_id) ? 0.7 : 0.3;
+        vertex_marker.scale.x = vtx_size;
+        vertex_marker.scale.y = vtx_size;
+        vertex_marker.scale.z = vtx_size;
 
         if (i == last_vertex_id) {
-            vertex_marker.color.r = 1.0; vertex_marker.color.g = 0.0;
-            vertex_marker.color.b = 0.0; vertex_marker.color.a = 1.0;
-        } else {
             vertex_marker.color.r = 0.0; vertex_marker.color.g = 1.0;
             vertex_marker.color.b = 0.0; vertex_marker.color.a = 1.0;
+        } else {
+            vertex_marker.color.r = 1.0; vertex_marker.color.g = 0.0;
+            vertex_marker.color.b = 0.0; vertex_marker.color.a = 1.0;
         }
+        geometry_msgs::Point vtx_pt;
+        vtx_pt.x = v.pose_for_visualization[0];
+        vtx_pt.y = v.pose_for_visualization[1];
+        vtx_pt.z = 0.05;
+        vertex_marker.points.push_back(vtx_pt);
         marker_array.markers.push_back(vertex_marker);
 
+        // 顶点编号 + 位姿文字 — 与 Python 一致: "id: (x, y, theta)"
         visualization_msgs::Marker text_marker;
         text_marker.header.frame_id = map_frame_;
         text_marker.header.stamp = now;
-        text_marker.ns = "labels";
+        text_marker.ns = "vertex_labels";
         text_marker.id = marker_id++;
         text_marker.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
         text_marker.action = visualization_msgs::Marker::ADD;
         text_marker.pose.position.x = v.pose_for_visualization[0];
         text_marker.pose.position.y = v.pose_for_visualization[1];
         text_marker.pose.position.z = 0.5;
-        text_marker.scale.z = 0.4; // 稍微放大一点字体
-        text_marker.color.r = 1.0; text_marker.color.g = 1.0;
-        text_marker.color.b = 1.0; text_marker.color.a = 1.0;
-        
-        // 拼接节点索引与绝对位姿
-        std::stringstream ss;
-        ss << i << ": (" << std::fixed << std::setprecision(1) 
-           << v.pose_for_visualization[0] << ", " 
-           << v.pose_for_visualization[1] << ", " 
-           << std::setprecision(2) << v.pose_for_visualization[2] << ")";
-           
-        // 查找上一节点的边以拼接相对位姿
-        if (i > 0 && graph.hasEdge(i - 1, i)) {
-            Pose2D rel = graph.getEdge(i - 1, i);
-            ss << "\nrel: (" << std::fixed << std::setprecision(1) 
-               << rel[0] << ", " << rel[1] << ", " 
-               << std::setprecision(2) << rel[2] << ")";
-        }
-        
-        text_marker.text = ss.str();
+        text_marker.scale.z = 0.3;
+        text_marker.color.r = 1.0; text_marker.color.g = 0.5;
+        text_marker.color.b = 0.0; text_marker.color.a = 1.0;
+        std::ostringstream label;
+        label << i << ": (" << std::fixed << std::setprecision(1)
+              << v.pose_for_visualization[0] << ", "
+              << v.pose_for_visualization[1] << ", "
+              << std::setprecision(2) << v.pose_for_visualization[2] << ")";
+        text_marker.text = label.str();
         marker_array.markers.push_back(text_marker);
     }
 
+    // 边 + 边上的相对位姿文字 — 与 Python 原版完全对应
     for (int u = 0; u < graph.numVertices(); ++u) {
         for (const auto& entry : graph.getEdgesFrom(u)) {
             int v = entry.vertex_id;
-            if (v <= u) continue;
+            if (v <= u) continue;  // 无向边只画一次
 
+            const auto& vu = graph.getVertex(u);
+            const auto& vv = graph.getVertex(v);
+
+            // 边线
             visualization_msgs::Marker edge_marker;
             edge_marker.header.frame_id = map_frame_;
             edge_marker.header.stamp = now;
             edge_marker.ns = "edges";
             edge_marker.id = marker_id++;
-            edge_marker.type = visualization_msgs::Marker::LINE_STRIP;
+            edge_marker.type = visualization_msgs::Marker::LINE_LIST;
             edge_marker.action = visualization_msgs::Marker::ADD;
             edge_marker.scale.x = 0.1;
-            edge_marker.color.r = 0.0; edge_marker.color.g = 0.5;
-            edge_marker.color.b = 1.0; edge_marker.color.a = 0.8;
+            edge_marker.color.r = 0.0; edge_marker.color.g = 0.0;
+            edge_marker.color.b = 1.0; edge_marker.color.a = 0.5;
+            edge_marker.pose.orientation.w = 1.0;
 
             geometry_msgs::Point p1, p2;
-            p1.x = graph.getVertex(u).pose_for_visualization[0];
-            p1.y = graph.getVertex(u).pose_for_visualization[1];
-            p2.x = graph.getVertex(v).pose_for_visualization[0];
-            p2.y = graph.getVertex(v).pose_for_visualization[1];
+            p1.x = vu.pose_for_visualization[0];
+            p1.y = vu.pose_for_visualization[1];
+            p1.z = 0.05;
+            p2.x = vv.pose_for_visualization[0];
+            p2.y = vv.pose_for_visualization[1];
+            p2.z = 0.05;
             edge_marker.points.push_back(p1);
             edge_marker.points.push_back(p2);
-
             marker_array.markers.push_back(edge_marker);
+
+            // 边中点文字 — 显示相对位姿 (与 Python 原版一致)
+            const auto& rel = entry.rel_pose;
+            visualization_msgs::Marker edge_text;
+            edge_text.header.frame_id = map_frame_;
+            edge_text.header.stamp = now;
+            edge_text.ns = "edge_labels";
+            edge_text.id = marker_id++;
+            edge_text.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
+            edge_text.action = visualization_msgs::Marker::ADD;
+            edge_text.pose.position.x = (vu.pose_for_visualization[0] +
+                                         vv.pose_for_visualization[0]) / 2.0;
+            edge_text.pose.position.y = (vu.pose_for_visualization[1] +
+                                         vv.pose_for_visualization[1]) / 2.0;
+            edge_text.pose.position.z = 0.3;
+            edge_text.scale.z = 0.25;
+            edge_text.color.r = 0.0; edge_text.color.g = 1.0;
+            edge_text.color.b = 1.0; edge_text.color.a = 1.0;
+            std::ostringstream edge_label;
+            edge_label << "(" << std::fixed << std::setprecision(1) << rel[0]
+                       << ", " << rel[1] << ", "
+                       << std::setprecision(2) << rel[2] << ")";
+            edge_text.text = edge_label.str();
+            marker_array.markers.push_back(edge_text);
         }
     }
 

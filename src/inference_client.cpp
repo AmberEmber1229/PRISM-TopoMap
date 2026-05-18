@@ -78,6 +78,10 @@ InferenceClient::DescriptorResult InferenceClient::getDescriptor(
         result.success = srv.response.success;
         if (result.success) {
             result.descriptor = srv.response.descriptor;
+            ROS_INFO_THROTTLE(5.0, "[INFER] getDescriptor OK, dim=%lu",
+                              result.descriptor.size());
+        } else {
+            ROS_WARN_THROTTLE(5.0, "[INFER] getDescriptor returned success=false");
         }
     } else {
         ROS_WARN("GetDescriptor service call failed!");
@@ -135,6 +139,12 @@ InferenceClient::RegistrationResult InferenceClient::gridRegistration(
         result.trans_i = srv.response.trans_i;
         result.trans_j = srv.response.trans_j;
         result.rot_angle = srv.response.rot_angle;
+        if (result.success) {
+            ROS_INFO("[INFER] gridRegistration type=%s score=%.3f "
+                     "trans=(%.2f,%.2f,%.3f rad)",
+                     registration_type.c_str(), result.score,
+                     result.trans_i, result.trans_j, result.rot_angle);
+        }
     } else {
         ROS_WARN("GridRegistration service call failed!");
         // 尝试重连

@@ -1,0 +1,426 @@
+File: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/scripts/prism_topomap_node.py
+Intializing...
+File: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/scripts/prism_topomap.py
+Initializing done!
+[INIT-PY] Subscriptions: use_gt_pose=True gt_topic=/odom_gt odom_topic=/odom pcd_topic=/rslidar_points
+[SYNC-PY] gt_buf=0 odom_buf=1 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=2 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=3 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=4 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=5 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=6 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=7 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=8 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=9 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=10 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=11 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=12 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=13 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=14 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=15 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=16 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=17 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=18 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=19 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=20 gt_pose=None odom_pose=None
+Waiting for message to initialize localizer...
+Waiting for message to initialize localizer...
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=21 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=22 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=23 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=24 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=25 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=26 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=27 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=28 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=29 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=30 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=31 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=32 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=33 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=34 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=35 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=36 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=37 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=38 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=39 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=40 gt_pose=None odom_pose=None
+Waiting for message to initialize localizer...
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=41 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=42 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=43 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=44 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=45 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=46 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=47 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=48 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=49 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=50 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=51 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=52 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=53 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=54 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=55 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=56 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=57 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=58 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=59 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=60 gt_pose=None odom_pose=None
+Waiting for message to initialize localizer...
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=61 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=62 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=63 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=64 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=65 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=66 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=67 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=68 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=69 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=70 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=71 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=72 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=73 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=74 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=75 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=76 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=77 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=78 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=79 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=80 gt_pose=None odom_pose=None
+Waiting for message to initialize localizer...
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=81 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=82 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=83 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=84 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=85 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=86 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=87 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=88 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=89 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=90 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=91 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=92 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=93 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=94 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=95 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=96 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=97 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=98 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=99 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=100 gt_pose=None odom_pose=None
+Waiting for message to initialize localizer...
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=101 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=102 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=103 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=104 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=105 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=106 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=107 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=108 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=109 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=110 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=111 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=112 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=113 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=114 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=115 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=116 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=117 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=118 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=119 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=120 gt_pose=None odom_pose=None
+Waiting for message to initialize localizer...
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=121 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=122 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=123 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=124 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=125 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=126 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=127 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=128 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=129 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=130 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=131 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=132 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=133 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=134 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=135 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=136 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=137 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=138 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=139 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=140 gt_pose=None odom_pose=None
+Waiting for message to initialize localizer...
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=141 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=142 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=143 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=144 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=145 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=146 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=147 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=148 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=149 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=150 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=151 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=152 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=153 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=154 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=155 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=156 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=157 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=158 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=159 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=160 gt_pose=None odom_pose=None
+Waiting for message to initialize localizer...
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=161 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=162 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=163 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=164 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=165 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=166 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=167 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=168 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=169 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=170 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=171 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=172 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=173 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=174 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=175 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=176 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=177 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=178 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=179 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=180 gt_pose=None odom_pose=None
+Waiting for message to initialize localizer...
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=181 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=182 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=183 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=184 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=185 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=186 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=187 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=188 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=189 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=190 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=191 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=192 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=193 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=194 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=195 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=196 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=197 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=198 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=199 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=200 gt_pose=None odom_pose=None
+Waiting for message to initialize localizer...
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=201 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=202 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=203 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=204 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=205 gt_pose=None odom_pose=None
+No global pose!

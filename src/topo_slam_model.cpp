@@ -119,10 +119,20 @@ void TopoSLAMModel::updateRelPoseByOdom(const Pose2D& cur_odom_pose) {
     if (!odom_initialized_) {
         odom_pose_ = cur_odom_pose;
         odom_initialized_ = true;
+        ROS_INFO("[ODOM] First odom received: (%.4f, %.4f, %.4f) — initializing odom_pose_",
+                 cur_odom_pose[0], cur_odom_pose[1], cur_odom_pose[2]);
         return;
     }
     Pose2D rel_odom = getRelPose(odom_pose_, cur_odom_pose);
+    Pose2D old_rel_pose = rel_pose_of_vcur_;
     rel_pose_of_vcur_ = applyPoseShift(rel_pose_of_vcur_, rel_odom);
+    ROS_INFO("[ODOM] delta=(%.4f,%.4f,%.4f) odom_old=(%.4f,%.4f,%.4f) odom_new=(%.4f,%.4f,%.4f) "
+             "rel_pose: (%.4f,%.4f,%.4f) -> (%.4f,%.4f,%.4f)",
+             rel_odom[0], rel_odom[1], rel_odom[2],
+             odom_pose_[0], odom_pose_[1], odom_pose_[2],
+             cur_odom_pose[0], cur_odom_pose[1], cur_odom_pose[2],
+             old_rel_pose[0], old_rel_pose[1], old_rel_pose[2],
+             rel_pose_of_vcur_[0], rel_pose_of_vcur_[1], rel_pose_of_vcur_[2]);
     odom_pose_ = cur_odom_pose;
 }
 
@@ -455,10 +465,44 @@ void TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
     Pose2D pose_stamped = getRelPoseFromStamp(current_stamp_);
     Pose2D new_rel_pose_of_vcur = getRelPose(pose_stamped, rel_pose_of_vcur_);
 
-    // 添加从上一个节点到新节点的边
+    // Safety check: warn if edge is abnormally long
+    double edge_dist = std::sqrt(pose_stamped[0] * pose_stamped[0] +
+                                 pose_stamped[1] * pose_stamped[1]);
+    if (edge_dist > max_edge_length_ * 3.0) {
+        ROS_WARN("[DIAG] Abnormally long edge: %.2f m (pose_stamped=(%.2f,%.2f,%.2f))",
+                 edge_dist, pose_stamped[0], pose_stamped[1], pose_stamped[2]);
+    }
+
+    // 诊断: 打印 addNewVertex 时的完整状态
+    {
+        double gx = global_pose_for_visualization_[0];
+        double gy = global_pose_for_visualization_[1];
+        double gth = global_pose_for_visualization_[2];
+        double last_gx = 0.0, last_gy = 0.0, last_gth = 0.0;
+        if (last_vertex_id_ >= 0) {
+            const auto& lv = graph_.getVertex(last_vertex_id_);
+            last_gx = lv.pose_for_visualization[0];
+            last_gy = lv.pose_for_visualization[1];
+            last_gth = lv.pose_for_visualization[2];
+        }
+        ROS_INFO("[NEWVTX] new_id=%d global_pose=(%.4f,%.4f,%.4f) "
+                 "last_vtx=%d last_gpose=(%.4f,%.4f,%.4f) "
+                 "pose_stamped=(%.4f,%.4f,%.4f) rel_pose_vcur=(%.4f,%.4f,%.4f) "
+                 "n_localized=%lu n_rel_poses=%lu has_vcur_to_loc=%d",
+                 new_id, gx, gy, gth,
+                 last_vertex_id_, last_gx, last_gy, last_gth,
+                 pose_stamped[0], pose_stamped[1], pose_stamped[2],
+                 rel_pose_of_vcur_[0], rel_pose_of_vcur_[1], rel_pose_of_vcur_[2],
+                 vertex_ids.size(), rel_poses.size(), has_rel_pose_vcur_to_loc_ ? 1 : 0);
+    }
+
+    // Add edge from last vertex to new vertex
     if (last_vertex_id_ >= 0) {
         graph_.addEdge(last_vertex_id_, new_id,
                        pose_stamped[0], pose_stamped[1], pose_stamped[2]);
+        ROS_INFO("Add edge (%d)->(%d) rel_pose=(%.2f,%.2f,%.2f) dist=%.2f",
+                 last_vertex_id_, new_id,
+                 pose_stamped[0], pose_stamped[1], pose_stamped[2], edge_dist);
     }
 
     rel_pose_of_vcur_ = new_rel_pose_of_vcur;
@@ -604,15 +648,32 @@ void TopoSLAMModel::update(
 
     global_pose_for_visualization_ = global_pose;
 
-    // Step A: Odometry integration
+    // =============================================
+    // TRACE: 打印 update() 入口参数
+    // =============================================
+    ROS_INFO("[TRACE] update() entry: stamp=%.3f mode=%s "
+             "global_pose=(%.4f,%.4f,%.4f) cur_odom_pose=(%.4f,%.4f,%.4f) "
+             "odom_pose_=(%.4f,%.4f,%.4f) odom_init=%d last_vid=%d",
+             current_stamp_, mode_.c_str(),
+             global_pose[0], global_pose[1], global_pose[2],
+             cur_odom_pose[0], cur_odom_pose[1], cur_odom_pose[2],
+             odom_pose_[0], odom_pose_[1], odom_pose_[2],
+             odom_initialized_ ? 1 : 0, last_vertex_id_);
+
+    // Step A: Odometry integration — grid_shift for grid transform
+    // Python original: x,y,theta = get_rel_pose(*cur_odom_pose, *self.odom_pose)
+    // i.e., (from=NEW, to=OLD) — reverse transform, combined with -theta in
+    // process_observations to form the correct grid affine shift.
     // =============================================
     Pose2D grid_shift = Pose2D::Zero();
     if (odom_initialized_) {
-        // FIX: parameter order was reversed (from=new, to=old).
-        // Correct: from=old_pose, to=new_pose → gives forward increment.
-        grid_shift = getRelPose(odom_pose_, cur_odom_pose);
+        grid_shift = getRelPose(cur_odom_pose, odom_pose_);
     }
     updateRelPoseByOdom(cur_odom_pose);
+
+    ROS_INFO("[DIAG] grid_shift=(%.4f, %.4f, %.4f) rel_pose_vcur=(%.2f, %.2f, %.2f)",
+              grid_shift[0], grid_shift[1], grid_shift[2],
+              rel_pose_of_vcur_[0], rel_pose_of_vcur_[1], rel_pose_of_vcur_[2]);
 
     // =============================================
     // 步骤 B: 观测处理 (描述符提取 + 栅格更新)

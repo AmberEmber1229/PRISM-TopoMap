@@ -3,7 +3,6 @@
 PRISM-TopoMap Python 推理服务节点
 inference_service_node.py
 
-职责: 仅负责深度学习推理, 不包含任何建图/逻辑控制功能
 提供两个 ROS Service:
   /prism/get_descriptor      - 位置识别描述符提取
   /prism/grid_registration   - 栅格到栅格配准
@@ -188,6 +187,7 @@ class InferenceServiceNode:
 
             resp.success = True
             resp.descriptor = descriptor.tolist()
+            rospy.loginfo("[INFER-PY] getDescriptor OK, dim=%d", len(resp.descriptor))
 
         except Exception as e:
             rospy.logerr(f"描述符提取异常: {str(e)}")
@@ -263,6 +263,10 @@ class InferenceServiceNode:
             resp.trans_i = float(transform[0])
             resp.trans_j = float(transform[1])
             resp.rot_angle = float(transform[2])
+            rospy.loginfo("[INFER-PY] gridRegistration type=%s score=%.3f "
+                          "trans=(%.2f,%.2f,%.3f rad)",
+                          req.registration_type, resp.score,
+                          resp.trans_i, resp.trans_j, resp.rot_angle)
 
         except Exception as e:
             rospy.logerr(f"栅格配准异常: {str(e)}")

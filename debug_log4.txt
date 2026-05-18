@@ -1,0 +1,839 @@
+[33m[WARN] [1776950399.854742205, 1517156141.448990648]: Waiting for pose data to catch up... gt_poses=0, odom_poses=0[0m
+[33m[WARN] [1776950399.895521595, 1517156141.489242585]: GetDescriptor service call failed![0m
+[33m[WARN] [1776950399.896541951, 1517156141.489242585]: Descriptor extraction failed![0m
+[33m[WARN] [1776950400.338935342, 1517156141.931991023]: Localizer: descriptor is empty, skipping[0m
+[0m[INFO] [1776950372.540857876]: Loading config: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/config/scout_rosbag.yaml[0m
+[0m[INFO] [1776950372.559948644]: === PRISM-TopoMap C++ node initialized ===[0m
+[0m[INFO] [1776950372.559978715]:   Mode: mapping[0m
+[0m[INFO] [1776950372.559997996]:   PCD topic: /rslidar_points[0m
+[0m[INFO] [1776950372.560016771]:   Odom topic: /odom[0m
+[0m[INFO] [1776950372.560034648]:   use_odom for rel_pose: false[0m
+[0m[INFO] [1776950372.560052659]:   use_gt_pose: true[0m
+[0m[INFO] [1776950372.560069975]:   GT topic: /odom_gt[0m
+[0m[INFO] [1776950372.560091306]:   GT type: Odometry[0m
+[0m[INFO] [1776950372.560115803]: Waiting for Python inference services...[0m
+[0m[INFO] [1776950372.560456876]: waitForService: Service [/prism/get_descriptor] has not been advertised, waiting...[0m
+[0m[INFO] [1776950375.644034263]: waitForService: Service [/prism/get_descriptor] is now available.[0m
+[0m[INFO] [1776950375.644050866]: Descriptor service is ready.[0m
+[0m[INFO] [1776950375.644437423]: Registration service is ready.[0m
+[0m[INFO] [1776950375.644448656]: All Python inference services are ready.[0m
+[0m[INFO] [1776950375.644455874]: === PRISM-TopoMap C++ node running ===[0m
+[0m[INFO] [1776950399.834383929, 1517156141.428872252]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1776950399.834449908, 1517156141.428872252]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1776950399.854722506, 1517156141.448990648]: [DIAG] First PCD msg received on topic: /rslidar_points[0m
+[0m[INFO] [1776950399.893573422, 1517156141.479158770]: [DIAG] First odom msg received on topic: /odom[0m
+[0m[INFO] [1776950399.894166677, 1517156141.479158770]: [DIAG] First GT Odometry msg received on topic: /odom_gt[0m
+[0m[INFO] [1776950399.912888811, 1517156141.499299482]: 
+
+
+ ADD NEW VERTEX (-0.0, -0.0, 0.00) idx=0 
+
+
+[0m
+[0m[INFO] [1776950399.914453680, 1517156141.509356453]: Processed 1 frames[0m
+[0m[INFO] [1776950400.337961406, 1517156141.931991023]: Starting localization from stamp 1517156141.444[0m
+[0m[INFO] [1776950400.728585781, 1517156142.314365388]: vtx=0, rel_pose=(0.0,-0.0,0.00), dist=0.0, IoU=0.996, total_vtx=1[0m
+[0m[INFO] [1776950400.842363827, 1517156142.437239998]: Starting localization from stamp 1517156142.044[0m
+[0m[INFO] [1776950400.842641196, 1517156142.437239998]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950401.088824021, 1517156142.678526504]: vtx=0, rel_pose=(0.0,-0.0,0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1776950401.335371668, 1517156142.929937804]: Starting localization from stamp 1517156142.644[0m
+[0m[INFO] [1776950401.336052347, 1517156142.929937804]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950401.586795840, 1517156143.181342466]: vtx=0, rel_pose=(0.0,-0.0,0.00), dist=0.0, IoU=0.992, total_vtx=1[0m
+[0m[INFO] [1776950401.839078445, 1517156143.433127910]: Starting localization from stamp 1517156143.144[0m
+[0m[INFO] [1776950401.839797110, 1517156143.433127910]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950402.288154198, 1517156143.876696294]: vtx=0, rel_pose=(-0.1,-0.0,0.04), dist=0.1, IoU=0.735, total_vtx=1[0m
+[0m[INFO] [1776950402.342579795, 1517156143.936997386]: Starting localization from stamp 1517156143.744[0m
+[0m[INFO] [1776950402.343155355, 1517156143.936997386]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950402.789366444, 1517156144.379846105]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1776950402.836059195, 1517156144.430187334]: Starting localization from stamp 1517156144.344[0m
+[0m[INFO] [1776950402.836256688, 1517156144.430187334]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950403.339236852, 1517156144.933168458]: Starting localization from stamp 1517156144.344[0m
+[0m[INFO] [1776950403.339463275, 1517156144.933168458]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950403.393214433, 1517156144.983548338]: vtx=0, rel_pose=(-0.1,-0.0,0.04), dist=0.1, IoU=0.732, total_vtx=1[0m
+[0m[INFO] [1776950403.841634023, 1517156145.436217203]: Starting localization from stamp 1517156144.944[0m
+[0m[INFO] [1776950403.841872175, 1517156145.436217203]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950404.080192136, 1517156145.667590270]: vtx=0, rel_pose=(0.0,-0.0,-0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1776950404.334220953, 1517156145.929135963]: Starting localization from stamp 1517156145.544[0m
+[0m[INFO] [1776950404.334509452, 1517156145.929135963]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950404.495671194, 1517156146.090037120]: vtx=0, rel_pose=(0.0,-0.0,-0.00), dist=0.0, IoU=0.992, total_vtx=1[0m
+[0m[INFO] [1776950404.838305199, 1517156146.432428670]: Starting localization from stamp 1517156146.044[0m
+[0m[INFO] [1776950404.838515472, 1517156146.432428670]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950405.088535515, 1517156146.673908112]: vtx=0, rel_pose=(0.0,-0.0,-0.00), dist=0.0, IoU=0.990, total_vtx=1[0m
+[0m[INFO] [1776950405.341268958, 1517156146.935402776]: Starting localization from stamp 1517156146.644[0m
+[0m[INFO] [1776950405.341458877, 1517156146.935402776]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950405.686671223, 1517156147.277548914]: vtx=0, rel_pose=(0.0,-0.0,0.00), dist=0.0, IoU=0.998, total_vtx=1[0m
+[0m[INFO] [1776950405.844272364, 1517156147.438590428]: Starting localization from stamp 1517156147.244[0m
+[0m[INFO] [1776950405.844528284, 1517156147.438590428]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950406.384890316, 1517156147.971948371]: vtx=0, rel_pose=(-0.1,-0.0,0.04), dist=0.1, IoU=0.717, total_vtx=1[0m
+[0m[INFO] [1776950406.386024748, 1517156147.971948371]: Starting localization from stamp 1517156147.844[0m
+[0m[INFO] [1776950406.386152006, 1517156147.971948371]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950406.840657977, 1517156148.434997828]: Starting localization from stamp 1517156147.844[0m
+[0m[INFO] [1776950406.840962802, 1517156148.434997828]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950406.891088200, 1517156148.485276561]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1776950407.344709250, 1517156148.938702340]: Starting localization from stamp 1517156148.444[0m
+[0m[INFO] [1776950407.344924521, 1517156148.938702340]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950407.494525734, 1517156149.089576123]: vtx=0, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.995, total_vtx=1[0m
+[0m[INFO] [1776950407.836886599, 1517156149.431522257]: Starting localization from stamp 1517156149.044[0m
+[0m[INFO] [1776950407.837186018, 1517156149.431522257]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950408.087742428, 1517156149.672941590]: vtx=0, rel_pose=(-0.1,-0.0,0.04), dist=0.1, IoU=0.715, total_vtx=1[0m
+[0m[INFO] [1776950408.340333572, 1517156149.934665445]: Starting localization from stamp 1517156149.644[0m
+[0m[INFO] [1776950408.340769619, 1517156149.934665445]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950408.781542523, 1517156150.367351220]: vtx=0, rel_pose=(-0.1,-0.0,0.04), dist=0.1, IoU=0.715, total_vtx=1[0m
+[0m[INFO] [1776950408.843443292, 1517156150.437768182]: Starting localization from stamp 1517156150.244[0m
+[0m[INFO] [1776950408.843785489, 1517156150.437768182]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950409.287837155, 1517156150.881654972]: vtx=0, rel_pose=(0.0,-0.0,-0.00), dist=0.0, IoU=0.994, total_vtx=1[0m
+[0m[INFO] [1776950409.337625457, 1517156150.931970831]: Starting localization from stamp 1517156150.844[0m
+[0m[INFO] [1776950409.337829709, 1517156150.931970831]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950409.840736601, 1517156151.435249985]: Starting localization from stamp 1517156150.844[0m
+[0m[INFO] [1776950409.840933105, 1517156151.435249985]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950409.891649193, 1517156151.485534711]: vtx=0, rel_pose=(0.0,-0.0,-0.00), dist=0.0, IoU=0.988, total_vtx=1[0m
+[0m[INFO] [1776950410.343877400, 1517156151.938158412]: Starting localization from stamp 1517156151.444[0m
+[0m[INFO] [1776950410.344069186, 1517156151.938158412]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950410.583520965, 1517156152.169467453]: vtx=0, rel_pose=(-0.1,-0.0,0.05), dist=0.1, IoU=0.710, total_vtx=1[0m
+[0m[INFO] [1776950410.584720251, 1517156152.179526607]: Processed 19 frames[0m
+[0m[INFO] [1776950410.836975525, 1517156152.431321270]: Starting localization from stamp 1517156152.044[0m
+[0m[INFO] [1776950410.837171308, 1517156152.431321270]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950410.991850534, 1517156152.582375506]: vtx=0, rel_pose=(-0.1,-0.0,0.05), dist=0.1, IoU=0.713, total_vtx=1[0m
+[0m[INFO] [1776950411.340244980, 1517156152.934605960]: Starting localization from stamp 1517156152.544[0m
+[0m[INFO] [1776950411.340491221, 1517156152.934605960]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950411.586863499, 1517156153.176039563]: vtx=0, rel_pose=(-0.1,-0.0,0.05), dist=0.1, IoU=0.710, total_vtx=1[0m
+[0m[INFO] [1776950411.842798484, 1517156153.437666240]: Starting localization from stamp 1517156153.143[0m
+[0m[INFO] [1776950411.842996297, 1517156153.437666240]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950412.184627264, 1517156153.769895059]: vtx=0, rel_pose=(-0.1,-0.0,0.04), dist=0.1, IoU=0.718, total_vtx=1[0m
+[0m[INFO] [1776950412.335976446, 1517156153.930802011]: Starting localization from stamp 1517156153.644[0m
+[0m[INFO] [1776950412.336173849, 1517156153.930802011]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950412.687265173, 1517156154.272958729]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.994, total_vtx=1[0m
+[0m[INFO] [1776950412.839967898, 1517156154.433941879]: Starting localization from stamp 1517156154.244[0m
+[0m[INFO] [1776950412.840169785, 1517156154.433941879]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950413.287272683, 1517156154.876577848]: vtx=0, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.997, total_vtx=1[0m
+[0m[INFO] [1776950413.342093241, 1517156154.936909460]: Starting localization from stamp 1517156154.843[0m
+[0m[INFO] [1776950413.342315565, 1517156154.936909460]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950413.789889083, 1517156155.380056809]: vtx=0, rel_pose=(-0.1,-0.0,0.04), dist=0.1, IoU=0.719, total_vtx=1[0m
+[0m[INFO] [1776950413.835756557, 1517156155.430660542]: Starting localization from stamp 1517156155.343[0m
+[0m[INFO] [1776950413.836078102, 1517156155.430660542]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950414.385306670, 1517156155.974410701]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.994, total_vtx=1[0m
+[0m[INFO] [1776950414.386434006, 1517156155.974410701]: Starting localization from stamp 1517156155.844[0m
+[0m[INFO] [1776950414.386561631, 1517156155.974410701]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950414.843060437, 1517156156.437318290]: Starting localization from stamp 1517156155.844[0m
+[0m[INFO] [1776950414.843320709, 1517156156.437318290]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950414.887872216, 1517156156.477646128]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.992, total_vtx=1[0m
+[0m[INFO] [1776950415.335848040, 1517156156.930352196]: Starting localization from stamp 1517156156.444[0m
+[0m[INFO] [1776950415.336038438, 1517156156.930352196]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950415.491246794, 1517156157.081252397]: vtx=0, rel_pose=(-0.1,-0.0,0.04), dist=0.1, IoU=0.747, total_vtx=1[0m
+[0m[INFO] [1776950415.838519498, 1517156157.433580632]: Starting localization from stamp 1517156157.044[0m
+[0m[INFO] [1776950415.838702932, 1517156157.433580632]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950416.087680223, 1517156157.675057623]: vtx=0, rel_pose=(-0.0,0.0,-0.00), dist=0.0, IoU=0.990, total_vtx=1[0m
+[0m[INFO] [1776950416.342662584, 1517156157.936544113]: Starting localization from stamp 1517156157.643[0m
+[0m[INFO] [1776950416.343356870, 1517156157.936544113]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950416.776987815, 1517156158.369532688]: vtx=0, rel_pose=(-0.1,-0.0,0.04), dist=0.1, IoU=0.750, total_vtx=1[0m
+[0m[INFO] [1776950416.835456329, 1517156158.429906486]: Starting localization from stamp 1517156158.243[0m
+[0m[INFO] [1776950416.835658259, 1517156158.429906486]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950417.187436980, 1517156158.782177824]: vtx=0, rel_pose=(-0.1,-0.0,0.04), dist=0.1, IoU=0.748, total_vtx=1[0m
+[0m[INFO] [1776950417.338255858, 1517156158.933136488]: Starting localization from stamp 1517156158.743[0m
+[0m[INFO] [1776950417.338494237, 1517156158.933136488]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950417.791853853, 1517156159.385985048]: vtx=0, rel_pose=(0.0,-0.0,-0.00), dist=0.0, IoU=0.992, total_vtx=1[0m
+[0m[INFO] [1776950417.841550506, 1517156159.436276990]: Starting localization from stamp 1517156159.343[0m
+[0m[INFO] [1776950417.841749389, 1517156159.436276990]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950418.293993652, 1517156159.879436675]: vtx=0, rel_pose=(-0.0,-0.0,0.04), dist=0.0, IoU=0.741, total_vtx=1[0m
+[0m[INFO] [1776950418.335188176, 1517156159.929716141]: Starting localization from stamp 1517156159.843[0m
+[0m[INFO] [1776950418.335367071, 1517156159.929716141]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950418.881384509, 1517156160.473422933]: vtx=0, rel_pose=(0.2,-0.0,-0.00), dist=0.2, IoU=0.941, total_vtx=1[0m
+[0m[INFO] [1776950418.882518551, 1517156160.473422933]: Starting localization from stamp 1517156160.344[0m
+[0m[INFO] [1776950418.882632262, 1517156160.473422933]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950419.342122652, 1517156160.936255442]: Starting localization from stamp 1517156160.344[0m
+[0m[INFO] [1776950419.342334161, 1517156160.936255442]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950419.391509083, 1517156160.976451695]: vtx=0, rel_pose=(0.7,-0.0,0.03), dist=0.7, IoU=0.720, total_vtx=1[0m
+[0m[INFO] [1776950419.835388471, 1517156161.429475463]: Starting localization from stamp 1517156160.943[0m
+[0m[INFO] [1776950419.835616650, 1517156161.429475463]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950419.986199712, 1517156161.580396990]: vtx=0, rel_pose=(1.3,-0.0,0.03), dist=1.3, IoU=0.691, total_vtx=1[0m
+[0m[INFO] [1776950420.338438842, 1517156161.932558629]: Starting localization from stamp 1517156161.543[0m
+[0m[INFO] [1776950420.339340999, 1517156161.932558629]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950420.589881798, 1517156162.183922950]: vtx=0, rel_pose=(1.0,-0.0,-0.01), dist=1.0, IoU=0.884, total_vtx=1[0m
+[0m[INFO] [1776950420.591180048, 1517156162.183922950]: Processed 37 frames[0m
+[0m[INFO] [1776950420.841605903, 1517156162.435517003]: Starting localization from stamp 1517156162.143[0m
+[0m[INFO] [1776950420.842239600, 1517156162.435517003]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950421.284075724, 1517156162.878790081]: vtx=0, rel_pose=(1.3,-0.0,-0.01), dist=1.3, IoU=0.840, total_vtx=1[0m
+[0m[INFO] [1776950421.334197365, 1517156162.929072782]: Starting localization from stamp 1517156162.743[0m
+[0m[INFO] [1776950421.334404902, 1517156162.929072782]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950421.791512072, 1517156163.381854125]: vtx=0, rel_pose=(1.6,-0.0,-0.01), dist=1.6, IoU=0.796, total_vtx=1[0m
+[0m[INFO] [1776950421.837858379, 1517156163.432159618]: Starting localization from stamp 1517156163.343[0m
+[0m[INFO] [1776950421.838367734, 1517156163.432159618]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950422.340598930, 1517156163.935230255]: Starting localization from stamp 1517156163.343[0m
+[0m[INFO] [1776950422.341263640, 1517156163.935230255]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950422.389305203, 1517156163.975476754]: vtx=0, rel_pose=(1.7,-0.0,-0.01), dist=1.7, IoU=0.783, tota[33m[WARN] [1776950425.379913719, 1517156166.974424080]: GridRegistration service call failed![0m
+l_vtx=1[0m
+[0m[INFO] [1776950422.834557555, 1517156164.428979209]: Starting localization from stamp 1517156163.942[0m
+[0m[INFO] [1776950422.834742181, 1517156164.428979209]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950422.983826070, 1517156164.569719307]: vtx=0, rel_pose=(3.2,-0.0,0.02), dist=3.2, IoU=0.592, total_vtx=1[0m
+[0m[INFO] [1776950423.337527631, 1517156164.931823859]: Starting localization from stamp 1517156164.443[0m
+[0m[INFO] [1776950423.337814955, 1517156164.931823859]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950423.490295044, 1517156165.082725276]: vtx=0, rel_pose=(1.8,-0.0,-0.01), dist=1.8, IoU=0.780, total_vtx=1[0m
+[0m[INFO] [1776950423.840790456, 1517156165.434831018]: Starting localization from stamp 1517156165.043[0m
+[0m[INFO] [1776950423.840986034, 1517156165.434831018]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950424.092996489, 1517156165.686398161]: vtx=0, rel_pose=(4.0,-0.0,0.01), dist=4.0, IoU=0.571, total_vtx=1[0m
+[0m[INFO] [1776950424.343577569, 1517156165.937854533]: Starting localization from stamp 1517156165.643[0m
+[0m[INFO] [1776950424.343757680, 1517156165.937854533]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950424.690557995, 1517156166.279927034]: vtx=0, rel_pose=(2.4,-0.1,-0.01), dist=2.4, IoU=0.759, total_vtx=1[0m
+[0m[INFO] [1776950424.836545524, 1517156166.430820251]: Starting localization from stamp 1517156166.242[0m
+[0m[INFO] [1776950424.836728584, 1517156166.430820251]: FAISS index is empty, cannot localize[0m
+[0m[INFO] [1776950425.377425063, 1517156166.964417051]: Too far from location center (dist=5.17 > 5.00)[0m
+[0m[INFO] [1776950425.377443147, 1517156166.964417051]: No recent localization. Add new vertex[0m
+[0m[INFO] [1776950425.377451944, 1517156166.964417051]: 
+
+
+ ADD NEW VERTEX (5.2, -0.0, 0.02) idx=1 
+
+
+[0m
+[0m[INFO] [1776950425.377556194, 1517156166.964417051]: 
+Add edge (-0.0,-0.0)->(5.2,-0.0) rel_pose=(5.2,-0.0,0.02)
+[0m
+[0m[INFO] [1776950425.377566587, 1517156166.964417051]: Add edge (0)->(1) rel_pose=(5.17,-0.03,0.02) dist=5.17[0m
+[0m[INFO] [1776950425.377574691, 1517156166.964417051]: vtx=1, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.556, total_vtx=2[0m
+[0m[INFO] [1776950425.378699052, 1517156166.964417051]: Starting localization from stamp 1517156166.843[0m
+[0m[INFO] [1776950425.380605910, 1517156166.974424080]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950425.842198164, 1517156167.437117911]: Starting localization from stamp 1517156166.843[0m
+[0m[INFO] [1776950425.900865411, 1517156167.487395346]: Vertex 0 registration score: 0.857[0m
+[0m[INFO] [1776950425.936658518, 1517156167.527628692]: vtx=1, rel_pose=(0.6,0.0,0.03), dist=0.6, IoU=0.848, total_vtx=2[0m
+[0m[INFO] [1776950426.335897505, 1517156167.930183547]: Starting localization from stamp 1517156167.443[0m
+[0m[INFO] [1776950426.344230258, 1517156167.930183547]: Vertex 0 registration score: 0.845[0m
+[0m[INFO] [1776950426.485146552, 1517156168.071115690]: vtx=1, rel_pose=(1.1,0.1,0.07), dist=1.1, IoU=0.699, total_vtx=2[0m
+[0m[INFO] [1776950426.839425981, 1517156168.433761424]: Starting localization from stamp 1517156168.042[0m
+[0m[INFO] [1776950426.847716486, 1517156168.433761424]: Vertex 0 registration score: 0.831[0m
+[0m[INFO] [1776950426.986452155, 1517156168.574540584]: vtx=1, rel_pose=(-1.7,-0.0,0.02), dist=1.7, IoU=0.620, total_vtx=2[0m
+[0m[INFO] [1776950427.336353183, 1517156168.930836079]: Starting localization from stamp 1517156168.543[0m
+[0m[INFO] [1776950427.343574301, 1517156168.930836079]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950427.682526106, 1517156169.272932574]: vtx=1, rel_pose=(-1.4,-0.0,0.02), dist=1.4, IoU=0.630, total_vtx=2[0m
+[0m[INFO] [1776950427.839164860, 1517156169.433784853]: Starting localization from stamp 1517156169.142[0m
+[0m[INFO] [1776950427.847914271, 1517156169.433784853]: Vertex 0 registration score: 0.711[0m
+[0m[INFO] [1776950428.084912327, 1517156169.675211747]: vtx=1, rel_pose=(-1.2,-0.0,0.03), dist=1.2, IoU=0.631, total_vtx=2[0m
+[0m[INFO] [1776950428.342972298, 1517156169.936790650]: Starting localization from stamp 1517156169.643[0m
+[0m[INFO] [1776950428.350611894, 1517156169.936790650]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950428.685133880, 1517156170.278606887]: vtx=1, rel_pose=(-1.0,-0.0,0.03), dist=1.0, IoU=0.629, total_vtx=2[0m
+[0m[INFO] [1776950428.835354282, 1517156170.429387741]: Starting localization from stamp 1517156170.243[0m
+[0m[INFO] [1776950428.844592171, 1517156170.439444219]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950429.384559021, 1517156170.972949169]: vtx=1, rel_pose=(-0.7,-0.0,0.03), dist=0.7, IoU=0.630, total_vtx=2[0m
+[0m[INFO] [1776950429.385947008, 1517156170.972949169]: Starting localization from stamp 1517156170.843[0m
+[0m[INFO] [1776950429.395244521, 1517156170.983013609]: Vertex 0 registration score: 0.767[0m
+[0m[INFO] [1776950429.841609287, 1517156171.435564721]: Starting localization from stamp 1517156170.843[0m
+[0m[INFO] [1776950429.851462800, 1517156171.445620161]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950429.892030383, 1517156171.485837044]: vtx=1, rel_pose=(-0.4,-0.0,0.03), dist=0.4, IoU=0.621, total_vtx=2[0m
+[0m[INFO] [1776950430.344044741, 1517156171.938466318]: Starting localization from stamp 1517156171.443[0m
+[0m[INFO] [1776950430.353606500, 1517156171.948523795]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950430.488613587, 1517156172.079243107]: vtx=1, rel_pose=(-0.1,-0.0,0.03), dist=0.1, IoU=0.619, total_vtx=2[0m
+[0m[INFO] [1776950430.836645788, 1517156172.431385091]: Starting localization from stamp 1517156172.043[0m
+[0m[INFO] [1776950430.843479770, 1517156172.431385091]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950431.091310428, 1517156172.682984981]: vtx=1, rel_pose=(0.3,-0.0,0.03), dist=0.3, IoU=0.635, total_vtx=2[0m
+[0m[INFO] [1776950431.092647048, 1517156172.682984981]: Processed 55 frames[0m
+[0m[INFO] [1776950431.339689235, 1517156172.934477114]: Starting localization from stamp 1517156172.644[0m
+[0m[INFO] [1776950431.347227910, 1517156172.934477114]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950431.781378105, 1517156173.370031441]: Too far from location center (dist=5.91 > 5.00)[0m
+[0m[INFO] [1776950431.781401177, 1517156173.370031441]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1776950431.781411748, 1517156173.370031441]: 
+
+
+ ADD NEW VERTEX (11.0, 0.5, 0.12) idx=2 
+
+
+[0m
+[0m[INFO] [1776950431.781506580, 1517156173.370031441]: 
+Add edge (5.2,-0.0)->(11.0,0.5) rel_pose=(5.9,0.4,0.11)
+[0m
+[0m[INFO] [1776950431.781515501, 1517156173.370031441]: Add edge (1)->(2) rel_pose=(5.89,0.44,0.11) dist=5.91[0m
+[0m[INFO] [1776950431.781522549, 1517156173.370031441]: vtx=2, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.467, total_vtx=3[0m
+[0m[INFO] [1776950431.835787753, 1517156173.430399829]: Starting localization from stamp 1517156173.243[0m
+[0m[INFO] [1776950431.843148087, 1517156173.430399829]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950431.849391590, 1517156173.440460861]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950432.192326101, 1517156173.782724945]: Trying to match vertex 1[0m
+[0m[INFO] [1776950432.220936642, 1517156173.812910428]: Moved outside vcur 2[0m
+[0m[INFO] [1776950432.220972118, 1517156173.812910428]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1776950432.220988708, 1517156173.812910428]: 
+
+
+ ADD NEW VERTEX (6.0, 0.0, 0.04) idx=3 
+
+
+[0m
+[0m[INFO] [1776950432.221308581, 1517156173.812910428]: 
+Add edge (11.0,0.5)->(6.0,0.0) rel_pose=(-5.1,0.1,-0.08)
+[0m
+[0m[INFO] [1776950432.221317663, 1517156173.812910428]: Add edge (2)->(3) rel_pose=(-5.08,0.09,-0.08) dist=5.08[0m
+[0m[INFO] [1776950432.221325908, 1517156173.812910428]: vtx=3, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.334, total_vtx=4[0m
+[0m[INFO] [1776950432.338841927, 1517156173.933718986]: Starting localization from stamp 1517156173.743[0m
+[0m[INFO] [1776950432.352264708, 1517156173.943773320]: Vertex 2 registration score: 0.963[0m
+[0m[INFO] [1776950432.363617896, 1517156173.953837229]: Vertex 1 registration score: 0.850[0m
+[0m[INFO] [1776950432.372839863, 1517156173.963894293]: Vertex 0 registration score: 0.824[0m
+[0m[INFO] [1776950432.784976095, 1517156174.376396988]: 
+
+
+=== LOOP CLOSURE FOUND! connect 2 and 3 through current ===
+
+
+[0m
+[0m[INFO] [1776950432.784995652, 1517156174.376396988]: Found loop closure. Add new vertex to close loop[0m
+[0m[INFO] [1776950432.785005880, 1517156174.376396988]: 
+
+
+ ADD NEW VERTEX (12.1, 0.6, 0.11) idx=4 
+
+
+[0m
+[0m[INFO] [1776950432.785233125, 1517156174.376396988]: 
+Add edge (6.0,0.0)->(12.1,0.6) rel_pose=(6.1,0.3,0.07)
+[0m
+[0m[INFO] [1776950432.785242744, 1517156174.376396988]: Add edge (3)->(4) rel_pose=(6.09,0.34,0.07) dist=6.10[0m
+[0m[INFO] [1776950432.785249852, 1517156174.376396988]: 
+Add edge (12.1,0.6)->(11.0,0.5) rel_pose=(-6.3,0.1,-0.07)
+[0m
+[0m[INFO] [1776950432.785256313, 1517156174.376396988]: 
+Add edge (12.1,0.6)->(5.2,-0.0) rel_pose=(-9.3,0.4,-0.13)
+[0m
+[0m[INFO] [1776950432.785262584, 1517156174.376396988]: 
+Add edge (12.1,0.6)->(-0.0,-0.0) rel_pose=(1.7,-0.7,3.02)
+[0m
+[0m[INFO] [1776950432.842742788, 1517156174.436789056]: Starting localization from stamp 1517156174.343[0m
+[0m[INFO] [1776950432.856223302, 1517156174.446843139]: Vertex 3 registration score: 0.960[0m
+[0m[INFO] [1776950432.869257189, 1517156174.456899574]: Vertex 2 registration score: 0.901[0m
+[0m[INFO] [1776950432.878159546, 1517156174.466961623]: Vertex 1 registration score: 0.702[0m
+[0m[INFO] [1776950432.887085767, 1517156174.477017972]: Vertex 0 registration score: 0.273[0m
+[0m[INFO] [1776950433.336025430, 1517156174.929878208]: Starting localization from stamp 1517156174.343[0m
+[0m[INFO] [1776950433.349164469, 1517156174.939933599]: Vertex 3 registration score: 0.960[0m
+[0m[INFO] [1776950433.359974974, 1517156174.950017374]: Vertex 2 registration score: 0.901[0m
+[0m[INFO] [1776950433.372080775, 1517156174.960083588]: Vertex 1 registration score: 0.702[0m
+[0m[INFO] [1776950433.378918874, 1517156174.970143078]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950433.514137004, 1517156175.100914585]: 
+
+
+=== LOOP CLOSURE FOUND! connect 3 and 2 through current ===
+
+
+[0m
+[0m[INFO] [1776950433.514157364, 1517156175.100914585]: Found loop closure. Add new vertex to close loop[0m
+[0m[INFO] [1776950433.514167424, 1517156175.100914585]: 
+
+
+ ADD NEW VERTEX (6.6, 0.0, 0.04) idx=5 
+
+
+[0m
+[0m[INFO] [1776950433.514398496, 1517156175.100914585]: 
+Add edge (12.1,0.6)->(6.6,0.0) rel_pose=(-5.5,0.1,-0.08)
+[0m
+[0m[INFO] [1776950433.514408266, 1517156175.100914585]: Add edge (4)->(5) rel_pose=(-5.54,0.06,-0.08) dist=5.54[0m
+[0m[INFO] [1776950433.514415915, 1517156175.100914585]: 
+Add edge (6.6,0.0)->(6.0,0.0) rel_pose=(5.3,0.3,0.08)
+[0m
+[0m[INFO] [1776950433.514422722, 1517156175.100914585]: 
+Add edge (6.6,0.0)->(11.0,0.5) rel_pose=(5.0,0.3,0.08)
+[0m
+[0m[INFO] [1776950433.514429862, 1517156175.100914585]: 
+Add edge (6.6,0.0)->(5.2,-0.0) rel_pose=(10.2,0.6,3.19)
+[0m
+[0m[INFO] [1776950433.838146036, 1517156175.433001730]: Starting localization from stamp 1517156174.943[0m
+[0m[INFO] [1776950433.854589185, 1517156175.443057884]: Vertex 4 registration score: 0.937[0m
+[0m[INFO] [1776950433.864961991, 1517156175.453114017]: Vertex 2 registration score: 0.839[0m
+[0m[INFO] [1776950433.880037604, 1517156175.473229962]: Vertex 3 registration score: 0.865[0m
+[0m[INFO] [1776950433.886377680, 1517156175.473229962]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950433.892518639, 1517156175.483285780]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950433.929738048, 1517156175.523489516]: 
+
+
+=== LOOP CLOSURE FOUND! connect 4 and 2 through current ===
+
+
+[0m
+[0m[INFO] [1776950433.929771630, 1517156175.523489516]: Found loop closure. Add new vertex to close loop[0m
+[0m[INFO] [1776950433.929788539, 1517156175.523489516]: 
+
+
+ ADD NEW VERTEX (6.8, 0.0, 0.03) idx=6 
+
+
+[0m
+[0m[INFO] [1776950433.930161596, 1517156175.523489516]: 
+Add edge (6.6,0.0)->(6.8,0.0) rel_pose=(0.2,-0.0,-0.00)
+[0m
+[0m[INFO] [1776950433.930187541, 1517156175.523489516]: Add edge (5)->(6) rel_pose=(0.24,-0.00,-0.00) dist=0.24[0m
+[0m[INFO] [1776950433.930201036, 1517156175.523489516]: 
+Add edge (6.8,0.0)->(12.1,0.6) rel_pose=(-0.5,0.0,0.00)
+[0m
+[0m[INFO] [1776950433.930212629, 1517156175.523489516]: 
+Add edge (6.8,0.0)->(11.0,0.5) rel_pose=(-1.0,-0.0,0.01)
+[0m
+[0m[INFO] [1776950433.930223776, 1517156175.523489516]: 
+Add edge (6.8,0.0)->(6.0,0.0) rel_pose=(-0.8,-0.0,0.01)
+[0m
+[0m[INFO] [1776950434.341413034, 1517156175.935853993]: Starting localization from stamp 1517156175.443[0m
+[0m[INFO] [1776950434.356996420, 1517156175.945909114]: Vertex 5 registration score: 0.951[0m
+[0m[INFO] [1776950434.368122020, 1517156175.955993506]: Vertex 4 registration score: 0.865[0m
+[0m[INFO] [1776950434.379961244, 1517156175.966056500]: Vertex 3 registration score: 0.853[0m
+[0m[INFO] [1776950434.389562124, 1517156175.976111867]: Vertex 2 registration score: 0.845[0m
+[0m[INFO] [1776950434.396080944, 1517156175.986165321]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950434.488239780, 1517156176.076664455]: vtx=6, rel_pose=(0.3,-0.0,-0.00), dist=0.3, IoU=0.816, total_vtx=7[0m
+[0m[INFO] [1776950434.844754161, 1517156176.438703141]: Starting localization from stamp 1517156176.043[0m
+[0m[INFO] [1776950434.855946429, 1517156176.448757742]: Vertex 4 registration score: 0.876[0m
+[0m[INFO] [1776950434.867105154, 1517156176.458813667]: Vertex 5 registration score: 0.882[0m
+[0m[INFO] [1776950434.879896630, 1517156176.468868937]: Vertex 2 registration score: 0.858[0m
+[0m[INFO] [1776950434.889404976, 1517156176.478952494]: Vertex 3 registration score: 0.867[0m
+[0m[INFO] [1776950434.896061880, 1517156176.489066310]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950435.086574273, 1517156176.680257403]: vtx=6, rel_pose=(0.7,-0.0,-0.00), dist=0.7, IoU=0.836, total_vtx=7[0m
+[0m[INFO] [1776950435.337833873, 1517156176.931842171]: Starting localization from stamp 1517156176.643[0m
+[0m[INFO] [1776950435.349514075, 1517156176.941899962]: Vertex 4 registration score: 0.838[0m
+[0m[INFO] [1776950435.359189826, 1517156176.951955909]: Vertex 2 registration score: 0.754[0m
+[0m[INFO] [1776950435.369938277, 1517156176.962044499]: Vertex 5 registration score: 0.848[0m
+[0m[INFO] [1776950435.381780407, 1517156176.972101985]: Vertex 3 registration score: 0.822[0m
+[0m[INFO] [1776950435.389260655, 1517156176.982159029]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950435.685102105, 1517156177.273910632]: vtx=6, rel_pose=(0.9,-0.0,-0.01), dist=0.9, IoU=0.779, total_vtx=7[0m
+[0m[INFO] [1776950435.842658615, 1517156177.437332900]: Starting localization from stamp 1517156177.143[0m
+[0m[INFO] [1776950435.854314593, 1517156177.447386086]: Vertex 4 registration score: 0.860[0m
+[0m[INFO] [1776950435.864411122, 1517156177.457442145]: Vertex 5 registration score: 0.852[0m
+[0m[INFO] [1776950435.873293370, 1517156177.467500985]: Vertex 2 registration score: 0.848[0m
+[0m[INFO] [1776950435.883234324, 1517156177.477554142]: Vertex 3 registration score: 0.853[0m
+[0m[INFO] [1776950435.889693805, 1517156177.477554142]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950436.193359841, 1517156177.779498258]: vtx=6, rel_pose=(1.7,-0.0,-0.01), dist=1.7, IoU=0.627, total_vtx=7[0m
+[0m[INFO] [1776950436.335591000, 1517156177.930353369]: Starting localization from stamp 1517156177.742[0m
+[0m[INFO] [1776950436.350530412, 1517156177.940413501]: Vertex 2 registration score: 0.774[0m
+[0m[INFO] [1776950436.361418887, 1517156177.950471824]: Vertex 3 registration score: 0.806[0m
+[0m[INFO] [1776950436.371376982, 1517156177.960526858]: Vertex 4 registration score: 0.802[0m
+[0m[INFO] [1776950436.380342521, 1517156177.970636058]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950436.391162573, 1517156177.980692183]: Vertex 5 registration score: 0.794[0m
+[0m[INFO] [1776950436.688435796, 1517156178.282542217]: Moved outside vcur 6[0m
+[0m[INFO] [1776950436.688762289, 1517156178.282542217]: Localization reattach: to vertex 2 (IoU=0.155, need_change=true)[0m
+[0m[INFO] [1776950436.688778571, 1517156178.282542217]: vtx=2, rel_pose=(12.1,0.3,0.05), dist=12.1, IoU=0.120, total_vtx=7[0m
+[0m[INFO] [1776950436.838844272, 1517156178.433515456]: Starting localization from stamp 1517156178.243[0m
+[0m[INFO] [1776950436.852009997, 1517156178.443589346]: Vertex 1 registration score: 0.310[0m
+[0m[INFO] [1776950436.862354492, 1517156178.453645546]: Vertex 4 registration score: 0.420[0m
+[0m[INFO] [1776950436.870052152, 1517156178.463700997]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1776950436.881822048, 1517156178.473762898]: Vertex 3 registration score: 0.704[0m
+[0m[INFO] [1776950436.892736626, 1517156178.483821741]: Vertex 5 registration score: 0.713[0m
+[0m[INFO] [1776950437.289680092, 1517156178.876212775]: Trying to match vertex 4[0m
+[0m[INFO] [1776950437.338916876, 1517156178.926489055]: vtx=2, rel_pose=(3.8,-0.1,-0.01), dist=3.8, IoU=0.372, total_vtx=7[0m
+[0m[INFO] [1776950437.342529174, 1517156178.936545221]: Starting localization from stamp 1517156178.842[0m
+[0m[INFO] [1776950437.352969523, 1517156178.946589588]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950437.362800535, 1517156178.956642554]: Vertex 3 registration score: 0.716[0m
+[0m[INFO] [1776950437.370356571, 1517156178.956642554]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1776950437.380322983, 1517156178.966698246]: Vertex 2 registration score: 0.714[0m
+[0m[INFO] [1776950437.391128992, 1517156178.976753612]: Vertex 5 registration score: 0.317[0m
+[0m[INFO] [1776950437.891230384, 1517156179.479754801]: Moved outside vcur 2[0m
+[0m[INFO] [1776950437.891550862, 1517156179.479754801]: Vertex 3 is too far to match[0m
+[0m[INFO] [1776950437.891840891, 1517156179.479754801]: Vertex 2 is too far to match[0m
+[0m[INFO] [1776950437.891848738, 1517156179.479754801]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1776950437.891858715, 1517156179.479754801]: 
+
+
+ ADD NEW VERTEX (18.2, 0.8, 0.08) idx=7 
+
+
+[0m
+[0m[INFO] [1776950437.891950741, 1517156179.479754801]: 
+Add edge (11.0,0.5)->(18.2,0.8) rel_pose=(12.6,0.3,0.05)
+[0m
+[0m[INFO] [1776950437.891959390, 1517156179.479754801]: Add edge (2)->(7) rel_pose=(12.57,0.35,0.05) dist=12.57[0m
+[0m[INFO] [1776950437.891967193, 1517156179.479754801]: 
+Add edge (18.2,0.8)->(6.0,0.0) rel_pose=(-12.1,0.1,-0.04)
+[0m
+[0m[INFO] [1776950437.891974480, 1517156179.479754801]: vtx=7, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.099, total_vtx=8[0m
+[0m[INFO] [1776950437.893140612, 1517156179.479754801]: Starting localization from stamp 1517156179.342[0m
+[0m[INFO] [1776950437.903021013, 1517156179.489809093]: Vertex 6 registration score: 0.715[0m
+[0m[INFO] [1776950437.911278297, 1517156179.499867764]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950437.923258968, 1517156179.509929500]: Vertex 3 registration score: 0.686[0m
+[0m[INFO] [1776950437.933169244, 1517156179.519984609]: Vertex 4 registration score: 0.374[0m
+[0m[INFO] [1776950437.943180343, 1517156179.530071615]: Vertex 2 registration score: 0.723[0m
+[0m[INFO] [1776950438.289316817, 1517156179.882181602]: Trying to match vertex 3[0m
+[0m[INFO] [1776950438.326401737, 1517156179.912382205]: Edge reattach: from vertex 7 to vertex 3 (match_dist=0.10)[0m
+[0m[INFO] [1776950438.327095002, 1517156179.912382205]: vtx=3, rel_pose=(3.5,-0.0,-0.02), dist=3.5, IoU=0.354, total_vtx=8[0m
+[0m[INFO] [1776950438.337682855, 1517156179.932490481]: Starting localization from stamp 1517156179.842[0m
+[0m[INFO] [1776950438.347748737, 1517156179.942546041]: Vertex 6 registration score: 0.284[0m
+[0m[INFO] [1776950438.358390091, 1517156179.952607047]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950438.367982669, 1517156179.962663839]: Vertex 2 registration score: 0.666[0m
+[0m[INFO] [1776950438.376811838, 1517156179.962663839]: Vertex 4 registration score: 0.334[0m
+[0m[INFO] [1776950438.387751415, 1517156179.972723303]: Vertex 3 registration score: 0.641[0m
+[0m[INFO] [1776950438.841343797, 1517156180.435600003]: Starting localization from stamp 1517156179.842[0m
+[0m[INFO] [1776950438.851927414, 1517156180.445932708]: Vertex 6 registration score: 0.288[0m
+[0m[INFO] [1776950438.860765071, 1517156180.445932708]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950438.870536065, 1517156180.456025445]: Vertex 2 registration score: 0.661[0m
+[0m[INFO] [1776950438.880600969, 1517156180.466085795]: Vertex 4 registration score: 0.334[0m
+[0m[INFO] [1776950438.892815638, 1517156180.486207731]: Vertex 3 registration score: 0.641[0m
+[0m[INFO] [1776950438.928782959, 1517156180.516384543]: Trying to match vertex 2[0m
+[0m[INFO] [1776950438.958547243, 1517156180.546573116]: vtx=3, rel_pose=(4.0,-0.1,-0.02), dist=4.0, IoU=0.617, total_vtx=8[0m
+[0m[INFO] [1776950439.334696252, 1517156180.929056793]: Starting localization from stamp 1517156180.442[0m
+[0m[INFO] [1776950439.344631485, 1517156180.939113600]: Vertex 4 registration score: 0.710[0m
+[0m[INFO] [1776950439.355757849, 1517156180.949149307]: Vertex 2 registration score: 0.805[0m
+[0m[INFO] [1776950439.364830628, 1517156180.959209408]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950439.373179675, 1517156180.959209408]: Vertex 3 registration score: 0.806[0m
+[0m[INFO] [1776950439.380974366, 1517156180.969266243]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950439.581769787, 1517156181.170483458]: Trying to match vertex 7[0m
+[0m[INFO] [1776950439.627103392, 1517156181.220782152]: Edge reattach: from vertex 3 to vertex 7 (match_dist=0.93)[0m
+[0m[INFO] [1776950439.627678115, 1517156181.220782152]: vtx=7, rel_pose=(1.4,-0.1,0.01), dist=1.4, IoU=0.311, total_vtx=8[0m
+[0m[INFO] [1776950439.837079265, 1517156181.431951210]: Starting localization from stamp 1517156181.042[0m
+[0m[INFO] [1776950439.847896715, 1517156181.442011786]: Vertex 4 registration score: 0.746[0m
+[0m[INFO] [1776950439.860130929, 1517156181.452096889]: Vertex 2 registration score: 0.813[0m
+[0m[INFO] [1776950439.867495909, 1517156181.462153065]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950439.875700680, 1517156181.462153065]: Vertex 3 registration score: 0.594[0m
+[0m[INFO] [1776950439.882639314, 1517156181.472208029]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950440.095558068, 1517156181.683590527]: Trying to match vertex 3[0m
+[0m[INFO] [1776950440.130272707, 1517156181.723813870]: Moved outside vcur 7[0m
+[0m[INFO] [1776950440.130601434, 1517156181.723813870]: Localization reattach: to vertex 4 (IoU=0.071, need_change=true)[0m
+[0m[INFO] [1776950440.130614376, 1517156181.723813870]: 
+Add edge (18.2,0.8)->(12.1,0.6) rel_pose=(0.6,-0.2,0.01)
+[0m
+[0m[INFO] [1776950440.130622492, 1517156181.723813870]: vtx=4, rel_pose=(-8.3,0.1,-0.05), dist=8.3, IoU=0.089, total_vtx=8[0m
+[0m[INFO] [1776950440.340765499, 1517156181.935034011]: Starting localization from stamp 1517156181.642[0m
+[0m[INFO] [1776950440.351222482, 1517156181.945098261]: Vertex 4 registration score: 0.765[0m
+[0m[INFO] [1776950440.363755134, 1517156181.955153691]: Vertex 1 registration score: 0.263[0m
+[0m[INFO] [1776950440.373405195, 1517156181.965213830]: Vertex 6 registration score: 0.744[0m
+[0m[INFO] [1776950440.383731227, 1517156181.975268247]: Vertex 3 registration score: 0.787[0m
+[0m[INFO] [1776950440.395777492, 1517156181.985325075]: Vertex 2 registration score: 0.763[0m
+[0m[INFO] [1776950440.687271342, 1517156182.277164392]: Trying to match vertex 0[0m
+[0m[INFO] [1776950440.730575583, 1517156182.317394599]: vtx=4, rel_pose=(3.0,0.4,0.06), dist=3.0, IoU=0.369, total_vtx=8[0m
+[0m[INFO] [1776950440.843714782, 1517156182.438320916]: Starting localization from stamp 1517156182.242[0m
+[0m[INFO] [1776950440.851823590, 1517156182.438320916]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1776950440.861804847, 1517156182.448375648]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950440.870652513, 1517156182.458456234]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1776950440.880185754, 1517156182.468688004]: Vertex 2 registration score: 0.602[0m
+[0m[INFO] [1776950440.892035365, 1517156182.478733544]: Vertex 6 registration score: 0.710[0m
+[0m[INFO] [1776950441.184456824, 1517156182.770730793]: Trying to match vertex 6[0m
+[0m[INFO] [1776950441.229633667, 1517156182.820992745]: Moved outside vcur 4[0m
+[0m[INFO] [1776950441.230037631, 1517156182.820992745]: Localization reattach: to vertex 2 (IoU=0.000, need_change=true)[0m
+[0m[INFO] [1776950441.230058659, 1517156182.820992745]: vtx=2, rel_pose=(5.9,2.7,0.59), dist=6.5, IoU=0.051, total_vtx=8[0m
+[0m[INFO] [1776950441.231469064, 1517156182.820992745]: Processed 73 frames[0m
+[0m[INFO] [1776950441.337115001, 1517156182.931617327]: Starting localization from stamp 1517156182.742[0m
+[0m[INFO] [1776950441.344762343, 1517156182.931617327]: Vertex 3 registration score: 0.000[0m
+[0m[INFO] [1776950441.353948440, 1517156182.941675378]: Vertex 4 registration score: 0.340[0m
+[0m[INFO] [1776950441.364608957, 1517156182.951738445]: Vertex 1 registration score: 0.224[0m
+[0m[INFO] [1776950441.375390381, 1517156182.961800224]: Vertex 6 registration score: 0.699[0m
+[0m[INFO] [1776950441.384814476, 1517156182.971862550]: Vertex 2 registration score: 0.354[0m
+[0m[INFO] [1776950441.881166298, 1517156183.474871555]: Moved outside vcur 2[0m
+[0m[INFO] [1776950441.881484119, 1517156183.474871555]: Vertex 6 is too far to match[0m
+[0m[INFO] [1776950441.881494301, 1517156183.474871555]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1776950441.881503304, 1517156183.474871555]: 
+
+
+ ADD NEW VERTEX (20.5, 8.5, 1.44) idx=8 
+
+
+[0m
+[0m[INFO] [1776950441.881596603, 1517156183.474871555]: 
+Add edge (11.0,0.5)->(20.5,8.5) rel_pose=(4.4,7.1,1.37)
+[0m
+[0m[INFO] [1776950441.881604788, 1517156183.474871555]: Add edge (2)->(8) rel_pose=(4.35,7.09,1.37) dist=8.32[0m
+[0m[INFO] [1776950441.881612068, 1517156183.474871555]: 
+Add edge (20.5,8.5)->(6.8,0.0) rel_pose=(-6.0,2.2,-1.12)
+[0m
+[0m[INFO] [1776950441.881619536, 1517156183.474871555]: vtx=8, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.033, total_vtx=9[0m
+[0m[INFO] [1776950441.882790114, 1517156183.474871555]: Starting localization from stamp 1517156183.342[0m
+[0m[INFO] [1776950441.893641933, 1517156183.484929686]: Vertex 7 registration score: 0.615[0m
+[0m[INFO] [1776950441.901986596, 1517156183.495030257]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1776950441.912820665, 1517156183.505120769]: Vertex 1 registration score: 0.390[0m
+[0m[INFO] [1776950441.921544067, 1517156183.515178085]: Vertex 6 registration score: 0.465[0m
+[0m[INFO] [1776950441.930217232, 1517156183.525238837]: Vertex 4 registration score: 0.000[0m
+[0m[INFO] [1776950442.286131357, 1517156183.877589603]: 
+
+
+=== LOOP CLOSURE FOUND! connect 7 and 8 through current ===
+
+
+[0m
+[0m[INFO] [1776950442.286161730, 1517156183.877589603]: Found loop closure. Add new vertex to close loop[0m
+[0m[INFO] [1776950442.286172997, 1517156183.877589603]: 
+
+
+ ADD NEW VERTEX (12.5, 0.5, 1.00) idx=9 
+
+
+[0m
+[0m[INFO] [1776950442.286433212, 1517156183.877589603]: 
+Add edge (20.5,8.5)->(12.5,0.5) rel_pose=(-9.0,6.9,-0.44)
+[0m
+[0m[INFO] [1776950442.286443399, 1517156183.877589603]: Add edge (8)->(9) rel_pose=(-9.01,6.91,-0.44) dist=11.35[0m
+[0m[INFO] [1776950442.286450739, 1517156183.877589603]: 
+Add edge (12.5,0.5)->(18.2,0.8) rel_pose=(8.4,-1.7,-0.30)
+[0m
+[0m[INFO] [1776950442.343796889, 1517156183.937936993]: Starting localization from stamp 1517156183.842[0m
+[0m[INFO] [1776950442.356931613, 1517156183.947992090]: Vertex 8 registration score: 0.900[0m
+[0m[INFO] [1776950442.369609692, 1517156183.958052195]: Vertex 7 registration score: 0.265[0m
+[0m[INFO] [1776950442.381485639, 1517156183.968112689]: Vertex 2 registration score: 0.244[0m
+[0m[INFO] [1776950442.391443723, 1517156183.978174737]: Vertex 1 registration score: 0.384[0m
+[0m[INFO] [1776950442.398635300, 1517156183.988233167]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950442.836804248, 1517156184.430928513]: Starting localization from stamp 1517156183.842[0m
+[0m[INFO] [1776950442.852166966, 1517156184.440982698]: Vertex 8 registration score: 0.899[0m
+[0m[INFO] [1776950442.862177398, 1517156184.451037515]: Vertex 7 registration score: 0.265[0m
+[0m[INFO] [1776950442.876936108, 1517156184.471173527]: Vertex 2 registration score: 0.536[0m
+[0m[INFO] [1776950442.884907608, 1517156184.471173527]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950442.893634236, 1517156184.481229962]: Vertex 0 registration score: 0.427[0m
+[0m[INFO] [1776950442.934207638, 1517156184.521483963]: vtx=9, rel_pose=(0.5,-0.0,0.30), dist=0.5, IoU=0.639, total_vtx=10[0m
+[0m[INFO] [1776950443.339224575, 1517156184.933865589]: Starting localization from stamp 1517156184.442[0m
+[0m[INFO] [1776950443.350047634, 1517156184.943918788]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1776950443.358243570, 1517156184.943918788]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1776950443.365319431, 1517156184.953972753]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950443.373543595, 1517156184.964033714]: Vertex 2 registration score: 0.000[0m
+[0m[INFO] [1776950443.382263290, 1517156184.974086594]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950443.596069851, 1517156185.185541967]: vtx=9, rel_pose=(0.9,0.2,0.63), dist=0.9, IoU=0.327, total_vtx=10[0m
+[0m[INFO] [1776950443.842325038, 1517156185.437179028]: Starting localization from stamp 1517156185.042[0m
+[0m[INFO] [1776950443.853545481, 1517156185.447234342]: Vertex 7 registration score: 0.179[0m
+[0m[INFO] [1776950443.861800153, 1517156185.447234342]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1776950443.868981920, 1517156185.457295218]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950443.882140091, 1517156185.467362049]: Vertex 6 registration score: 0.190[0m
+[0m[INFO] [1776950443.890078823, 1517156185.477423408]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950444.089033112, 1517156185.678782863]: Moved outside vcur 9[0m
+[0m[INFO] [1776950444.089063127, 1517156185.678782863]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1776950444.089080427, 1517156185.678782863]: 
+
+
+ ADD NEW VERTEX (5.3, 12.2, -2.25) idx=10 
+
+
+[0m
+[0m[INFO] [1776950444.089233187, 1517156185.678782863]: 
+Add edge (12.5,0.5)->(5.3,12.2) rel_pose=(6.0,12.4,3.03)
+[0m
+[0m[INFO] [1776950444.089244338, 1517156185.678782863]: Add edge (9)->(10) rel_pose=(5.96,12.39,3.03) dist=13.75[0m
+[0m[INFO] [1776950444.089251749, 1517156185.678782863]: vtx=10, rel_pose=(0.0,-0.0,0.00), dist=0.0, IoU=0.029, total_vtx=11[0m
+[0m[INFO] [1776950444.335325843, 1517156185.930229036]: Starting localization from stamp 1517156185.643[0m
+[0m[INFO] [1776950444.349998900, 1517156185.940315549]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950444.359662051, 1517156185.950369259]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1776950444.369029382, 1517156185.960454612]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1776950444.378938647, 1517156185.970516198]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950444.388343927, 1517156185.980572229]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950444.684593497, 1517156186.272265716]: Moved outside vcur 10[0m
+[0m[INFO] [1776950444.684626378, 1517156186.272265716]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1776950444.684638216, 1517156186.272265716]: 
+
+
+ ADD NEW VERTEX (2.1, 9.4, -1.61) idx=11 
+
+
+[0m
+[0m[INFO] [1776950444.684820773, 1517156186.272265716]: 
+Add edge (5.3,12.2)->(2.1,9.4) rel_pose=(4.2,-0.7,0.64)
+[0m
+[0m[INFO] [1776950444.684831870, 1517156186.272265716]: Add edge (10)->(11) rel_pose=(4.15,-0.71,0.64) dist=4.21[0m
+[0m[INFO] [1776950444.684839235, 1517156186.272265716]: vtx=11, rel_pose=(0.0,0.0,0.00), dist=0.0, IoU=0.128, total_vtx=12[0m
+[0m[INFO] [1776950444.839206687, 1517156186.433195267]: Starting localization from stamp 1517156186.241[0m
+[0m[INFO] [1776950444.855775649, 1517156186.443250187]: Vertex 10 registration score: 0.847[0m
+[0m[INFO] [1776950444.866667573, 1517156186.453306775]: Vertex 9 registration score: 0.388[0m
+[0m[INFO] [1776950444.875431857, 1517156186.463365496]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1776950444.887009012, 1517156186.473429563]: Vertex 8 registration score: 0.000[0m
+[0m[INFO] [1776950444.895708998, 1517156186.483482835]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950445.189187619, 1517156186.775138274]: Moved outside vcur 11[0m
+[0m[INFO] [1776950445.189543351, 1517156186.775138274]: Vertex 10 is too far to match[0m
+[0m[INFO] [1776950445.189553694, 1517156186.775138274]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1776950445.189564803, 1517156186.775138274]: 
+
+
+ ADD NEW VERTEX (12.2, 2.4, 2.71) idx=12 
+
+
+[0m
+[0m[INFO] [1776950445.189692615, 1517156186.775138274]: 
+Add edge (2.1,9.4)->(12.2,2.4) rel_pose=(6.6,10.4,-1.96)
+[0m
+[0m[INFO] [1776950445.189702323, 1517156186.775138274]: Add edge (11)->(12) rel_pose=(6.61,10.40,-1.96) dist=12.32[0m
+[0m[INFO] [1776950445.189710130, 1517156186.775138274]: 
+Add edge (12.2,2.4)->(5.3,12.2) rel_pose=(12.2,-2.6,1.58)
+[0m
+[0m[INFO] [1776950445.189717223, 1517156186.775138274]: vtx=12, rel_pose=(-0.0,0.0,0.00), dist=0.0, IoU=0.069, total_vtx=13[0m
+[0m[INFO] [1776950445.341743323, 1517156186.936140328]: Starting localization from stamp 1517156186.742[0m
+[0m[INFO] [1776950445.359515129, 1517156186.946207538]: Vertex 11 registration score: 0.857[0m
+[0m[INFO] [1776950445.370606987, 1517156186.956265538]: Vertex 10 registration score: 0.719[0m
+[0m[INFO] [1776950445.381381425, 1517156186.976406297]: Vertex 9 registration score: 0.438[0m
+[0m[INFO] [1776950445.390642622, 1517156186.976406297]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1776950445.398949200, 1517156186.986462795]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950445.785330995, 1517156187.378992334]: vtx=12, rel_pose=(0.4,0.0,0.30), dist=0.4, IoU=0.587, total_vtx=13[0m
+[0m[INFO] [1776950445.835082018, 1517156187.429329927]: Starting localization from stamp 1517156187.242[0m
+[0m[INFO] [1776950445.848229929, 1517156187.439420103]: Vertex 11 registration score: 0.766[0m
+[0m[INFO] [1776950445.859799684, 1517156187.449474168]: Vertex 10 registration score: 0.000[0m
+[0m[INFO] [1776950445.868383592, 1517156187.459534197]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950445.877269502, 1517156187.469591509]: Vertex 7 registration score: 0.000[0m
+[0m[INFO] [1776950445.888035705, 1517156187.479649804]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950446.288511877, 1517156187.877651491]: vtx=12, rel_pose=(0.7,0.2,0.43), dist=0.7, IoU=0.540, total_vtx=13[0m
+[0m[INFO] [1776950446.343808058, 1517156187.937991991]: Starting localization from stamp 1517156187.842[0m
+[0m[INFO] [1776950446.360213844, 1517156187.948077743]: Vertex 11 registration score: 0.789[0m
+[0m[INFO] [1776950446.370763556, 1517156187.958139033]: Vertex 10 registration score: 0.725[0m
+[0m[INFO] [1776950446.379132763, 1517156187.968199767]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950446.388403046, 1517156187.978269448]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950446.398612214, 1517156187.988332750]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950446.836993839, 1517156188.430984121]: Starting localization from stamp 1517156187.842[0m
+[0m[INFO] [1776950446.848845272, 1517156188.441040882]: Vertex 11 registration score: 0.792[0m
+[0m[INFO] [1776950446.861425747, 1517156188.451096937]: Vertex 10 registration score: 0.780[0m
+[0m[INFO] [1776950446.869764290, 1517156188.461158050]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950446.876821501, 1517156188.471214897]: Vertex 0 registration score: 0.000[0m
+[0m[INFO] [1776950446.883757705, 1517156188.471214897]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950446.919886158, 1517156188.511437972]: vtx=12, rel_pose=(1.0,0.3,0.51), dist=1.0, IoU=0.520, total_vtx=13[0m
+[0m[INFO] [1776950447.340101212, 1517156188.934165900]: Starting localization from stamp 1517156188.442[0m
+[0m[INFO] [1776950447.352156399, 1517156188.944219552]: Vertex 11 registration score: 0.783[0m
+[0m[INFO] [1776950447.366575296, 1517156188.954274104]: Vertex 10 registration score: 0.778[0m
+[0m[INFO] [1776950447.373880053, 1517156188.964330890]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950447.382496702, 1517156188.974403160]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950447.390940190, 1517156188.984458043]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950447.486230994, 1517156189.074944900]: Moved outside vcur 12[0m
+[0m[INFO] [1776950447.486801289, 1517156189.074944900]: Localization reattach: to vertex 11 (IoU=0.067, need_change=true)[0m
+[0m[INFO] [1776950447.486819761, 1517156189.074944900]: vtx=11, rel_pose=(7.8,9.9,-2.31), dist=12.6, IoU=0.038, total_vtx=13[0m
+[0m[INFO] [1776950447.842971009, 1517156189.437210069]: Starting localization from stamp 1517156189.041[0m
+[0m[INFO] [1776950447.854613944, 1517156189.447263791]: Vertex 11 registration score: 0.785[0m
+[0m[INFO] [1776950447.868925243, 1517156189.457322916]: Vertex 10 registration score: 0.759[0m
+[0m[INFO] [1776950447.877801107, 1517156189.467384637]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950447.884801752, 1517156189.477440009]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950447.893620599, 1517156189.487528968]: Vertex 1 registration score: 0.000[0m
+[0m[INFO] [1776950448.194131708, 1517156189.779320641]: Trying to match vertex 12[0m
+[0m[INFO] [1776950448.259413433, 1517156189.849894653]: Moved outside vcur 11[0m
+[0m[INFO] [1776950448.259928991, 1517156189.849894653]: Vertex 11 is too far to match[0m
+[0m[INFO] [1776950448.260377391, 1517156189.849894653]: Vertex 10 is too far to match[0m
+[0m[INFO] [1776950448.260392171, 1517156189.849894653]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1776950448.260410624, 1517156189.849894653]: 
+
+
+ ADD NEW VERTEX (0.3, -0.9, 0.17) idx=13 
+
+
+[0m
+[0m[INFO] [1776950448.260675423, 1517156189.849894653]: 
+Add edge (2.1,9.4)->(0.3,-0.9) rel_pose=(7.8,9.9,-2.31)
+[0m
+[0m[INFO] [1776950448.260687048, 1517156189.849894653]: Add edge (11)->(13) rel_pose=(7.79,9.88,-2.31) dist=12.58[0m
+[0m[INFO] [1776950448.260695685, 1517156189.849894653]: 
+Add edge (0.3,-0.9)->(5.3,12.2) rel_pose=(-1.5,0.9,-1.14)
+[0m
+[0m[INFO] [1776950448.260704039, 1517156189.849894653]: vtx=13, rel_pose=(-0.0,0.0,0.00), dist=0.0, IoU=0.041, total_vtx=14[0m
+[0m[INFO] [1776950448.336251031, 1517156189.930428909]: Starting localization from stamp 1517156189.642[0m
+[0m[INFO] [1776950448.348533794, 1517156189.940483154]: Vertex 12 registration score: 0.795[0m
+[0m[INFO] [1776950448.358480223, 1517156189.950540707]: Vertex 11 registration score: 0.000[0m
+[0m[INFO] [1776950448.371407862, 1517156189.960552206]: Vertex 10 registration score: 0.731[0m
+[0m[INFO] [1776950448.380065554, 1517156189.970602524]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950448.387718513, 1517156189.980658164]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950448.685383860, 1517156190.272612132]: vtx=13, rel_pose=(0.0,0.0,-0.00), dist=0.0, IoU=0.988, total_vtx=14[0m
+[0m[INFO] [1776950448.838822481, 1517156190.433586003]: Starting localization from stamp 1517156190.241[0m
+[0m[INFO] [1776950448.851734003, 1517156190.443741357]: Vertex 12 registration score: 0.797[0m
+[0m[INFO] [1776950448.864586110, 1517156190.453797027]: Vertex 11 registration score: 0.787[0m
+[0m[INFO] [1776950448.877371398, 1517156190.463857171]: Vertex 10 registration score: 0.719[0m
+[0m[INFO] [1776950448.885987413, 1517156190.473903707]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950448.893459004, 1517156190.483961910]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950449.185278890, 1517156190.775675431]: 
+
+
+=== LOOP CLOSURE FOUND! connect 11 and 13 through current ===
+
+
+[0m
+[0m[INFO] [1776950449.185297344, 1517156190.775675431]: Found loop closure. Add new vertex to close loop[0m
+[0m[INFO] [1776950449.185308085, 1517156190.775675431]: 
+
+
+ ADD NEW VERTEX (11.2, 2.5, -3.08) idx=14 
+
+
+[0m
+[0m[INFO] [1776950449.185407736, 1517156190.775675431]: 
+Add edge (0.3,-0.9)->(11.2,2.5) rel_pose=(11.4,1.5,3.03)
+[0m
+[0m[INFO] [1776950449.185421282, 1517156190.775675431]: Add edge (13)->(14) rel_pose=(11.35,1.52,3.03) dist=11.45[0m
+[0m[INFO] [1776950449.185428717, 1517156190.775675431]: 
+Add edge (11.2,2.5)->(12.2,2.4) rel_pose=(12.1,2.5,-3.45)
+[0m
+[0m[INFO] [1776950449.185434927, 1517156190.775675431]: 
+Add edge (11.2,2.5)->(2.1,9.4) rel_pose=(12.4,2.3,-3.78)
+[0m
+[0m[INFO] [1776950449.185441481, 1517156190.775675431]: 
+Add edge (11.2,2.5)->(5.3,12.2) rel_pose=(12.5,1.9,-4.19)
+[0m
+[0m[INFO] [1776950449.342205803, 1517156190.936631246]: Starting localization from stamp 1517156190.742[0m
+[0m[INFO] [1776950449.357111415, 1517156190.946686002]: Vertex 13 registration score: 0.827[0m
+[0m[INFO] [1776950449.369433634, 1517156190.956742040]: Vertex 12 registration score: 0.666[0m
+[0m[INFO] [1776950449.382304378, 1517156190.976862447]: Vertex 11 registration score: 0.341[0m
+[0m[INFO] [1776950449.392923043, 1517156190.986917928]: Vertex 10 registration score: 0.637[0m
+[0m[INFO] [1776950449.403283968, 1517156190.996976150]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950449.882924895, 1517156191.470356528]: vtx=14, rel_pose=(0.2,-0.0,-0.08), dist=0.2, IoU=0.762, total_vtx=15[0m
+[0m[INFO] [1776950449.884191749, 1517156191.470356528]: Starting localization from stamp 1517156191.342[0m
+[0m[INFO] [1776950449.898077588, 1517156191.490471152]: Vertex 13 registration score: 0.815[0m
+[0m[INFO] [1776950449.910941447, 1517156191.500529495]: Vertex 12 registration score: 0.000[0m
+[0m[INFO] [1776950449.920439497, 1517156191.510585487]: Vertex 11 registration score: 0.000[0m
+[0m[INFO] [1776950449.928966214, 1517156191.520640039]: Vertex 10 registration score: 0.000[0m
+[0m[INFO] [1776950449.938317592, 1517156191.530704758]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950450.339081651, 1517156191.933163451]: Starting localization from stamp 1517156191.342[0m
+[0m[INFO] [1776950450.353731504, 1517156191.943388111]: Vertex 13 registration score: 0.814[0m
+[0m[INFO] [1776950450.362617512, 1517156191.953441453]: Vertex 12 registration score: 0.000[0m
+[0m[INFO] [1776950450.372923857, 1517156191.963499415]: Vertex 11 registration score: 0.000[0m
+[0m[INFO] [1776950450.383585588, 1517156191.973558565]: Vertex 10 registration score: 0.000[0m
+[0m[INFO] [1776950450.391997655, 1517156191.983615876]: Vertex 9 registration score: 0.000[0m
+[0m[INFO] [1776950450.428795786, 1517156192.013887732]: Trying to match vertex 10[0m
+[0m[INFO] [1776950450.497998308, 1517156192.084228379]: Moved outside vcur 14[0m
+[0m[INFO] [1776950450.498328472, 1517156192.084228379]: Localization reattach: to vertex 13 (IoU=0.019, need_change=true)[0m
+[0m[INFO] [1776950450.498344394, 1517156192.084228379]: vtx=13, rel_pose=(11.6,1.0,2.96), dist=11.6, IoU=0.060, total_vtx=15[0m
+[0m[INFO] [1776950450.841738990, 1517156192.436219770]: Starting localization from stamp 1517156191.942[0m
+[0m[INFO] [1776950450.855017371, 1517156192.446273703]: Vertex 13 registration score: 0.781[0m
+[0m[INFO] [1776950450.864063716, 1517156192.456326832]: Vertex 12 registration score: 0.000[0m
+[0m[INFO] [1776950450.875613613, 1517156192.466387108]: Vertex 11 registration score: 0.000[0m
+[0m[INFO] [1776950450.884720872, 1517156192.476442005]: Vertex 10 registration score: 0.000[0m
+[0m[INFO] [1776950450.892215124, 1517156192.486525395]: Vertex 6 registration score: 0.000[0m
+[0m[INFO] [1776950450.990231304, 1517156192.577095403]: Trying to match vertex 14[0m
+[0m[INFO] [1776950451.086037253, 1517156192.677887272]: Moved outside vcur 13[0m
+[0m[INFO] [1776950451.086437199, 1517156192.677887272]: Vertex 13 is too far to match[0m
+[0m[INFO] [1776950451.086454640, 1517156192.677887272]: No proper vertex to change. Add new vertex[0m
+[0m[INFO] [1776950451.086475741, 1517156192.677887272]: 
+
+
+ ADD NEW VERTEX (-0.2, 0.6, -0.12) idx=15 
+
+
+[0m
+[0m[INFO] [1776950451.086692554, 1517156192.677887272]: 
+Add edge (0.3,-0.9)->(-0.2,0.6) rel_pose=(11.6,0.8,2.92)
+[0m
+[0m[INFO] [1776950451.086707719, 1517156192.677887272]: Add edge (13)->(15) rel_pose=(11.59,0.83,2.92) dist=11.62[0m
+[0m[INFO] [1776950451.086728748, 1517156192.677887272]: vtx=15, rel_pose=(0.0,-0.0,0.00), dist=0.0, IoU=0.062, total_vtx=16[0m
+[0m[INFO] [1776950451.334671213, 1517156192.929533139]: Starting localization from stamp 1517156192.541[0m
+[0m[INFO] [1776950451.349223059, 1517156192.939618956]: Vertex 14 registration score: 0.712[0m
+[0m[INFO] [1776950451.358529233, 1517156192.949676161]: Vertex 11 registration score: 0.000[0m
+[0m[INFO] [1776950451.369434164, 1517156192.959731049]: Vertex 13 registration score: 0.755[0m
+[0m[INFO] [1776950451.380840928, 1517156192.969794183]: Vertex 12 registration score: 0.000[0m
+[0m[INFO] [1776950451.394103660, 1517156192.979860840]: Vertex 10 registration score: 0.386[0m
+[0m[INFO] [1776950451.485870223, 1517156193.080566220]: 
+
+
+=== LOOP CLOSURE FOUND! connect 14 and 15 through current ===
+
+
+[0m
+[0m[INFO] [1776950451.485891283, 1517156193.080566220]: Found loop closure. Add new vertex to close loop[0m
+[0m[INFO] [1776950451.485902723, 1517156193.080566220]: 
+
+
+ ADD NEW VERTEX (-0.2, 0.6, -0.13) idx=16 
+
+
+[0m
+[0m[INFO] [1776950451.486178292, 1517156193.080566220]: 
+Add edge (-0.2,0.6)->(-0.2,0.6) rel_pose=(0.0,-0.0,-0.00)
+[0m
+[0m[INFO] [1776950451.486188140, 1517156193.080566220]: Add edge (15)->(16) rel_pose=(0.00,-0.01,-0.00) dist=0.01[0m
+[0m[INFO] [1776950451.486197022, 1517156193.080566220]: 
+Add edge (-0.2,0.6)->(11.2,2.5) rel_pose=(-0.5,-0.1,0.10)
+[0m
+[0m[INFO] [1776950451.486204268, 1517156193.080566220]: 
+Add edge (-0.2,0.6)->(0.3,-0.9) rel_pose=(-0.7,-0.1,0.12)
+[0m
+[0m[INFO] [1776950451.487408856, 1517156193.080566220]: Processed 91 frames[0m
+[0m[INFO] [1776950451.838044952, 1517156193.432808160]: Starting localization from stamp 1517156193.042[0m
+[0m[INFO] [1776950451.856117559, 1517156193.442867080]: Vertex 15 registration score: 0.841[0m
+[0m[INFO] [1776950451.869435311, 1517156193.462986872]: Vertex 12 registration score: 0.000[0m
+[0m[INFO] [1776950451.881261150, 1517156193.473053016]: Vertex 13 registration score: 0.732[0m
+[0m[INFO] [1776950451.892285673, 1517156193.483109576]: Vertex 14 registration score: 0.644[0m
+[0m[INFO] [1776950451.900846010, 1517156193.493163404]: Vertex 11 registration score: 0.000[0m
+[0m[INFO] [1776950452.173254221, 1517156193.765782251]: Trying to match vertex 15[0m
+[0m[INFO] [1776950452.297751882, 1517156193.886456602]: Edge reattach: from vertex 16 to vertex 15 (match_dist=0.34)[0m
+[0m[INFO] [1776950452.298353176, 1517156193.886456602]: vtx=15, rel_pose=(0.3,0.0,-0.01), dist=0.3, IoU=0.660, total_vtx=17[0m
+[0m[INFO] [1776950452.342616125, 1517156193.936736271]: Starting localization from stamp 1517156193.641[0m
+[0m[INFO] [1776950452.361569889, 1517156193.946790853]: Vertex 15 registration score: 0.836[0m
+[0m[INFO] [1776950452.370502684, 1517156193.956849475]: Vertex 11 registration score: 0.000[0m
+[0m[INFO] [1776950452.379536449, 1517156193.966908835]: Vertex 12 registration score: 0.000[0m
+[0m[INFO] [1776950452.389599476, 1517156193.976965793]: Vertex 14 registration score: 0.000[0m
+[0m[INFO] [1776950452.401288735, 1517156193.987022910]: Vertex 13 registration score: 0.541[0m
+[0m[INFO] [1776950452.686877130, 1517156194.278952990]: Trying to match vertex 13[0m
+[0m[INFO] [1776950452.836193711, 1517156194.429927033]: Edge reattach: from vertex 15 to vertex 13 (match_dist=0.66)[0m
+[0m[INFO] [1776950452.836797671, 1517156194.429927033]: vtx=13, rel_pose=(1.5,0.4,-0.14), dist=1.5, IoU=0.392, total_vtx=17[0m
+[0m[INFO] [1776950452.838234022, 1517156194.429927033]: Starting localization from stamp 1517156194.242[0m
+[0m[INFO] [1776950452.853589579, 1517156194.439980740]: Vertex 15 registration score: 0.638[0m
+[0m[INFO] [1776950452.864655812, 1517156194.450039085]: Vertex 14 registration score: 0.000[0m
+[0m[INFO] [1776950452.876036669, 1517156194.470150193]: Vertex 12 registration score: 0.651[0m
+[0m[INFO] [1776950452.887896538, 1517156194.480209189]: Vertex 13 registration score: 0.683[0m
+[0m[INFO] [17

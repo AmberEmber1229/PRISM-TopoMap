@@ -747,7 +747,8 @@ class PRISMTopomapNode():
         #     print('Cur curbs is None!')
         self.cur_global_pose = cur_global_pose
         if self.cur_global_pose is None:
-            print('No global pose!')
+            print('No global pose! (gt_buf={}, odom_buf={})'.format(
+                  len(self.gt_poses), len(self.odom_poses)))
             return
         
         # print('Cur odom pose:', cur_odom_pose)

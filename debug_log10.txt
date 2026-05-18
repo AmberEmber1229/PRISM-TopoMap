@@ -1,0 +1,169 @@
+[33m[WARN] [1779028289.882637473, 1517156141.746566443]: Waiting for pose data to catch up... gt_poses=0, odom_poses=1[0m
+[33m[WARN] [1779028294.770203071, 1517156146.787255278]: Waiting for pose data to catch up... gt_poses=0, odom_poses=52[0m
+[33m[WARN] [1779028299.830279445, 1517156151.845277153]: Waiting for pose data to catch up... gt_poses=0, odom_poses=102[0m
+[0m[INFO] [1779028251.806062758]: Loading config: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/config/scout_rosbag.yaml[0m
+[0m[INFO] [1779028251.863959110]: === PRISM-TopoMap C++ node initialized ===[0m
+[0m[INFO] [1779028251.863973264]:   Mode: mapping[0m
+[0m[INFO] [1779028251.863979243]:   PCD topic: /rslidar_points[0m
+[0m[INFO] [1779028251.863984605]:   Odom topic: /odom[0m
+[0m[INFO] [1779028251.863990534]:   use_odom for rel_pose: false[0m
+[0m[INFO] [1779028251.863995201]:   use_gt_pose: true[0m
+[0m[INFO] [1779028251.863999563]:   GT topic: /odom_gt[0m
+[0m[INFO] [1779028251.864007235]:   GT type: Odometry[0m
+[0m[INFO] [1779028251.864016784]: Waiting for Python inference services...[0m
+[0m[INFO] [1779028251.864190356]: waitForService: Service [/prism/get_descriptor] has not been advertised, waiting...[0m
+[0m[INFO] [1779028257.132474113]: waitForService: Service [/prism/get_descriptor] is now available.[0m
+[0m[INFO] [1779028257.132498935]: Descriptor service is ready.[0m
+[0m[INFO] [1779028257.132872969]: Registration service is ready.[0m
+[0m[INFO] [1779028257.132884196]: All Python inference services are ready.[0m
+[0m[INFO] [1779028257.132892082]: === PRISM-TopoMap C++ node running ===[0m
+[0m[INFO] [1779028289.669463581, 1517156141.686135244]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028289.669527433, 1517156141.686135244]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028289.671719268, 1517156141.686135244]: [DIAG] First odom msg received on topic: /odom[0m
+[0m[INFO] [1779028289.882619529, 1517156141.746566443]: [DIAG] First PCD msg received on topic: /rslidar_points[0m
+[0m[INFO] [1779028290.169594017, 1517156142.186510027]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028290.672415298, 1517156142.690079372]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028291.173898720, 1517156143.190801929]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028291.676575832, 1517156143.693772920]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028292.169221638, 1517156144.186581108]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028292.673987897, 1517156144.691486092]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028293.177025922, 1517156145.194656605]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028293.670081250, 1517156145.687349482]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028294.177144557, 1517156146.194852901]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028294.669537500, 1517156146.686572243]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028295.172570105, 1517156147.190066146]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028295.672748188, 1517156147.689898875]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028296.175400190, 1517156148.193281244]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028296.671514891, 1517156148.688862681]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028297.175209251, 1517156149.192238047]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028297.670166814, 1517156149.687099408]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028298.175820611, 1517156150.193223287]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028298.678703987, 1517156150.696038670]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028299.172012100, 1517156151.188932106]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028299.677227513, 1517156151.694445550]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028300.177755433, 1517156152.194968924]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028300.672776335, 1517156152.690160284]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [[33m[WARN] [1779028304.870570525, 1517156156.879230514]: Waiting for pose data to catch up... gt_poses=0, odom_poses=153[0m
+[33m[WARN] [1779028309.931524909, 1517156161.942872160]: Waiting for pose data to catch up... gt_poses=0, odom_poses=203[0m
+[33m[WARN] [1779028314.970066770, 1517156166.978481576]: Waiting for pose data to catch up... gt_poses=0, odom_poses=254[0m
+1779028301.173632490, 1517156153.190519923]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028301.676211842, 1517156153.693590158]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028302.175216981, 1517156154.192584658]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028302.672609147, 1517156154.689872931]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028303.176241651, 1517156155.192966766]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028303.678535410, 1517156155.695939624]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028304.173439976, 1517156156.191117270]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028304.791426576, 1517156156.808770685]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028305.170486444, 1517156157.187976370]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028305.668872048, 1517156157.686343117]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028306.172237153, 1517156158.189263854]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028306.677315760, 1517156158.694643364]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028307.170456979, 1517156159.187787301]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028307.672607049, 1517156159.689562188]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028308.175299618, 1517156160.192594774]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028308.669666341, 1517156160.687431846]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028309.171315730, 1517156161.188666125]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028309.675270458, 1517156161.691991491]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028310.176350800, 1517156162.193834563]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028310.669986666, 1517156162.686863743]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028311.177459177, 1517156163.194617363]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028311.672341355, 1517156163.689359068]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028312.176722948, 1517156164.194352939]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028312.669936288, 1517156164.687682641]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028313.281387085, 1517156165.299111697]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028313.678048102, 1517156165.695132345]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028314.171118338, 1517156166.188324465]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028314.676900167, 1517156166.694125061]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028315.172214178, 1517156167.189772658]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028315.677850481, 1517156167.694631194]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028316.177580205, 1517156168.195109827]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028316.671034102, 1517156168.688669427]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028317.168344582, 1517156169.186178512]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028317.674656605, 1517156169.691749743]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028318.170072552, 1517156170.187710355]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028318.673029546, 1517156170.690587912]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028319.175828437, 1517156171.193584352]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028319.677658830, 1517156171.695236916]: Waiting for messag[33m[WARN] [1779028319.969910715, 1517156171.983388227]: Waiting for pose data to catch up... gt_poses=0, odom_poses=304[0m
+[33m[WARN] [1779028325.026832644, 1517156177.041031996]: Waiting for pose data to catch up... gt_poses=0, odom_poses=354[0m
+[33m[WARN] [1779028330.070706608, 1517156182.079178290]: Waiting for pose data to catch up... gt_poses=0, odom_poses=405[0m
+[33m[WARN] [1779028335.070076378, 1517156187.087030950]: Waiting for pose data to catch up... gt_poses=0, odom_poses=455[0m
+es to initialize localizer...[0m
+[0m[INFO] [1779028320.170391193, 1517156172.187556999]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028320.673737825, 1517156172.690644260]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028321.178178808, 1517156173.195353837]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028321.758208379, 1517156173.775237649]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028322.169259516, 1517156174.187086330]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028322.672280078, 1517156174.690171904]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028323.171328903, 1517156175.188073110]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028323.673348454, 1517156175.691105433]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028324.176598777, 1517156176.194396392]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028324.671931797, 1517156176.688925623]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028325.174679636, 1517156177.192058338]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028325.675411205, 1517156177.692544268]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028326.178683932, 1517156178.195631977]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028326.671999145, 1517156178.689131493]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028327.191806308, 1517156179.208335299]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028327.675227830, 1517156179.692672131]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028328.169856049, 1517156180.187045949]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028328.673524866, 1517156180.690730369]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028329.176533535, 1517156181.193881247]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028329.676791313, 1517156181.694411805]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028330.172275284, 1517156182.189923454]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028330.675569704, 1517156182.692885811]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028331.178343021, 1517156183.195767164]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028331.675662760, 1517156183.692282411]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028332.178704053, 1517156184.195214839]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028332.773268591, 1517156184.790417049]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028333.176235336, 1517156185.193950687]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028333.671624674, 1517156185.688501170]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028334.177523777, 1517156186.194793115]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028334.670233665, 1517156186.687776761]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028335.170752111, 1517156187.187682711]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028335.673989394, 1517156187.690885986]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028336.176391482, 1517156188.193831060]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028336.672633593, 1517156188.689947773]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028337.175756760, 1517156189.192823419]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028337.673618471, 1517156189.690878739]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028338.177187929, 1517156190.194930370]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028338.673279[33m[WARN] [1779028340.127588356, 1517156192.140502282]: Waiting for pose data to catch up... gt_poses=0, odom_poses=505[0m
+[33m[WARN] [1779028345.125658853, 1517156197.143086283]: Waiting for pose data to catch up... gt_poses=0, odom_poses=555[0m
+[33m[WARN] [1779028350.170593606, 1517156202.181675031]: Waiting for pose data to catch up... gt_poses=0, odom_poses=606[0m
+[33m[WARN] [1779028355.171251551, 1517156207.186184822]: Waiting for pose data to catch up... gt_poses=0, odom_poses=656[0m
+574, 1517156190.690264064]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028339.278593905, 1517156191.295330208]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028339.670034128, 1517156191.687643562]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028340.170326705, 1517156192.187233314]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028340.677475044, 1517156192.694668228]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028341.173030725, 1517156193.189918928]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028341.676065473, 1517156193.692926846]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028342.172250910, 1517156194.189477832]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028342.675102152, 1517156194.692351893]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028343.175795784, 1517156195.193382066]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028343.671209020, 1517156195.688691054]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028344.176752205, 1517156196.194162748]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028344.672625348, 1517156196.690194057]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028345.169577332, 1517156197.187201243]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028345.673054278, 1517156197.690774663]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028346.177891773, 1517156198.194650227]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028346.669710909, 1517156198.686700345]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028347.176457307, 1517156199.194013194]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028347.669905735, 1517156199.686888896]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028348.173207546, 1517156200.190119896]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028348.676020332, 1517156200.693365236]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028349.169157242, 1517156201.186787544]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028349.670418346, 1517156201.687643014]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028350.173943694, 1517156202.191729055]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028350.677778008, 1517156202.695536624]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028351.173529227, 1517156203.191182839]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028351.674565810, 1517156203.692123118]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028352.171876605, 1517156204.189208849]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028352.675209620, 1517156204.692316591]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028353.178357698, 1517156205.195533719]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028353.671616948, 1517156205.689144002]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028354.176798498, 1517156206.193735696]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028354.670317936, 1517156206.687423076]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028355.168627573, 1517156207.186184822]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028355.673217204, 1517156207.690572443]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028356.175654066, 1517156208.193375176]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028356.668769729, 1517156208.686188684]: Waiting for messages to initialize localizer...[0m
+[0m[INFO] [1779028357.171188948, 1517156209.189028009]: Waiting for messages to initialize 

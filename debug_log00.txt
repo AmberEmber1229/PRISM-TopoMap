@@ -1,0 +1,42 @@
+File: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/scripts/prism_topomap_node.py
+Intializing...
+File: /home/docker_prism/catkin_ws/src/PRISM-TopoMap/scripts/prism_topomap.py
+Initializing done!
+[SYNC-PY] gt_buf=0 odom_buf=4 gt_pose=None odom_pose=(-0.0352,-0.0032,0.0235)
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=4 gt_pose=None odom_pose=(-0.0356,-0.0033,0.0235)
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=5 gt_pose=None odom_pose=(-0.0360,-0.0034,0.0232)
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=5 gt_pose=None odom_pose=(-0.0360,-0.0034,0.0235)
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=5 gt_pose=None odom_pose=(-0.0362,-0.0034,0.0238)
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=5 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=6 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=7 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=8 gt_pose=None odom_pose=None
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=9 gt_pose=None odom_pose=None
+No global pose!
+Waiting for message to initialize localizer...
+[SYNC-PY] gt_buf=0 odom_buf=20 gt_pose=None odom_pose=(-0.0355,-0.0033,0.0234)
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=20 gt_pose=None odom_pose=(-0.0357,-0.0034,0.0234)
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=20 gt_pose=None odom_pose=(-0.0356,-0.0034,0.0234)
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=20 gt_pose=None odom_pose=(-0.0353,-0.0035,0.0234)
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=20 gt_pose=None odom_pose=(-0.0353,-0.0035,0.0234)
+No global pose!
+[SYNC-PY] gt_buf=0 odom_buf=20 gt_pose=None odom_pose=None
+Traceback (most recent call last):
+  File "/home/docker_prism/catkin_ws/src/PRISM-TopoMap/scripts/prism_topomap_node.py", line 794, in <module>
+    node = PRISMTopomapNode()
+  File "/home/docker_prism/catkin_ws/src/PRISM-TopoMap/scripts/prism_topomap_node.py", line 531, in __init__
+    input_config['gt_pose']['topic'] if self.use_gt_pose and 'gt_pose' in input_config else 'N/A',
+NameError: name 'input_config' is not defined
