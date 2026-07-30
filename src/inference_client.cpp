@@ -4,6 +4,11 @@
  */
 #include "prism_topomap/inference_client.h"
 #include <ros/ros.h>
+#include <chrono>
+#include <cmath>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
 
 namespace prism_topomap {
 
@@ -61,6 +66,17 @@ InferenceClient::DescriptorResult InferenceClient::getDescriptor(
 
     DescriptorResult result;
     result.success = false;
+    const auto call_start = std::chrono::steady_clock::now();
+
+    if (trace_config_.enabled && trace_detailed_) {
+        ROS_INFO("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DESCRIPTOR] action=SERVICE_REQUEST "
+                 "points=%u front_image=%s back_image=%s quantization=%.3f",
+                 trace_frame_id_, cloud_msg.header.stamp.toSec(),
+                 cloud_msg.width * cloud_msg.height,
+                 has_image_front ? "true" : "false",
+                 has_image_back ? "true" : "false",
+                 quantization_size);
+    }
 
     prism_topomap::GetDescriptor srv;
     srv.request.pointcloud = cloud_msg;
@@ -90,6 +106,32 @@ InferenceClient::DescriptorResult InferenceClient::getDescriptor(
             descriptor_client_.getService(), true);
     }
 
+    result.elapsed_ms = std::chrono::duration<double, std::milli>(
+        std::chrono::steady_clock::now() - call_start).count();
+
+    if (trace_config_.enabled && (trace_detailed_ || !result.success)) {
+        double norm_sq = 0.0;
+        for (float value : result.descriptor) {
+            norm_sq += static_cast<double>(value) * value;
+        }
+        std::ostringstream head;
+        head << std::fixed << std::setprecision(5) << "[";
+        const int head_size = std::max(0, trace_config_.descriptor_head_size);
+        const size_t n = std::min(result.descriptor.size(), static_cast<size_t>(head_size));
+        for (size_t i = 0; i < n; ++i) {
+            if (i > 0) head << ",";
+            head << result.descriptor[i];
+        }
+        if (result.descriptor.size() > n) head << ",...";
+        head << "]";
+
+        ROS_INFO("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DESCRIPTOR] action=SERVICE_RESULT "
+                 "success=%s elapsed_ms=%.3f dim=%lu l2_norm=%.6f head=%s",
+                 trace_frame_id_, cloud_msg.header.stamp.toSec(),
+                 result.success ? "true" : "false", result.elapsed_ms,
+                 result.descriptor.size(), std::sqrt(norm_sq), head.str().c_str());
+    }
+
     return result;
 }
 
@@ -107,6 +149,7 @@ InferenceClient::RegistrationResult InferenceClient::gridRegistration(
     result.trans_i = 0.0;
     result.trans_j = 0.0;
     result.rot_angle = 0.0;
+    const auto call_start = std::chrono::steady_clock::now();
 
     prism_topomap::GridRegistration srv;
 
@@ -150,6 +193,15 @@ InferenceClient::RegistrationResult InferenceClient::gridRegistration(
         // 尝试重连
         registration_client_ = ros::NodeHandle().serviceClient<prism_topomap::GridRegistration>(
             registration_client_.getService(), true);
+    }
+
+    result.elapsed_ms = std::chrono::duration<double, std::milli>(
+        std::chrono::steady_clock::now() - call_start).count();
+    if (trace_config_.enabled && !result.success) {
+        ROS_WARN("[FLOW][STAGE=REGISTRATION_SERVICE] type=%s success=false "
+                 "elapsed_ms=%.3f ref=%dx%d cand=%dx%d",
+                 registration_type.c_str(), result.elapsed_ms,
+                 ref_grid.rows, ref_grid.cols, cand_grid.rows, cand_grid.cols);
     }
 
     return result;

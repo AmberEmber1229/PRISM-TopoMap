@@ -12,6 +12,7 @@
 #include <cmath>
 #include <iostream>
 #include <sys/stat.h>
+#include <chrono>
 
 namespace prism_topomap {
 
@@ -219,27 +220,77 @@ void LocalGrid::transform(double x, double y, double theta) {
 // 对应 Python: LocalGrid.update_from_cloud_and_transform()
 // ============================================================================
 void LocalGrid::updateFromCloudAndTransform(const PointCloudPtr& points_xyz,
-                                            double x, double y, double theta) {
+                                            double x, double y, double theta,
+                                            LocalGridUpdateStats* stats) {
+    const auto flow_start = std::chrono::steady_clock::now();
+    if (stats) {
+        *stats = LocalGridUpdateStats();
+        stats->input_points = points_xyz ? points_xyz->size() : 0;
+        stats->curbs_layer_exists = layers_.count("curbs") > 0;
+    }
+
+    auto finish_stats = [&]() {
+        if (!stats) return;
+
+        const cv::Mat& occ = layers_["occupancy"];
+        cv::Mat mask;
+        cv::compare(occ, 0, mask, cv::CMP_EQ);
+        stats->unknown_cells = cv::countNonZero(mask);
+        cv::compare(occ, 1, mask, cv::CMP_EQ);
+        stats->free_cells = cv::countNonZero(mask);
+        cv::compare(occ, 2, mask, cv::CMP_EQ);
+        stats->occupied_cells = cv::countNonZero(mask);
+
+        if (layers_.count("density_map")) {
+            stats->density_nonzero_cells = cv::countNonZero(layers_["density_map"]);
+            double min_val = 0.0;
+            cv::minMaxLoc(layers_["density_map"], &min_val, &stats->density_max);
+        }
+        if (layers_.count("height_map")) {
+            cv::Mat nonzero_mask;
+            cv::compare(layers_["height_map"], 0, nonzero_mask, cv::CMP_NE);
+            stats->height_nonzero_cells = cv::countNonZero(nonzero_mask);
+            double min_val = 0.0;
+            cv::minMaxLoc(layers_["height_map"], &min_val, &stats->height_max);
+        }
+        stats->elapsed_ms = std::chrono::duration<double, std::milli>(
+            std::chrono::steady_clock::now() - flow_start).count();
+    };
+
     // 1. Transform existing grid (accumulate odometry increment)
     transform(x, y, theta);
 
-    if (!points_xyz || points_xyz->empty()) return;
+    if (!points_xyz || points_xyz->empty()) {
+        finish_stats();
+        return;
+    }
 
     // 2. Range filter: [-max_range, max_range] on X and Y
     float mr = static_cast<float>(max_range_);
     PointCloudPtr in_range(new PointCloudXYZ);
     in_range->reserve(points_xyz->size());
     for (const auto& p : *points_xyz) {
-        if (std::isfinite(p.x) && std::isfinite(p.y) && std::isfinite(p.z) &&
-            p.x > -mr && p.x < mr && p.y > -mr && p.y < mr) {
+        const bool finite = std::isfinite(p.x) && std::isfinite(p.y) && std::isfinite(p.z);
+        if (stats && finite) stats->finite_points++;
+        const bool in_bounds = finite &&
+            p.x > -mr && p.x < mr && p.y > -mr && p.y < mr;
+        if (in_bounds) {
             in_range->push_back(p);
+        } else if (stats && finite) {
+            stats->out_of_range_points++;
         }
     }
 
-    if (in_range->empty()) return;
+    if (stats) stats->in_range_points = in_range->size();
+
+    if (in_range->empty()) {
+        finish_stats();
+        return;
+    }
 
     // 3. Separate obstacle points (remove floor and ceiling)
     PointCloudPtr obstacles = removeFloorAndCeil(in_range, floor_height_, ceil_height_);
+    if (stats) stats->obstacle_points = obstacles->size();
 
     int grid_radius = static_cast<int>(radius_ / resolution_);
 
@@ -300,6 +351,8 @@ void LocalGrid::updateFromCloudAndTransform(const PointCloudPtr& points_xyz,
             cur = std::max(cur, all_z_values[i]);
         }
     }
+
+    finish_stats();
 }
 
 // ============================================================================

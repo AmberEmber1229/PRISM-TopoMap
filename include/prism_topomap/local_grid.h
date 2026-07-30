@@ -16,8 +16,28 @@
 #include <map>
 #include <vector>
 #include <memory>
+#include <cstddef>
 
 namespace prism_topomap {
+
+/// Per-update aggregate statistics for optional [FLOW] logging.
+struct LocalGridUpdateStats {
+    size_t input_points = 0;
+    size_t finite_points = 0;
+    size_t in_range_points = 0;
+    size_t out_of_range_points = 0;
+    size_t obstacle_points = 0;
+    int unknown_cells = 0;
+    int free_cells = 0;
+    int occupied_cells = 0;
+    int density_nonzero_cells = 0;
+    int height_nonzero_cells = 0;
+    double density_max = 0.0;
+    double height_max = 0.0;
+    bool curbs_layer_exists = false;
+    bool curbs_updated = false;
+    double elapsed_ms = 0.0;
+};
 
 class LocalGrid {
 public:
@@ -68,7 +88,8 @@ public:
      */
     void updateFromCloudAndTransform(const PointCloudPtr& points_xyz,
                                      double x = 0.0, double y = 0.0,
-                                     double theta = 0.0);
+                                     double theta = 0.0,
+                                     LocalGridUpdateStats* stats = nullptr);
 
     /**
      * @brief 更新路沿层

@@ -3,10 +3,18 @@
   <arg name="path_to_save_graph" default="$(find prism_topomap)/graph_jsons/scout_rosbag"/>
   <arg name="path_to_save_logs" default="$(find prism_topomap)/logs"/>
   <arg name="config_file" default="scout_rosbag.yaml"/>
+  <arg name="trace_data_flow" default="false"/>
+  <arg name="trace_every_n_processed_frames" default="1"/>
+  <arg name="trace_descriptor_head_size" default="4"/>
+  <arg name="trace_registration_candidates" default="true"/>
 
   <node pkg="prism_topomap" type="inference_service_node.py"
         name="prism_inference_service" output="screen">
     <param name="config_file" value="$(arg config_file)"/>
+    <param name="trace_data_flow" value="$(arg trace_data_flow)"/>
+    <param name="trace_every_n_processed_frames" value="$(arg trace_every_n_processed_frames)"/>
+    <param name="trace_descriptor_head_size" value="$(arg trace_descriptor_head_size)"/>
+    <param name="trace_registration_candidates" value="$(arg trace_registration_candidates)"/>
   </node>
 
   <node pkg="prism_topomap" type="prism_topomap_cpp_node"
@@ -15,6 +23,10 @@
     <param name="path_to_save_graph" value="$(arg path_to_save_graph)"/>
     <param name="path_to_save_logs" value="$(arg path_to_save_logs)"/>
     <param name="config_file" value="$(arg config_file)"/>
+    <param name="trace_data_flow" value="$(arg trace_data_flow)"/>
+    <param name="trace_every_n_processed_frames" value="$(arg trace_every_n_processed_frames)"/>
+    <param name="trace_descriptor_head_size" value="$(arg trace_descriptor_head_size)"/>
+    <param name="trace_registration_candidates" value="$(arg trace_registration_candidates)"/>
   </node>
 
   <node pkg="prism_topomap" type="tf_manager.py" name="odometry_publisher" output="screen">

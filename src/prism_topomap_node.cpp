@@ -10,8 +10,10 @@
 #include <tf/transform_datatypes.h>
 #include <cmath>
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <fstream>
+#include <limits>
 
 namespace prism_topomap {
 
@@ -89,6 +91,19 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
     map_frame_ = viz_config["map_frame"].as<std::string>("map");
     publish_tf_from_odom_ = viz_config["publish_tf_from_odom"].as<bool>(false);
 
+    // --- optional end-to-end data-flow tracing (default off) ---
+    pnh_.param<bool>("trace_data_flow", trace_config_.enabled, true);
+    pnh_.param<int>("trace_every_n_processed_frames",
+                    trace_config_.every_n_processed_frames, 1);
+    pnh_.param<int>("trace_descriptor_head_size",
+                    trace_config_.descriptor_head_size, 4);
+    pnh_.param<bool>("trace_registration_candidates",
+                     trace_config_.registration_candidates, true);
+    trace_config_.every_n_processed_frames =
+        std::max(1, trace_config_.every_n_processed_frames);
+    trace_config_.descriptor_head_size =
+        std::max(0, trace_config_.descriptor_head_size);
+
     // --- curb detection topic ---
     if (subscribe_to_curbs_ && pointcloud_config["curb_detection_topic"]) {
         curb_topic_ = pointcloud_config["curb_detection_topic"].as<std::string>("/curb_detection");
@@ -111,7 +126,8 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
 
     topo_slam_model_ = std::make_unique<TopoSLAMModel>(
         config_, inference_client_,
-        path_to_load_graph, path_to_save_graph, path_to_save_logs);
+        path_to_load_graph, path_to_save_graph, path_to_save_logs,
+        trace_config_);
 
     // ================================================================
     // 5. 创建可视化发布器
@@ -172,6 +188,13 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
     if (use_gt_pose_) {
         ROS_INFO("  GT topic: %s", gt_topic_.c_str());
         ROS_INFO("  GT type: %s", use_gt_pose_pose_stamped_ ? "PoseStamped" : "Odometry");
+    }
+    if (trace_config_.enabled) {
+        ROS_INFO("[FLOW][STAGE=RX] trace_enabled=true every_n_processed_frames=%d "
+                 "descriptor_head_size=%d registration_candidates=%s",
+                 trace_config_.every_n_processed_frames,
+                 trace_config_.descriptor_head_size,
+                 trace_config_.registration_candidates ? "true" : "false");
     }
 }
 
@@ -289,6 +312,23 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
     result.has_img_front = false;
     result.has_img_back = false;
     result.has_curbs = false;
+    result.global_source = "NONE";
+    result.odom_source = "NONE";
+    result.failure_reason = "NO_MATCHING_POSE";
+    const double nan = std::numeric_limits<double>::quiet_NaN();
+    result.dt_gt = nan;
+    result.dt_odom = nan;
+    result.dt_front = nan;
+    result.dt_back = nan;
+    result.dt_curbs = nan;
+    result.latest_gt_stamp = gt_poses_.empty() ? nan : gt_poses_.back().timestamp;
+    result.latest_odom_stamp = odom_poses_.empty() ? nan : odom_poses_.back().timestamp;
+    result.latest_front_stamp =
+        rgb_buffer_front_.empty() ? nan : rgb_buffer_front_.back().timestamp;
+    result.latest_back_stamp =
+        rgb_buffer_back_.empty() ? nan : rgb_buffer_back_.back().timestamp;
+    result.latest_curbs_stamp =
+        curb_clouds_.empty() ? nan : curb_clouds_.back().timestamp;
 
     // 查找 GT 位姿 (插值)
     if (true) {
@@ -314,9 +354,14 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
         // 获取 global_pose (用于可视化/顶点坐标)
         // 优先使用 GT, 如果 GT 不可用则回退到 odometry
         if (use_gt_pose_ && !gt_poses_.empty()) {
+            result.global_source = "GT";
             if (gt_poses_.size() == 1) {
                 double gt_diff = std::abs(gt_poses_[0].timestamp - timestamp);
-                if (gt_diff > kPoseSyncTolerance) return result;
+                result.dt_gt = gt_diff;
+                if (gt_diff > kPoseSyncTolerance) {
+                    result.failure_reason = "GT_OUT_OF_TOLERANCE";
+                    return result;
+                }
                 result.global_pose = gt_poses_[0].pose;
             } else {
                 int gt_idx = -1;
@@ -329,19 +374,31 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
 
                 if (gt_idx >= 0) {
                     result.global_pose = interpolatePose(gt_poses_[gt_idx], gt_poses_[gt_idx + 1], timestamp);
+                    result.dt_gt = std::min(
+                        std::abs(gt_poses_[gt_idx].timestamp - timestamp),
+                        std::abs(gt_poses_[gt_idx + 1].timestamp - timestamp));
                 } else {
                     double gt_diff = std::numeric_limits<double>::max();
                     if (!getNearestPose(gt_poses_, result.global_pose, gt_diff) || gt_diff > kPoseSyncTolerance) {
+                        result.dt_gt = gt_diff;
+                        result.failure_reason = "GT_OUT_OF_TOLERANCE";
                         return result;
                     }
+                    result.dt_gt = gt_diff;
                 }
             }
         } else {
             // 无 GT 数据: 从 odometry 获取 global_pose
             double odom_diff = std::numeric_limits<double>::max();
             if (!getNearestPose(odom_poses_, result.global_pose, odom_diff) || odom_diff > kPoseSyncTolerance) {
+                result.dt_odom = odom_diff;
+                result.failure_reason = odom_poses_.empty()
+                    ? "NO_ODOM_FOR_GLOBAL_POSE"
+                    : "ODOM_GLOBAL_OUT_OF_TOLERANCE";
                 return result;
             }
+            result.global_source = "ODOM";
+            result.dt_odom = odom_diff;
             if (use_gt_pose_ && gt_poses_.empty()) {
                 ROS_WARN_THROTTLE(5.0,
                     "[SYNC] GT pose configured but topic %s has no data (gt_buf=0, odom_buf=%lu). "
@@ -356,6 +413,8 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
             double odom_diff = std::numeric_limits<double>::max();
             if (getNearestPose(odom_poses_, result.odom_pose, odom_diff) &&
                 odom_diff <= kPoseSyncTolerance) {
+                result.odom_source = "ODOM";
+                result.dt_odom = odom_diff;
                 // 成功从 /odom 获取里程计位姿
                 // ROS_DEBUG("[SYNC] odom_pose from /odom topic (diff=%.3fs)", odom_diff);
             } else {
@@ -366,6 +425,8 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
                     "This may cause incorrect grid_shift / rel_pose accumulation!",
                     kPoseSyncTolerance, odom_diff, odom_poses_.size());
                 result.odom_pose = result.global_pose;
+                result.odom_source = "GLOBAL_FALLBACK";
+                result.dt_odom = odom_diff;
             }
         }
         // ROS_DEBUG("[SYNC] odom_source=%s odom_pose=(%.4f,%.4f,%.4f) global_pose=(%.4f,%.4f,%.4f)",
@@ -374,6 +435,7 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
         //          result.global_pose[0], result.global_pose[1], result.global_pose[2]);
 
         result.valid = true;
+        result.failure_reason = "NONE";
     } /* legacy sync logic retained for reference:
         if (gt_poses_.size() < 2) return result;
 
@@ -436,6 +498,9 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
         if (best_idx >= 0 && best_diff < 0.5) {
             result.has_img_front = true;
             result.img_front = rgb_buffer_front_[best_idx].image;
+            result.dt_front = best_diff;
+        } else if (best_idx >= 0) {
+            result.dt_front = best_diff;
         }
     }
 
@@ -453,6 +518,9 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
         if (best_idx >= 0 && best_diff < 0.5) {
             result.has_img_back = true;
             result.img_back = rgb_buffer_back_[best_idx].image;
+            result.dt_back = best_diff;
+        } else if (best_idx >= 0) {
+            result.dt_back = best_diff;
         }
     }
 
@@ -470,6 +538,9 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
         if (best_idx >= 0 && best_diff < 0.5) {
             result.has_curbs = true;
             result.curbs = curb_clouds_[best_idx].cloud;
+            result.dt_curbs = best_diff;
+        } else if (best_idx >= 0) {
+            result.dt_curbs = best_diff;
         }
     }
 
@@ -504,9 +575,24 @@ Pose2D PRISMTopomapNode::getNavigationSubgoal() {
 // ============================================================================
 void PRISMTopomapNode::pcdCallback(const sensor_msgs::PointCloud2::ConstPtr& msg) {
     ROS_INFO_ONCE("[DIAG] First PCD msg received on topic: %s", pcd_topic_.c_str());
+    const size_t queue_before = pcd_queue_.size();
+    ++pcd_rx_count_;
     pcd_queue_.push_back(msg);
+    bool dropped_oldest = false;
     if (pcd_queue_.size() > 50) {
         pcd_queue_.pop_front();
+        dropped_oldest = true;
+    }
+    if (trace_config_.enabled) {
+        ROS_INFO("[FLOW][FRAME=UNASSIGNED][STAMP=%.9f][STAGE=RX] "
+                 "rx_id=%lu seq=%u raw_points=%u queue_before=%lu queue_after=%lu "
+                 "dropped_oldest=%s",
+                 msg->header.stamp.toSec(),
+                 static_cast<unsigned long>(pcd_rx_count_), msg->header.seq,
+                 msg->width * msg->height,
+                 static_cast<unsigned long>(queue_before),
+                 static_cast<unsigned long>(pcd_queue_.size()),
+                 dropped_oldest ? "true" : "false");
     }
     processPcdQueue();
 }
@@ -530,6 +616,14 @@ void PRISMTopomapNode::processPcdQueue() {
                 "queue=%lu, gt_buf=%lu, odom_buf=%lu)",
                 stamp, stamp - last_processed_stamp, skipped_count,
                 pcd_queue_.size(), gt_poses_.size(), odom_poses_.size());
+            if (trace_config_.enabled) {
+                ROS_INFO("[FLOW][FRAME=UNASSIGNED][STAMP=%.9f][STAGE=THROTTLE] "
+                         "seq=%u result=SKIPPED_INTERVAL interval=%.6f "
+                         "since_last=%.6f last_processed_stamp=%.9f queue=%lu",
+                         stamp, msg->header.seq, pcd_process_interval_,
+                         stamp - last_processed_stamp, last_processed_stamp,
+                         static_cast<unsigned long>(pcd_queue_.size()));
+            }
             pcd_queue_.pop_front();
             continue;
         }
@@ -547,26 +641,94 @@ void PRISMTopomapNode::processPcdQueue() {
             // 退出循环，保留该帧在队列里等待未来的里程计回调触发消费
             ROS_WARN_THROTTLE(5.0, "Waiting for pose data to catch up... gt_poses=%lu, odom_poses=%lu",
                               gt_poses_.size(), odom_poses_.size());
+            if (trace_config_.enabled) {
+                ROS_INFO("[FLOW][FRAME=UNASSIGNED][STAMP=%.9f][STAGE=SYNC] "
+                         "seq=%u result=WAITING_FOR_POSE reason=%s "
+                         "global_source=%s dt_gt=%.6f dt_odom=%.6f "
+                         "latest_gt=%.9f latest_odom=%.9f latest_front=%.9f "
+                         "latest_back=%.9f latest_curbs=%.9f queue=%lu",
+                         stamp, msg->header.seq, sync.failure_reason.c_str(),
+                         sync.global_source.c_str(), sync.dt_gt, sync.dt_odom,
+                         sync.latest_gt_stamp, sync.latest_odom_stamp,
+                         sync.latest_front_stamp, sync.latest_back_stamp,
+                         sync.latest_curbs_stamp,
+                         static_cast<unsigned long>(pcd_queue_.size()));
+            }
             break;
         }
 
         // 成功获取同步数据，弹出队列并开始处理
         pcd_queue_.pop_front();
         last_processed_stamp = stamp;
-        frame_cnt_++;
+        const auto frame_start = std::chrono::steady_clock::now();
 
         // ROS_DEBUG("[DIAG] sync.global_pose=(%.4f, %.4f, %.4f) stamp=%.3f",
         //          sync.global_pose[0], sync.global_pose[1], sync.global_pose[2], stamp);
 
         // 2. Parse point cloud
-        PointCloudPtr cur_cloud = getXyzCoordsFromMsg(*msg, pcd_fields_, pcd_rotation_);
+        CloudParseStats cloud_stats;
+        PointCloudPtr cur_cloud = getXyzCoordsFromMsg(
+            *msg, pcd_fields_, pcd_rotation_,
+            trace_config_.enabled ? &cloud_stats : nullptr);
         if (!cur_cloud || cur_cloud->empty()) {
             ROS_WARN("Empty pointcloud, skipping");
+            if (trace_config_.enabled) {
+                ROS_INFO("[FLOW][FRAME=UNASSIGNED][STAMP=%.9f][STAGE=CLOUD_PARSE] "
+                         "seq=%u result=EMPTY_CLOUD raw_points=%lu parsed_points=%lu "
+                         "finite_points=%lu invalid_points=%lu rotation_applied=%s",
+                         stamp, msg->header.seq,
+                         static_cast<unsigned long>(cloud_stats.raw_points),
+                         static_cast<unsigned long>(cloud_stats.parsed_points),
+                         static_cast<unsigned long>(cloud_stats.finite_points),
+                         static_cast<unsigned long>(cloud_stats.invalid_points),
+                         cloud_stats.rotation_applied ? "true" : "false");
+            }
             continue; 
         }
 
+        ++frame_cnt_;
+        const bool trace_detailed =
+            trace_config_.enabled &&
+            ((frame_cnt_ - 1) % trace_config_.every_n_processed_frames == 0);
+
         // 3. Set timestamp
         topo_slam_model_->setCurrentStamp(stamp);
+        topo_slam_model_->setTraceContext(frame_cnt_, trace_detailed);
+
+        if (trace_detailed) {
+            ROS_INFO("[FLOW][FRAME=%d][STAMP=%.9f][STAGE=SYNC] seq=%u result=OK "
+                     "global_source=%s global_pose=(%.6f,%.6f,%.6f) dt_gt=%.6f "
+                     "odom_source=%s odom_pose=(%.6f,%.6f,%.6f) dt_odom=%.6f "
+                     "front_image=%s dt_front=%.6f back_image=%s dt_back=%.6f "
+                     "curbs=%s dt_curbs=%.6f latest_gt=%.9f latest_odom=%.9f "
+                     "latest_front=%.9f latest_back=%.9f latest_curbs=%.9f",
+                     frame_cnt_, stamp, msg->header.seq,
+                     sync.global_source.c_str(),
+                     sync.global_pose[0], sync.global_pose[1], sync.global_pose[2],
+                     sync.dt_gt, sync.odom_source.c_str(),
+                     sync.odom_pose[0], sync.odom_pose[1], sync.odom_pose[2],
+                     sync.dt_odom, sync.has_img_front ? "true" : "false",
+                     sync.dt_front, sync.has_img_back ? "true" : "false",
+                     sync.dt_back, sync.has_curbs ? "true" : "false",
+                     sync.dt_curbs, sync.latest_gt_stamp, sync.latest_odom_stamp,
+                     sync.latest_front_stamp, sync.latest_back_stamp,
+                     sync.latest_curbs_stamp);
+            ROS_INFO("[FLOW][FRAME=%d][STAMP=%.9f][STAGE=CLOUD_PARSE] seq=%u result=OK "
+                     "fields=%s raw_points=%lu parsed_points=%lu finite_points=%lu "
+                     "invalid_points=%lu rotation_applied=%s "
+                     "sample_before=(%.6f,%.6f,%.6f) sample_after=(%.6f,%.6f,%.6f) "
+                     "pcl_points=%lu",
+                     frame_cnt_, stamp, msg->header.seq, pcd_fields_.c_str(),
+                     static_cast<unsigned long>(cloud_stats.raw_points),
+                     static_cast<unsigned long>(cloud_stats.parsed_points),
+                     static_cast<unsigned long>(cloud_stats.finite_points),
+                     static_cast<unsigned long>(cloud_stats.invalid_points),
+                     cloud_stats.rotation_applied ? "true" : "false",
+                     cloud_stats.sample_before.x, cloud_stats.sample_before.y,
+                     cloud_stats.sample_before.z, cloud_stats.sample_after.x,
+                     cloud_stats.sample_after.y, cloud_stats.sample_after.z,
+                     static_cast<unsigned long>(cur_cloud->size()));
+        }
 
         // 4. Call core algorithm
         PointCloudPtr curbs_ptr = sync.has_curbs ? sync.curbs : PointCloudPtr();
@@ -629,6 +791,30 @@ void PRISMTopomapNode::processPcdQueue() {
                 results_publisher_->publishTopologicalPath(
                     topo_slam_model_->graph(), path_to_goal_, ros_stamp);
             }
+        }
+
+        if (trace_config_.enabled) {
+            const auto frame_end = std::chrono::steady_clock::now();
+            const double elapsed_ms =
+                std::chrono::duration<double, std::milli>(
+                    frame_end - frame_start).count();
+            ROS_INFO("[FLOW][FRAME=%d][STAMP=%.9f][STAGE=PUBLISH] "
+                     "decision=%s current_vertex=%d nodes=%d edges=%d "
+                     "current_grid=true last_vertex_grid=%s localization_matched=%lu "
+                     "localization_unmatched=%lu loop_closure_published=%s "
+                     "path_published=%s path_size=%lu "
+                     "frame_total_ms=%.3f result=OK",
+                     frame_cnt_, stamp, topo_slam_model_->traceDecision().c_str(),
+                     topo_slam_model_->lastVertexId(),
+                     topo_slam_model_->graph().numVertices(),
+                     topo_slam_model_->graph().undirectedEdgeCount(),
+                     topo_slam_model_->lastVertexId() >= 0 ? "true" : "false",
+                     static_cast<unsigned long>(loc_state.vertex_ids_matched.size()),
+                     static_cast<unsigned long>(loc_state.vertex_ids_unmatched.size()),
+                     topo_slam_model_->foundLoopClosure() ? "true" : "false",
+                     (has_metric_goal_ && !path_to_goal_.empty())
+                         ? "true" : "false",
+                     static_cast<unsigned long>(path_to_goal_.size()), elapsed_ms);
         }
 
         ROS_INFO_THROTTLE(10.0, "Processed %d frames", frame_cnt_);

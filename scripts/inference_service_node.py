@@ -16,6 +16,7 @@ import torch
 import yaml
 import os
 import sys
+import time
 
 # 将脚本所在目录加入 Python 路径, 确保能找到同目录下的 models.py 等模块
 # 注意: 必须用 append 而非 insert(0), 因为 scripts/ 下有 prism_topomap.py
@@ -66,6 +67,18 @@ class InferenceServiceNode:
 
         with open(config_path, 'r') as f:
             self.config = yaml.safe_load(f)
+
+        # Optional end-to-end data-flow tracing. All new detailed output is off
+        # unless explicitly enabled by launch/private parameters.
+        self.trace_data_flow = rospy.get_param('~trace_data_flow', False)
+        self.trace_every_n_processed_frames = max(
+            1, int(rospy.get_param('~trace_every_n_processed_frames', 1)))
+        self.trace_descriptor_head_size = max(
+            0, int(rospy.get_param('~trace_descriptor_head_size', 4)))
+        self.trace_registration_candidates = rospy.get_param(
+            '~trace_registration_candidates', True)
+        self.descriptor_request_count = 0
+        self.registration_request_count = 0
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         rospy.loginfo(f"推理设备: {self.device}")
@@ -121,6 +134,14 @@ class InferenceServiceNode:
         rospy.loginfo("=== PRISM 推理服务节点初始化完成 ===")
         rospy.loginfo("  - 描述符提取服务: /prism/get_descriptor")
         rospy.loginfo("  - 栅格配准服务: /prism/grid_registration")
+        if self.trace_data_flow:
+            rospy.loginfo(
+                "[FLOW][STAGE=DESCRIPTOR_PY] trace_enabled=true "
+                "every_n_processed_frames=%d descriptor_head_size=%d "
+                "registration_candidates=%s",
+                self.trace_every_n_processed_frames,
+                self.trace_descriptor_head_size,
+                str(self.trace_registration_candidates).lower())
 
     # ====================================================================
     # 描述符提取 Service Handler
@@ -141,6 +162,18 @@ class InferenceServiceNode:
         """
         resp = GetDescriptorResponse()
         resp.success = False
+        self.descriptor_request_count += 1
+        request_id = self.descriptor_request_count
+        trace_detailed = (
+            self.trace_data_flow and
+            (request_id - 1) % self.trace_every_n_processed_frames == 0)
+        request_start = time.perf_counter()
+        forward_ms = 0.0
+        raw_points = int(req.pointcloud.width * req.pointcloud.height)
+        finite_points = 0
+        quantized_points = 0
+        front_shape = "NONE"
+        back_shape = "NONE"
 
         try:
             # 1. 解析点云
@@ -152,9 +185,18 @@ class InferenceServiceNode:
 
             if len(cloud_array) == 0:
                 rospy.logwarn("收到空点云, 跳过描述符提取")
+                if self.trace_data_flow:
+                    rospy.loginfo(
+                        "[FLOW][FRAME=SERVICE-%d][STAMP=%.9f]"
+                        "[STAGE=DESCRIPTOR_PY] result=EMPTY_CLOUD "
+                        "raw_points=%d finite_points=0 elapsed_ms=%.3f",
+                        request_id, req.pointcloud.header.stamp.to_sec(),
+                        raw_points,
+                        (time.perf_counter() - request_start) * 1000.0)
                 return resp
 
             cloud_np = np.array(cloud_array, dtype=np.float32)
+            finite_points = int(cloud_np.shape[0])
 
             # 2. 构建模型输入
             input_data = {
@@ -167,19 +209,24 @@ class InferenceServiceNode:
                 img_front = self._ros_image_to_tensor(req.image_front)
                 if img_front is not None:
                     input_data['image_front'] = img_front
+                    front_shape = "x".join(str(v) for v in img_front.shape)
 
             if req.has_image_back:
                 img_back = self._ros_image_to_tensor(req.image_back)
                 if img_back is not None:
                     input_data['image_back'] = img_back
+                    back_shape = "x".join(str(v) for v in img_back.shape)
 
             # 4. 预处理 (MinkowskiEngine 稀疏量化)
             batch = self._preprocess_input(input_data, req.quantization_size)
+            quantized_points = int(batch["pointclouds_lidar_coords"].shape[0])
 
             # 5. 模型推理
+            forward_start = time.perf_counter()
             with torch.no_grad():
                 output = self.place_recognition_model(batch)
                 descriptor = output["final_descriptor"].detach().cpu().numpy()
+            forward_ms = (time.perf_counter() - forward_start) * 1000.0
 
             # 确保是一维
             if len(descriptor.shape) > 1:
@@ -188,9 +235,43 @@ class InferenceServiceNode:
             resp.success = True
             resp.descriptor = descriptor.tolist()
             rospy.loginfo("[INFER-PY] getDescriptor OK, dim=%d", len(resp.descriptor))
+            if trace_detailed:
+                head_size = min(
+                    self.trace_descriptor_head_size, len(resp.descriptor))
+                head = ",".join(
+                    "{:.6f}".format(value)
+                    for value in resp.descriptor[:head_size])
+                rospy.loginfo(
+                    "[FLOW][FRAME=SERVICE-%d][STAMP=%.9f]"
+                    "[STAGE=DESCRIPTOR_PY] result=OK raw_points=%d "
+                    "finite_points=%d invalid_points=%d quantization=%.6f "
+                    "quantized_points=%d front_image=%s front_shape=%s "
+                    "back_image=%s back_shape=%s model=%s device=%s "
+                    "descriptor_dim=%d descriptor_l2=%.6f "
+                    "descriptor_head=[%s] forward_ms=%.3f elapsed_ms=%.3f",
+                    request_id, req.pointcloud.header.stamp.to_sec(),
+                    raw_points, finite_points,
+                    raw_points - finite_points, req.quantization_size,
+                    quantized_points,
+                    str(req.has_image_front).lower(), front_shape,
+                    str(req.has_image_back).lower(), back_shape,
+                    type(self.place_recognition_model).__name__, str(self.device),
+                    len(resp.descriptor),
+                    float(np.linalg.norm(descriptor)), head, forward_ms,
+                    (time.perf_counter() - request_start) * 1000.0)
 
         except Exception as e:
             rospy.logerr(f"描述符提取异常: {str(e)}")
+            if self.trace_data_flow:
+                rospy.loginfo(
+                    "[FLOW][FRAME=SERVICE-%d][STAMP=%.9f]"
+                    "[STAGE=DESCRIPTOR_PY] result=EXCEPTION "
+                    "raw_points=%d finite_points=%d quantized_points=%d "
+                    "error=%s forward_ms=%.3f elapsed_ms=%.3f",
+                    request_id, req.pointcloud.header.stamp.to_sec(),
+                    raw_points, finite_points, quantized_points,
+                    str(e).replace(" ", "_"), forward_ms,
+                    (time.perf_counter() - request_start) * 1000.0)
             import traceback
             traceback.print_exc()
 
@@ -219,6 +300,13 @@ class InferenceServiceNode:
         resp.trans_i = 0.0
         resp.trans_j = 0.0
         resp.rot_angle = 0.0
+        self.registration_request_count += 1
+        request_id = self.registration_request_count
+        request_start = time.perf_counter()
+        trace_registration = (
+            self.trace_data_flow and self.trace_registration_candidates)
+        ref_nonzero = 0
+        cand_nonzero = 0
 
         try:
             # 1. 反序列化栅格
@@ -236,6 +324,8 @@ class InferenceServiceNode:
                 cand_grid_np = np.frombuffer(req.cand_grid, dtype=np.uint8).reshape(h, w)
             else:
                 cand_grid_np = np.array(req.cand_grid, dtype=np.uint8).reshape(h, w)
+            ref_nonzero = int(np.count_nonzero(ref_grid_np))
+            cand_nonzero = int(np.count_nonzero(cand_grid_np))
 
             # 2. 转为 Tensor
             ref_grid_tensor = torch.Tensor(ref_grid_np.astype(np.float32)).to(self.device)
@@ -256,6 +346,16 @@ class InferenceServiceNode:
                 # 配准失败（比如没有任何重叠或匹配点）
                 resp.success = False
                 resp.score = 0.0
+                if trace_registration:
+                    rospy.loginfo(
+                        "[FLOW][FRAME=SERVICE-REG-%d][STAMP=UNAVAILABLE]"
+                        "[STAGE=REGISTRATION_PY] candidate=UNKNOWN type=%s "
+                        "grid=%dx%d ref_nonzero=%d cand_nonzero=%d "
+                        "service_success=false result=NO_TRANSFORM "
+                        "elapsed_ms=%.3f",
+                        request_id, req.registration_type, h, w,
+                        ref_nonzero, cand_nonzero,
+                        (time.perf_counter() - request_start) * 1000.0)
                 return resp
 
             resp.success = True
@@ -267,9 +367,32 @@ class InferenceServiceNode:
                           "trans=(%.2f,%.2f,%.3f rad)",
                           req.registration_type, resp.score,
                           resp.trans_i, resp.trans_j, resp.rot_angle)
+            if trace_registration:
+                rospy.loginfo(
+                    "[FLOW][FRAME=SERVICE-REG-%d][STAMP=UNAVAILABLE]"
+                    "[STAGE=REGISTRATION_PY] candidate=UNKNOWN type=%s "
+                    "grid=%dx%d ref_nonzero=%d cand_nonzero=%d "
+                    "service_success=true score=%.6f "
+                    "pixel_transform=(%.6f,%.6f,%.6f) elapsed_ms=%.3f "
+                    "result=OK",
+                    request_id, req.registration_type, h, w,
+                    ref_nonzero, cand_nonzero, resp.score,
+                    resp.trans_i, resp.trans_j, resp.rot_angle,
+                    (time.perf_counter() - request_start) * 1000.0)
 
         except Exception as e:
             rospy.logerr(f"栅格配准异常: {str(e)}")
+            if self.trace_data_flow:
+                rospy.loginfo(
+                    "[FLOW][FRAME=SERVICE-REG-%d][STAMP=UNAVAILABLE]"
+                    "[STAGE=REGISTRATION_PY] candidate=UNKNOWN type=%s "
+                    "grid=%dx%d ref_nonzero=%d cand_nonzero=%d "
+                    "service_success=false result=EXCEPTION error=%s "
+                    "elapsed_ms=%.3f",
+                    request_id, req.registration_type,
+                    req.grid_height, req.grid_width,
+                    ref_nonzero, cand_nonzero, str(e).replace(" ", "_"),
+                    (time.perf_counter() - request_start) * 1000.0)
             import traceback
             traceback.print_exc()
 

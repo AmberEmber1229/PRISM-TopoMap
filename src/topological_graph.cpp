@@ -169,6 +169,9 @@ TransformResult TopologicalGraph::getTransformToVertex(int vertex_id,
 
     TransformResult result;
     result.success = false;
+    result.x = 0.0;
+    result.y = 0.0;
+    result.theta = 0.0;
 
     const LocalGrid& cand_grid = vertices_[vertex_id].grid;
 
@@ -178,6 +181,12 @@ TransformResult TopologicalGraph::getTransformToVertex(int vertex_id,
         cand_grid.getLayer("occupancy"),
         "inline"  // 沿边配准
     );
+    result.service_success = reg_result.success;
+    result.score = reg_result.score;
+    result.trans_i = reg_result.trans_i;
+    result.trans_j = reg_result.trans_j;
+    result.rot_angle = reg_result.rot_angle;
+    result.elapsed_ms = reg_result.elapsed_ms;
 
     if (reg_result.success && reg_result.score > inline_reg_score_threshold_) {
         // 使用 getTfMatrixXY 将像素级变换转为度量坐标变换

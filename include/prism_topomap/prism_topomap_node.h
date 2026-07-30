@@ -25,6 +25,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <cstdint>
 
 namespace prism_topomap {
 
@@ -72,6 +73,19 @@ private:
         sensor_msgs::Image img_back;
         bool has_curbs;
         PointCloudPtr curbs;
+        std::string global_source;
+        std::string odom_source;
+        std::string failure_reason;
+        double dt_gt;
+        double dt_odom;
+        double dt_front;
+        double dt_back;
+        double dt_curbs;
+        double latest_gt_stamp;
+        double latest_odom_stamp;
+        double latest_front_stamp;
+        double latest_back_stamp;
+        double latest_curbs_stamp;
     };
 
     SyncResult getSyncPoseAndImages(double timestamp);
@@ -127,6 +141,7 @@ private:
     std::string map_frame_;
     bool publish_tf_from_odom_ = false;
     double pcd_process_interval_ = 0.1;
+    FlowTraceConfig trace_config_;
 
     // 导航
     bool has_metric_goal_ = false;
@@ -135,6 +150,7 @@ private:
 
     // 状态
     int frame_cnt_ = 0;
+    uint64_t pcd_rx_count_ = 0;
 };
 
 } // namespace prism_topomap

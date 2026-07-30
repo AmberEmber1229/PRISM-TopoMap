@@ -31,6 +31,27 @@ using Pose2D = Eigen::Vector3d;
 using PointCloudXYZ = pcl::PointCloud<pcl::PointXYZ>;
 using PointCloudPtr = PointCloudXYZ::Ptr;
 
+/// Runtime-only controls for unified [FLOW] trace logging.
+/// These fields never participate in SLAM decisions.
+struct FlowTraceConfig {
+    bool enabled = false;
+    int every_n_processed_frames = 1;
+    int descriptor_head_size = 4;
+    bool registration_candidates = true;
+};
+
+/// Optional diagnostic counters produced while parsing one PointCloud2.
+struct CloudParseStats {
+    size_t raw_points = 0;
+    size_t parsed_points = 0;
+    size_t finite_points = 0;
+    size_t invalid_points = 0;
+    bool rotation_applied = false;
+    bool has_sample = false;
+    pcl::PointXYZ sample_before;
+    pcl::PointXYZ sample_after;
+};
+
 // ============================================================================
 // Angle utilities
 // ============================================================================
@@ -90,7 +111,8 @@ PointCloudPtr transformPcd(const PointCloudPtr& points,
  */
 PointCloudPtr getXyzCoordsFromMsg(const sensor_msgs::PointCloud2& msg,
                                   const std::string& fields,
-                                  const Eigen::Matrix3f& rotation);
+                                  const Eigen::Matrix3f& rotation,
+                                  CloudParseStats* stats = nullptr);
 
 /**
  * @brief Remove floor and ceiling points.

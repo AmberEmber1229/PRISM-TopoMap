@@ -46,7 +46,8 @@ public:
               std::shared_ptr<InferenceClient> inference_client,
               double registration_score_threshold = 0.6,
               int top_k = 5,
-              const std::string& save_dir = "");
+              const std::string& save_dir = "",
+              const FlowTraceConfig& trace_config = FlowTraceConfig());
 
     /**
      * @brief 执行一次定位
@@ -69,7 +70,9 @@ public:
     void updateCurrentState(const Pose2D& global_pose,
                             const std::vector<float>& descriptor,
                             const LocalGrid& grid,
-                            double timestamp);
+                            double timestamp,
+                            int frame_id = -1,
+                            bool trace_detailed = false);
 
     /**
      * @brief 获取最新定位结果 (线程安全)
@@ -89,6 +92,8 @@ private:
         std::vector<float> descriptor;
         LocalGrid grid;
         double timestamp;
+        int frame_id;
+        bool trace_detailed;
     };
 
     Snapshot getCurrentState();
@@ -104,6 +109,7 @@ private:
     double reg_score_threshold_;
     int top_k_;
     std::string save_dir_;
+    FlowTraceConfig trace_config_;
 
     // 线程保护的共享状态
     mutable std::mutex mutex_;
@@ -111,6 +117,8 @@ private:
     std::vector<float> descriptor_;
     LocalGrid grid_;
     double stamp_ = 0.0;
+    int frame_id_ = -1;
+    bool trace_detailed_ = false;
     bool initialized_ = false;
 
     // 定位输出

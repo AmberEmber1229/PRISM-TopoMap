@@ -24,7 +24,8 @@ class TopologicalGraph():
                  inline_registration_score_threshold=0.5,
                  grid_resolution=0.1,
                  grid_radius=18.0,
-                 max_grid_range=8.0):
+                 max_grid_range=8.0,
+                 trace=None):
         self.vertices = []
         self.adj_lists = []
         self.index = place_recognition_index
@@ -34,6 +35,13 @@ class TopologicalGraph():
         self.grid_radius = grid_radius
         self.max_grid_range = max_grid_range
         self.device = torch.device('cuda:0')
+        self.trace = trace
+        self.trace_frame = None
+        self.trace_stamp = None
+
+    def set_trace_context(self, frame, stamp):
+        self.trace_frame = frame
+        self.trace_stamp = stamp
 
     def normalize(self, angle):
         while angle < -np.pi:
@@ -60,7 +68,10 @@ class TopologicalGraph():
     #@profile
     def add_vertex(self, global_pose_for_visualization, descriptor=None, grid=None):
         x, y, theta = global_pose_for_visualization
-        print('\n\n\n Add new vertex ({}, {}, {}) with idx {} \n\n\n'.format(x, y, theta, len(self.vertices)))
+        vertex_count_before = len(self.vertices)
+        index_size_before = int(self.index.ntotal)
+        # Replaced by the unified, opt-in [FLOW] VERTEX event below.
+        # print('\n\n\n Add new vertex ({}, {}, {}) with idx {} \n\n\n'.format(x, y, theta, len(self.vertices)))
         if grid is not None:
             self.adj_lists.append([])
             vertex_dict = {
@@ -71,10 +82,30 @@ class TopologicalGraph():
             self.vertices.append(vertex_dict)
             #print('Descriptor shape:', descriptor.shape)
             self.index.add(descriptor)
-        return len(self.vertices) - 1
+        new_vertex_id = len(self.vertices) - 1
+        if self.trace is not None and self.trace.enabled:
+            occupancy = grid.layers['occupancy'] if grid is not None else None
+            descriptor_array = np.asarray(descriptor) if descriptor is not None else None
+            self.trace.log(
+                'VERTEX', frame=self.trace_frame, stamp=self.trace_stamp, force=True,
+                RESULT='ADDED' if grid is not None else 'SKIPPED_NO_GRID',
+                vertex_count_before=vertex_count_before,
+                new_vertex_id=new_vertex_id,
+                global_pose=[x, y, theta],
+                descriptor_dim=int(descriptor_array.shape[-1]) if descriptor_array is not None else None,
+                occupancy_unknown=int((occupancy == 0).sum()) if occupancy is not None else None,
+                occupancy_free=int((occupancy == 1).sum()) if occupancy is not None else None,
+                occupancy_occupied=int((occupancy >= 2).sum()) if occupancy is not None else None,
+                index_size_before=index_size_before,
+                index_size_after=int(self.index.ntotal))
+        return new_vertex_id
 
     def get_transform_to_vertex(self, vertex_id, grid):
-        print('Trying to match to vertex {}'.format(vertex_id))
+        trace_registration = (self.trace is not None and self.trace.enabled and
+                              self.trace.registration_candidates)
+        registration_start = time.perf_counter() if trace_registration else None
+        # Replaced by the unified, opt-in [FLOW] REGISTRATION record below.
+        # print('Trying to match to vertex {}'.format(vertex_id))
         #return get_rel_pose(*self.global_pose_for_visualization, *self.vertices[vertex_id]['pose_for_visualization'])
         cand_grid = self.vertices[vertex_id]['grid']
         cand_grid_tensor = torch.Tensor(cand_grid.layers['occupancy']).to(self.device)
@@ -82,7 +113,18 @@ class TopologicalGraph():
         #print('                Ref grid:', grid.max())
         #print('                Cand grid:', cand_grid.max())
 
-        transform, score = self.inline_registration_pipeline.infer(ref_grid_tensor, cand_grid_tensor, verbose=False)
+        try:
+            transform, score = self.inline_registration_pipeline.infer(
+                ref_grid_tensor, cand_grid_tensor, verbose=False)
+        except Exception as exc:
+            if self.trace is not None and self.trace.enabled:
+                self.trace.log(
+                    'REGISTRATION', frame=self.trace_frame, stamp=self.trace_stamp,
+                    force=True, RESULT='REGISTRATION_FAILED',
+                    candidate_id=vertex_id, registration_type='inline',
+                    exception_type=type(exc).__name__,
+                    exception_message=str(exc))
+            raise
         # print('TRANSFORM:', transform)
         # print('Score:', score)
         if score > self.inline_registration_score_threshold:
@@ -90,8 +132,31 @@ class TopologicalGraph():
             x = tf_matrix[0, 3]
             y = tf_matrix[1, 3]
             _, __, theta = Rotation.from_matrix(tf_matrix[:3, :3]).as_rotvec()
+            if trace_registration:
+                self.trace.log(
+                    'REGISTRATION', frame=self.trace_frame, stamp=self.trace_stamp,
+                    candidate_id=vertex_id, registration_type='inline',
+                    ref_shape=list(grid.layers['occupancy'].shape),
+                    candidate_shape=list(cand_grid.layers['occupancy'].shape),
+                    ref_nonzero=int(np.count_nonzero(grid.layers['occupancy'])),
+                    candidate_nonzero=int(np.count_nonzero(cand_grid.layers['occupancy'])),
+                    score=float(score), threshold=self.inline_registration_score_threshold,
+                    transform=list(transform), relative_pose_m=[x, y, theta],
+                    matched=True,
+                    elapsed_ms=(time.perf_counter() - registration_start) * 1000.0)
             # print('X Y THETA:', x, y, theta)
             return x, y, theta
+        if trace_registration:
+            self.trace.log(
+                'REGISTRATION', frame=self.trace_frame, stamp=self.trace_stamp,
+                candidate_id=vertex_id, registration_type='inline',
+                ref_shape=list(grid.layers['occupancy'].shape),
+                candidate_shape=list(cand_grid.layers['occupancy'].shape),
+                ref_nonzero=int(np.count_nonzero(grid.layers['occupancy'])),
+                candidate_nonzero=int(np.count_nonzero(cand_grid.layers['occupancy'])),
+                score=float(score), threshold=self.inline_registration_score_threshold,
+                transform=list(transform), relative_pose_m=None, matched=False,
+                elapsed_ms=(time.perf_counter() - registration_start) * 1000.0)
         return None, None, None
 
     def inverse_transform(self, x, y, theta):
@@ -100,16 +165,25 @@ class TopologicalGraph():
         theta_inv = -theta
         return [x_inv, y_inv, theta_inv]
     
-    def add_edge(self, i, j, x, y, theta):
+    def add_edge(self, i, j, x, y, theta, edge_type='UNSPECIFIED'):
         if i == j:
             return
         if j in [x[0] for x in self.adj_lists[i]]:
             return
         xi, yi, _ = self.vertices[i]['pose_for_visualization']
         xj, yj, _ = self.vertices[j]['pose_for_visualization']
-        print('\nAdd edge from ({}, {}) to ({}, {}) with rel pose ({}, {}, {})\n'.format(xi, yi, xj, yj, x, y, theta))
+        # Replaced by the unified, opt-in [FLOW] EDGE event below.
+        # print('\nAdd edge from ({}, {}) to ({}, {}) with rel pose ({}, {}, {})\n'.format(xi, yi, xj, yj, x, y, theta))
         self.adj_lists[i].append((int(j), [x, y, theta]))
         self.adj_lists[j].append((int(i), self.inverse_transform(x, y, theta)))
+        if self.trace is not None and self.trace.enabled:
+            self.trace.log(
+                'EDGE', frame=self.trace_frame, stamp=self.trace_stamp, force=True,
+                RESULT='ADDED', source=i, target=j,
+                relative_pose=[x, y, theta],
+                length=float(np.sqrt(x ** 2 + y ** 2)),
+                edge_type=edge_type,
+                length_validation='NOT_PRESENT_IN_PYTHON_ORIGINAL')
 
     def get_vertex(self, vertex_id):
         return self.vertices[vertex_id]

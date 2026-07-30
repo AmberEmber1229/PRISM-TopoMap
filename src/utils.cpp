@@ -111,11 +111,18 @@ PointCloudPtr transformPcd(const PointCloudPtr& points,
 // ============================================================================
 PointCloudPtr getXyzCoordsFromMsg(const sensor_msgs::PointCloud2& msg,
                                   const std::string& fields,
-                                  const Eigen::Matrix3f& rotation) {
+                                  const Eigen::Matrix3f& rotation,
+                                  CloudParseStats* stats) {
     PointCloudPtr cloud(new PointCloudXYZ);
 
     // Convert ROS message to PCL (extracts xyz automatically)
     pcl::fromROSMsg(msg, *cloud);
+
+    if (stats) {
+        stats->raw_points = static_cast<size_t>(msg.width) * msg.height;
+        stats->parsed_points = cloud->size();
+        stats->rotation_applied = !rotation.isIdentity(1e-6f);
+    }
 
     if (cloud->empty()) {
         return cloud;
@@ -130,9 +137,22 @@ PointCloudPtr getXyzCoordsFromMsg(const sensor_msgs::PointCloud2& msg,
         }
     }
 
+    if (stats) {
+        stats->finite_points = clean->size();
+        stats->invalid_points = cloud->size() - clean->size();
+        if (!clean->empty()) {
+            stats->has_sample = true;
+            stats->sample_before = clean->front();
+        }
+    }
+
     // Apply sensor rotation matrix
     if (!rotation.isIdentity(1e-6f)) {
         clean = rotatePcd(clean, rotation);
+    }
+
+    if (stats && stats->has_sample && !clean->empty()) {
+        stats->sample_after = clean->front();
     }
 
     return clean;

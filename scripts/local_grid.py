@@ -5,6 +5,7 @@ from utils import *
 import yaml
 import cv2
 import os
+import time
 from skimage.io import imread, imsave
 
 class LocalGrid:
@@ -16,7 +17,8 @@ class LocalGrid:
                  obstacles_attenuation=0.9,
                  curbs_attenuation=0.99,
                  layer_names=['curbs', 'occupancy', 'height_map', 'density_map', 'density_map_cur'],
-                 save_dir=None):
+                 save_dir=None,
+                 trace=None):
         self.resolution = resolution
         self.radius = radius
         self.max_range = max_range
@@ -34,6 +36,9 @@ class LocalGrid:
                 dtype = np.uint8
             self.layers[layer_name] = np.zeros((self.grid_size, self.grid_size), dtype=dtype)
         self.save_dir = save_dir
+        self.trace = trace
+        self.trace_frame = None
+        self.trace_stamp = None
         if self.save_dir is not None and not os.path.exists(save_dir):
             os.mkdir(save_dir)
 
@@ -43,11 +48,18 @@ class LocalGrid:
                               floor_height=self.floor_height, ceil_height=self.ceil_height,
                               layer_names=self.layer_names,
                               obstacles_attenuation=self.obstacles_attenuation, curbs_attenuation=self.curbs_attenuation,
-                              save_dir=self.save_dir)
+                              save_dir=self.save_dir,
+                              trace=self.trace)
+        grid_copy.trace_frame = self.trace_frame
+        grid_copy.trace_stamp = self.trace_stamp
         grid_copy.layers = {}
         for layer_name in self.layer_names:
             grid_copy.layers[layer_name] = self.layers[layer_name].copy()
         return grid_copy
+
+    def set_trace_context(self, frame, stamp):
+        self.trace_frame = frame
+        self.trace_stamp = stamp
 
     def raycast_grid(self, n_rays=1000, center_point=None):
         grid_raycasted = self.layers['occupancy'].copy()
@@ -72,11 +84,16 @@ class LocalGrid:
 
     def update_from_cloud_and_transform(self, points_xyz, 
                                         x=0, y=0, theta=0):
+        trace_enabled = self.trace is not None and self.trace.enabled
+        trace_start = time.perf_counter() if trace_enabled else None
+        input_count = len(points_xyz) if trace_enabled else None
+        finite_count = int(np.isfinite(points_xyz[:, :3]).all(axis=1).sum()) if trace_enabled else None
         self.transform(x, y, theta)
         index = np.isnan(points_xyz).any(axis=1)
         points_xyz = np.delete(points_xyz, index, axis=0)
         points_xyz = points_xyz[(points_xyz[:, 0] > -self.max_range) * (points_xyz[:, 0] < self.max_range) * \
                                 (points_xyz[:, 1] > -self.max_range) * (points_xyz[:, 1] < self.max_range)]
+        in_range_count = len(points_xyz)
         points_xyz_obstacles = remove_floor_and_ceil(points_xyz, floor_height=self.floor_height, ceil_height=self.ceil_height)
         grid_radius = int(self.radius / self.resolution)
         #print('Points xyz:', points_xyz.shape, points_xyz[0], points_xyz.min(), points_xyz.max())
@@ -104,8 +121,38 @@ class LocalGrid:
         if 'height_map' in self.layer_names:
             self.layers['height_map'] = np.zeros((self.grid_size, self.grid_size))
             np.maximum.at(self.layers['height_map'], (points_ij_all[:, 0], points_ij_all[:, 1]), points_xyz[mask][:, 2])
+        if trace_enabled:
+            occupancy = self.layers['occupancy']
+            density = self.layers.get('density_map')
+            height = self.layers.get('height_map')
+            self.trace.log(
+                'GRID', frame=self.trace_frame, stamp=self.trace_stamp,
+                input_points=input_count,
+                finite_points=finite_count,
+                nan_rows_removed=int(index.sum()),
+                in_range_points=in_range_count,
+                out_of_range_points=input_count - int(index.sum()) - in_range_count,
+                obstacle_points=len(points_xyz_obstacles),
+                resolution=self.resolution,
+                radius=self.radius,
+                max_range=self.max_range,
+                grid_shape=list(occupancy.shape),
+                grid_shift=[x, y, theta],
+                occupancy_unknown=int((occupancy == 0).sum()),
+                occupancy_free=int((occupancy == 1).sum()),
+                occupancy_occupied=int((occupancy >= 2).sum()),
+                density_nonzero=int(np.count_nonzero(density)) if density is not None else None,
+                density_max=float(np.max(density)) if density is not None and density.size else None,
+                height_nonzero=int(np.count_nonzero(height)) if height is not None else None,
+                height_max=float(np.max(height)) if height is not None and height.size else None,
+                curbs_layer='curbs' in self.layer_names,
+                curbs_updated=False,
+                elapsed_ms=(time.perf_counter() - trace_start) * 1000.0)
 
     def update_curbs_from_cloud(self, points_xyz):
+        trace_enabled = self.trace is not None and self.trace.enabled
+        trace_start = time.perf_counter() if trace_enabled else None
+        input_count = len(points_xyz) if trace_enabled else None
         index = np.isnan(points_xyz).any(axis=1)
         points_xyz = np.delete(points_xyz, index, axis=0)
         points_xyz = points_xyz[(points_xyz[:, 0] > -self.max_range) * (points_xyz[:, 0] < self.max_range) * \
@@ -118,6 +165,16 @@ class LocalGrid:
         self.layers['curbs_cur'] = np.zeros((self.grid_size, self.grid_size), dtype=np.uint8)
         self.layers['curbs_cur'][points_ij[:, 0], points_ij[:, 1]] = 1
         self.layers['curbs'] = self.layers['curbs'] * self.curbs_attenuation + self.layers['curbs_cur']
+        if trace_enabled:
+            self.trace.log(
+                'GRID', frame=self.trace_frame, stamp=self.trace_stamp,
+                grid_component='CURBS',
+                input_points=input_count,
+                nan_rows_removed=int(index.sum()),
+                in_range_points=len(points_xyz),
+                curb_cells=int(np.count_nonzero(self.layers['curbs_cur'])),
+                curbs_updated=True,
+                elapsed_ms=(time.perf_counter() - trace_start) * 1000.0)
 
     def get_transformed_grid(self, grid, x, y, theta):
         minus8 = np.array([

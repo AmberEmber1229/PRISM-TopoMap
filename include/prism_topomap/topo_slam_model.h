@@ -39,7 +39,8 @@ public:
                    std::shared_ptr<InferenceClient> inference_client,
                    const std::string& path_to_load_graph = "",
                    const std::string& path_to_save_graph = "",
-                   const std::string& path_to_save_logs = "");
+                   const std::string& path_to_save_logs = "",
+                   const FlowTraceConfig& trace_config = FlowTraceConfig());
 
     /**
      * @brief 主更新入口 (每帧调用)
@@ -78,8 +79,14 @@ public:
     double curIoU() const { return cur_iou_; }
     double currentStamp() const { return current_stamp_; }
     void setCurrentStamp(double stamp) { current_stamp_ = stamp; }
+    void setTraceContext(int frame_id, bool detailed) {
+        trace_frame_id_ = frame_id;
+        trace_detailed_ = detailed;
+        inference_client_->setTraceContext(frame_id, detailed);
+    }
     const std::string& mode() const { return mode_; }
     double localizationFrequency() const { return localization_frequency_; }
+    const std::string& traceDecision() const { return trace_decision_; }
 
     // 导航
     std::vector<int> getPathToMetricGoal(double x, double y);
@@ -115,6 +122,7 @@ private:
     // === 位姿历史查询 ===
     Pose2D getRelPoseFromStamp(double timestamp) const;
     Pose2D getRelPoseSinceLocalization() const;
+    void logFlowSummary(double update_start_wall_sec);
 
     // === 成员变量 ===
     std::shared_ptr<InferenceClient> inference_client_;
@@ -183,6 +191,16 @@ private:
     std::string path_to_save_logs_;
 
     std::mutex mutex_;
+
+    // Runtime-only [FLOW] trace state. Never used by algorithm decisions.
+    FlowTraceConfig trace_config_;
+    int trace_frame_id_ = -1;
+    bool trace_detailed_ = false;
+    int trace_vertex_before_ = -1;
+    std::string trace_decision_ = "UNSET";
+    bool trace_inside_valid_ = false;
+    bool trace_inside_ = false;
+    double trace_rel_dist_ = 0.0;
 };
 
 } // namespace prism_topomap

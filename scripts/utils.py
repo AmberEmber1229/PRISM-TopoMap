@@ -1,14 +1,19 @@
 import ros_numpy
 import os
 import numpy as np
+import time
 from skimage.transform import rotate as image_rotate
 from skimage.io import imsave
 from scipy.spatial.transform import Rotation
 from cv2 import warpAffine
 
-def get_xyz_coords_from_msg(msg, fields, rotation):
+def get_xyz_coords_from_msg(msg, fields, rotation, trace=None, frame=None, stamp=None):
+    trace_enabled = trace is not None and trace.enabled
+    trace_start = time.perf_counter() if trace_enabled else None
     points_numpify = ros_numpy.point_cloud2.pointcloud2_to_array(msg)
     points_numpify = points_numpify.ravel()
+    raw_count = len(points_numpify)
+    available_fields = list(points_numpify.dtype.names or [])
     if fields == 'xyz':
         points_x = np.array([x[0] for x in points_numpify])[:, np.newaxis]
         points_y = np.array([x[1] for x in points_numpify])[:, np.newaxis]
@@ -26,7 +31,26 @@ def get_xyz_coords_from_msg(msg, fields, rotation):
     else:
         print('Incorrect pointcloud fields {}. Fields must be `xyz` or `xyzrgb`'.format(fields))
         points_xyz = None
+    sample_before = None
+    if trace_enabled and points_xyz is not None and len(points_xyz) > 0:
+        sample_before = points_xyz[0, :3].tolist()
     points_xyz = rotate_pcd(points_xyz, rotation)
+    if trace_enabled:
+        finite_count = int(np.isfinite(points_xyz[:, :3]).all(axis=1).sum())
+        sample_after = points_xyz[0, :3].tolist() if len(points_xyz) > 0 else None
+        trace.log('CLOUD_PARSE', frame=frame, stamp=stamp,
+                  raw_points=raw_count,
+                  requested_fields=fields,
+                  available_fields=available_fields,
+                  parsed_xyz=len(points_xyz),
+                  finite_points=finite_count,
+                  nonfinite_points=raw_count - finite_count,
+                  removed_nonfinite=0,
+                  rotation_applied=not np.allclose(rotation, np.eye(3)),
+                  sample_before=sample_before,
+                  sample_after=sample_after,
+                  output_points=len(points_xyz),
+                  elapsed_ms=(time.perf_counter() - trace_start) * 1000.0)
     return points_xyz
 
 def rotate_pcd(points, rotation_matrix):

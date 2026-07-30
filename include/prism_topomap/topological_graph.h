@@ -39,7 +39,13 @@ struct AdjEntry {
 // ============================================================================
 struct TransformResult {
     bool success;
+    bool service_success = false;
     double x, y, theta;
+    double score = 0.0;
+    double trans_i = 0.0;
+    double trans_j = 0.0;
+    double rot_angle = 0.0;
+    double elapsed_ms = 0.0;
 };
 
 // ============================================================================
@@ -104,6 +110,13 @@ public:
 
     // === 访问接口 ===
     int numVertices() const { return static_cast<int>(vertices_.size()); }
+    int indexSize() const { return static_cast<int>(faiss_index_->ntotal); }
+    int undirectedEdgeCount() const {
+        size_t directed_count = 0;
+        for (const auto& entries : adj_lists_) directed_count += entries.size();
+        return static_cast<int>(directed_count / 2);
+    }
+    double inlineRegistrationThreshold() const { return inline_reg_score_threshold_; }
     const std::vector<Vertex>& vertices() const { return vertices_; }
     const std::vector<std::vector<AdjEntry>>& adjLists() const { return adj_lists_; }
 

@@ -9,6 +9,10 @@
 #include <cmath>
 #include <algorithm>
 #include <sys/stat.h>
+#include <chrono>
+#include <sstream>
+#include <iomanip>
+#include <limits>
 
 namespace prism_topomap {
 
@@ -30,12 +34,14 @@ Localizer::Localizer(TopologicalGraph& graph,
                      std::shared_ptr<InferenceClient> inference_client,
                      double registration_score_threshold,
                      int top_k,
-                     const std::string& save_dir)
+                     const std::string& save_dir,
+                     const FlowTraceConfig& trace_config)
     : graph_(graph),
       inference_client_(inference_client),
       reg_score_threshold_(registration_score_threshold),
       top_k_(top_k),
-      save_dir_(save_dir) {
+      save_dir_(save_dir),
+      trace_config_(trace_config) {
     if (!save_dir_.empty()) {
         mkdirIfNotExists(save_dir_);
     }
@@ -55,13 +61,26 @@ Localizer::Localizer(TopologicalGraph& graph,
 void Localizer::updateCurrentState(const Pose2D& global_pose,
                                    const std::vector<float>& descriptor,
                                    const LocalGrid& grid,
-                                   double timestamp) {
+                                   double timestamp,
+                                   int frame_id,
+                                   bool trace_detailed) {
     std::lock_guard<std::mutex> lock(mutex_);
     global_pose_ = global_pose;
     descriptor_ = descriptor;
     grid_ = grid.copy();
     stamp_ = timestamp;
+    frame_id_ = frame_id;
+    trace_detailed_ = trace_detailed;
     initialized_ = true;
+
+    if (trace_config_.enabled && trace_detailed_) {
+        const cv::Mat& occ = grid_.getLayer("occupancy");
+        ROS_INFO("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=LOCALIZER_SNAPSHOT] "
+                 "action=WRITE descriptor_dim=%lu occupancy=%dx%d occupancy_nonzero=%d "
+                 "graph_vertices=%d",
+                 frame_id_, stamp_, descriptor_.size(), occ.rows, occ.cols,
+                 cv::countNonZero(occ), graph_.numVertices());
+    }
 }
 
 // ============================================================================
@@ -75,6 +94,8 @@ Localizer::Snapshot Localizer::getCurrentState() {
     snap.descriptor = descriptor_;
     snap.grid = grid_.copy();
     snap.timestamp = stamp_;
+    snap.frame_id = frame_id_;
+    snap.trace_detailed = trace_detailed_;
     return snap;
 }
 
@@ -120,10 +141,14 @@ void Localizer::writeLocalizedState(const std::vector<int>& matched_ids,
 void Localizer::localize() {
     if (!initialized_) {
         ROS_INFO("Waiting for messages to initialize localizer...");
+        if (trace_config_.enabled) {
+            ROS_INFO("[FLOW][STAGE=LOCALIZER_SNAPSHOT] action=TIMER_SKIP reason=NOT_INITIALIZED");
+        }
         return;
     }
 
     ROS_INFO("Starting localization from stamp %.3f", stamp_);
+    const auto localize_start = std::chrono::steady_clock::now();
 
     // 1. 获取当前快照
     Snapshot snap = getCurrentState();
@@ -132,18 +157,56 @@ void Localizer::localize() {
     LocalGrid start_grid = snap.grid;
     std::vector<float> start_desc = snap.descriptor;
 
+    if (trace_config_.enabled && snap.trace_detailed) {
+        ROS_INFO("[FLOW][FRAME=%d][LOC_STAMP=%.6f][STAGE=LOCALIZER_SNAPSHOT] "
+                 "action=TIMER_READ wall_time=%.6f descriptor_dim=%lu occupancy=%dx%d "
+                 "occupancy_nonzero=%d graph_vertices=%d",
+                 snap.frame_id, start_stamp, ros::WallTime::now().toSec(),
+                 start_desc.size(), start_grid.gridSize(), start_grid.gridSize(),
+                 cv::countNonZero(start_grid.getLayer("occupancy")), graph_.numVertices());
+    }
+
     if (start_desc.empty()) {
         ROS_WARN("Localizer: descriptor is empty, skipping");
+        if (trace_config_.enabled) {
+            ROS_WARN("[FLOW][FRAME=%d][LOC_STAMP=%.6f][STAGE=FAISS] "
+                     "result=SKIPPED_EMPTY_DESCRIPTOR",
+                     snap.frame_id, start_stamp);
+        }
         return;
     }
 
     // 2. FAISS 检索 top-k
+    const auto faiss_start = std::chrono::steady_clock::now();
     auto [dists, pred_i] = graph_.searchIndex(start_desc, top_k_);
+    const double faiss_ms = std::chrono::duration<double, std::milli>(
+        std::chrono::steady_clock::now() - faiss_start).count();
 
     if (pred_i.empty()) {
         ROS_INFO("FAISS index is empty, cannot localize");
         n_loc_fails++;
+        if (trace_config_.enabled) {
+            ROS_INFO("[FLOW][FRAME=%d][LOC_STAMP=%.6f][STAGE=FAISS] "
+                     "query_dim=%lu index_size=%d top_k=%d elapsed_ms=%.3f "
+                     "result=EMPTY_INDEX",
+                     snap.frame_id, start_stamp, start_desc.size(),
+                     graph_.indexSize(), top_k_, faiss_ms);
+        }
         return;
+    }
+
+    if (trace_config_.enabled && snap.trace_detailed) {
+        std::ostringstream candidates;
+        candidates << std::fixed << std::setprecision(6) << "[";
+        for (size_t i = 0; i < pred_i.size(); ++i) {
+            if (i > 0) candidates << ",";
+            candidates << pred_i[i] << ":" << dists[i];
+        }
+        candidates << "]";
+        ROS_INFO("[FLOW][FRAME=%d][LOC_STAMP=%.6f][STAGE=FAISS] "
+                 "query_dim=%lu index_size=%d top_k=%d elapsed_ms=%.3f candidates=%s",
+                 snap.frame_id, start_stamp, start_desc.size(),
+                 graph_.indexSize(), top_k_, faiss_ms, candidates.str().c_str());
     }
 
     // 3. 对每个候选做配准
@@ -191,6 +254,36 @@ void Localizer::localize() {
             // 存储为 [rot_x=0, rot_y=0, rot_z=theta, trans_x, trans_y, trans_z=0]
             pred_tf.push_back({0.0, 0.0, theta, tx, ty, tz});
         }
+
+        if (trace_config_.enabled &&
+            ((snap.trace_detailed && trace_config_.registration_candidates) ||
+             !reg_result.success)) {
+            const bool matched = reg_result.success &&
+                                 reg_result.score >= reg_score_threshold_;
+            double metric_x = std::numeric_limits<double>::quiet_NaN();
+            double metric_y = std::numeric_limits<double>::quiet_NaN();
+            double metric_theta = std::numeric_limits<double>::quiet_NaN();
+            if (matched) {
+                const auto& tf = pred_tf.back();
+                metric_x = tf[3];
+                metric_y = tf[4];
+                metric_theta = tf[2];
+            }
+            ROS_INFO("[FLOW][FRAME=%d][LOC_STAMP=%.6f][STAGE=REGISTRATION] "
+                     "type=localization candidate=%d ref=%dx%d ref_nonzero=%d "
+                     "cand=%dx%d cand_nonzero=%d service_success=%s score=%.6f "
+                     "threshold=%.6f pixel_tf=(%.3f,%.3f,%.6f) "
+                     "metric_pose=(%.4f,%.4f,%.6f) result=%s elapsed_ms=%.3f",
+                     snap.frame_id, start_stamp, idx,
+                     grid_copy.gridSize(), grid_copy.gridSize(),
+                     cv::countNonZero(grid_copy.getLayer("occupancy")),
+                     cand_grid.gridSize(), cand_grid.gridSize(),
+                     cv::countNonZero(cand_grid.getLayer("occupancy")),
+                     reg_result.success ? "true" : "false", reg_result.score,
+                     reg_score_threshold_, reg_result.trans_i, reg_result.trans_j,
+                     reg_result.rot_angle, metric_x, metric_y, metric_theta,
+                     matched ? "MATCHED" : "UNMATCHED", reg_result.elapsed_ms);
+        }
     }
 
     // 4. 过滤结果
@@ -231,6 +324,15 @@ void Localizer::localize() {
                         vertex_ids_unmatched, start_global_pose, start_stamp);
 
     cnt++;
+
+    if (trace_config_.enabled && snap.trace_detailed) {
+        const double total_ms = std::chrono::duration<double, std::milli>(
+            std::chrono::steady_clock::now() - localize_start).count();
+        ROS_INFO("[FLOW][FRAME=%d][LOC_STAMP=%.6f][STAGE=LOCALIZATION_RESULT] "
+                 "matched=%lu unmatched=%lu result_stamp=%.6f elapsed_ms=%.3f",
+                 snap.frame_id, start_stamp, vertex_ids_matched.size(),
+                 vertex_ids_unmatched.size(), start_stamp, total_ms);
+    }
 }
 
 } // namespace prism_topomap

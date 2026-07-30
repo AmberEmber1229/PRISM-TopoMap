@@ -18,6 +18,7 @@
 // catkin 自动生成的 Service 头文件
 #include <prism_topomap/GetDescriptor.h>
 #include <prism_topomap/GridRegistration.h>
+#include "prism_topomap/utils.h"
 
 namespace prism_topomap {
 
@@ -40,6 +41,12 @@ public:
      */
     bool waitForServices(double timeout_sec = 30.0);
 
+    void setTraceConfig(const FlowTraceConfig& config) { trace_config_ = config; }
+    void setTraceContext(int frame_id, bool detailed) {
+        trace_frame_id_ = frame_id;
+        trace_detailed_ = detailed;
+    }
+
     // ========================================================================
     // 描述符提取
     // ========================================================================
@@ -48,6 +55,7 @@ public:
     struct DescriptorResult {
         bool success;
         std::vector<float> descriptor;
+        double elapsed_ms = 0.0;
     };
 
     /**
@@ -78,6 +86,7 @@ public:
         bool success;
         double score;
         double trans_i, trans_j, rot_angle;
+        double elapsed_ms = 0.0;
     };
 
     /**
@@ -96,6 +105,9 @@ public:
 private:
     ros::ServiceClient descriptor_client_;
     ros::ServiceClient registration_client_;
+    FlowTraceConfig trace_config_;
+    int trace_frame_id_ = -1;
+    bool trace_detailed_ = false;
 };
 
 } // namespace prism_topomap
