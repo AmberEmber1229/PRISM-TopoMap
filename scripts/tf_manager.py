@@ -1,5 +1,15 @@
 #!/usr/bin/env python
 
+import os
+import sys
+
+# catkin_install_python executes this source through a wrapper in devel/lib.
+# Add the real source directory explicitly so sibling helper modules remain
+# importable in both source execution and catkin devel-space execution.
+_scripts_dir = os.path.dirname(os.path.abspath(__file__))
+if _scripts_dir not in sys.path:
+    sys.path.append(_scripts_dir)
+
 import rospy
 import numpy as np
 import tf2_ros

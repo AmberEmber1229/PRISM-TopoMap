@@ -65,6 +65,13 @@ TopologicalGraph::TopologicalGraph(
 int TopologicalGraph::addVertex(const Pose2D& global_pose,
                                 const std::vector<float>& descriptor,
                                 const LocalGrid& grid) {
+    if (!isDescriptorValid(descriptor)) {
+        ROS_ERROR("[GRAPH] Refusing to create vertex: invalid descriptor "
+                  "(dim=%lu expected=%d)",
+                  descriptor.size(), descriptor_dim_);
+        return -1;
+    }
+
     double x = global_pose[0], y = global_pose[1], theta = global_pose[2];
     int idx = static_cast<int>(vertices_.size());
     ROS_INFO("\n\n\n ADD NEW VERTEX (%.1f, %.1f, %.2f) idx=%d \n\n\n", x, y, theta, idx);
@@ -77,8 +84,13 @@ int TopologicalGraph::addVertex(const Pose2D& global_pose,
     vertices_.push_back(std::move(v));
     adj_lists_.push_back({});
 
-    // 添加到 FAISS 索引
-    addToIndex(descriptor);
+    // 添加到 FAISS 索引。若底层索引写入失败，回滚顶点，避免图和索引分叉。
+    if (!addToIndex(descriptor, idx)) {
+        vertices_.pop_back();
+        adj_lists_.pop_back();
+        ROS_ERROR("[GRAPH] Vertex %d rolled back because FAISS insertion failed", idx);
+        return -1;
+    }
 
     return idx;
 }
@@ -278,19 +290,71 @@ PathResult TopologicalGraph::getPathWithLength(int u, int v) const {
 // ============================================================================
 // FAISS 索引操作
 // ============================================================================
-void TopologicalGraph::addToIndex(const std::vector<float>& descriptor) {
-    if (descriptor.empty()) return;
+bool TopologicalGraph::isDescriptorValid(
+    const std::vector<float>& descriptor) const {
+    if (descriptor.size() != static_cast<size_t>(descriptor_dim_)) {
+        return false;
+    }
+    return std::all_of(descriptor.begin(), descriptor.end(),
+                       [](float value) { return std::isfinite(value); });
+}
 
-    // FAISS 要求输入为 float*, 行数 1, 列数 descriptor_dim_
-    // 如果描述符是 [1, dim] 形状 (从 Python 来), 取前 dim 个
-    const float* data = descriptor.data();
-    int n_vectors = 1;
-    // 如果 descriptor 大小正好是 dim 的整数倍, 只添加第一行
-    faiss_index_->add(n_vectors, data);
+bool TopologicalGraph::addToIndex(const std::vector<float>& descriptor,
+                                  int vertex_id) {
+    if (!isDescriptorValid(descriptor)) {
+        ROS_ERROR("[FAISS] Rejecting descriptor for vertex %d: "
+                  "dim=%lu expected=%d finite=%s",
+                  vertex_id, descriptor.size(), descriptor_dim_,
+                  std::all_of(descriptor.begin(), descriptor.end(),
+                              [](float value) { return std::isfinite(value); })
+                      ? "true" : "false");
+        return false;
+    }
+    if (vertex_id < 0 || vertex_id >= static_cast<int>(vertices_.size())) {
+        ROS_ERROR("[FAISS] Rejecting invalid vertex id %d (vertices=%lu)",
+                  vertex_id, vertices_.size());
+        return false;
+    }
+    if (faiss_index_->ntotal !=
+        static_cast<faiss::idx_t>(faiss_row_to_vertex_id_.size())) {
+        ROS_ERROR("[FAISS] Identity invariant broken before add: "
+                  "ntotal=%ld mapping=%lu",
+                  static_cast<long>(faiss_index_->ntotal),
+                  faiss_row_to_vertex_id_.size());
+        return false;
+    }
+
+    try {
+        faiss_index_->add(1, descriptor.data());
+    } catch (const std::exception& e) {
+        ROS_ERROR("[FAISS] Failed to add descriptor for vertex %d: %s",
+                  vertex_id, e.what());
+        return false;
+    }
+    faiss_row_to_vertex_id_.push_back(vertex_id);
+    ROS_INFO("[FAISS] Added row=%lu vertex=%d ntotal=%ld mapping=%lu",
+             faiss_row_to_vertex_id_.size() - 1, vertex_id,
+             static_cast<long>(faiss_index_->ntotal),
+             faiss_row_to_vertex_id_.size());
+    return true;
 }
 
 std::pair<std::vector<float>, std::vector<int>>
 TopologicalGraph::searchIndex(const std::vector<float>& query, int top_k) const {
+    if (!isDescriptorValid(query)) {
+        ROS_ERROR("[FAISS] Rejecting query: dim=%lu expected=%d",
+                  query.size(), descriptor_dim_);
+        return {{}, {}};
+    }
+    if (faiss_index_->ntotal !=
+        static_cast<faiss::idx_t>(faiss_row_to_vertex_id_.size())) {
+        ROS_ERROR("[FAISS] Identity invariant broken before search: "
+                  "ntotal=%ld mapping=%lu",
+                  static_cast<long>(faiss_index_->ntotal),
+                  faiss_row_to_vertex_id_.size());
+        return {{}, {}};
+    }
+
     int actual_k = std::min(top_k, static_cast<int>(faiss_index_->ntotal));
     if (actual_k <= 0) {
         return {{}, {}};
@@ -302,9 +366,23 @@ TopologicalGraph::searchIndex(const std::vector<float>& query, int top_k) const 
     faiss_index_->search(1, query.data(), actual_k,
                          distances.data(), indices.data());
 
-    // 转换 faiss::idx_t → int
-    std::vector<int> int_indices(indices.begin(), indices.end());
-    return {distances, int_indices};
+    std::vector<float> mapped_distances;
+    std::vector<int> vertex_ids;
+    mapped_distances.reserve(indices.size());
+    vertex_ids.reserve(indices.size());
+    for (size_t i = 0; i < indices.size(); ++i) {
+        const faiss::idx_t row = indices[i];
+        if (row < 0 ||
+            row >= static_cast<faiss::idx_t>(faiss_row_to_vertex_id_.size())) {
+            ROS_ERROR("[FAISS] Search returned invalid row=%ld mapping=%lu",
+                      static_cast<long>(row), faiss_row_to_vertex_id_.size());
+            continue;
+        }
+        mapped_distances.push_back(distances[i]);
+        vertex_ids.push_back(
+            faiss_row_to_vertex_id_[static_cast<size_t>(row)]);
+    }
+    return {mapped_distances, vertex_ids};
 }
 
 // ============================================================================
@@ -383,6 +461,8 @@ void TopologicalGraph::loadFromJson(const std::string& input_path) {
     // 解析顶点
     vertices_.clear();
     adj_lists_.clear();
+    faiss_index_ = std::make_unique<faiss::IndexFlatL2>(descriptor_dim_);
+    faiss_row_to_vertex_id_.clear();
 
     for (int i = 0; i < static_cast<int>(j["vertices"].size()); ++i) {
         const auto& v_json = j["vertices"][i];
@@ -403,8 +483,13 @@ void TopologicalGraph::loadFromJson(const std::string& input_path) {
 
         vertices_.push_back(std::move(v));
 
-        // 添加到 FAISS 索引
-        addToIndex(vertices_.back().descriptor);
+        // 旧图可能包含无 descriptor 顶点。保留顶点，但使用显式 row→vertex
+        // 映射确保后续合法 descriptor 不会发生 ID 偏移。
+        if (!addToIndex(vertices_.back().descriptor, i)) {
+            ROS_WARN("[FAISS] Loaded vertex %d remains unindexed "
+                     "(descriptor_dim=%lu expected=%d)",
+                     i, vertices_.back().descriptor.size(), descriptor_dim_);
+        }
     }
 
     // 解析邻接表
@@ -420,7 +505,8 @@ void TopologicalGraph::loadFromJson(const std::string& input_path) {
         adj_lists_.push_back(adj_list);
     }
 
-    ROS_INFO("Graph loaded (vertices: %d)", numVertices());
+    ROS_INFO("Graph loaded (vertices: %d, faiss: %d, identity: %d)",
+             numVertices(), indexSize(), indexIdentitySize());
 }
 
 } // namespace prism_topomap

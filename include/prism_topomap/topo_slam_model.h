@@ -108,16 +108,36 @@ private:
 
     void initLocalization();
 
-    bool findLoopClosure(const std::vector<int>& vertex_ids,
-                         const std::vector<double>& dists);
+    struct LoopClosureCandidate {
+        bool found = false;
+        int u = -1;
+        int v = -1;
+        double path_length = 0.0;
+        double distance_through_current = 0.0;
+        std::vector<int> path;
+    };
+    LoopClosureCandidate findLoopClosure(
+        const std::vector<int>& vertex_ids,
+        const std::vector<double>& dists);
     bool checkPathCondition(int u, int v);
     bool isInsideVcur() const;
 
     bool reattachByEdge(bool require_match = true);
     bool reattachByLocalization(double iou_threshold, double localized_stamp);
 
-    void addNewVertex(const std::vector<int>& vertex_ids,
-                      const std::vector<Pose2D>& rel_poses);
+    struct ValidatedLoopEdge {
+        int vertex_id;
+        Pose2D rel_pose;
+        double predicted_length;
+        double direct_length;
+    };
+    std::vector<ValidatedLoopEdge> validateLoopEdges(
+        const std::vector<int>& vertex_ids,
+        const std::vector<Pose2D>& rel_poses,
+        const Pose2D& pose_stamped) const;
+    bool addNewVertex(const std::vector<int>& vertex_ids,
+                      const std::vector<Pose2D>& rel_poses,
+                      const LoopClosureCandidate* required_loop = nullptr);
 
     // === 位姿历史查询 ===
     Pose2D getRelPoseFromStamp(double timestamp) const;
@@ -168,6 +188,10 @@ private:
     double localization_frequency_;
     double rel_pose_correction_frequency_;
     double max_edge_length_;
+    double loop_edge_max_abs_distance_error_;
+    double loop_edge_max_distance_ratio_;
+    double loop_edge_ratio_min_distance_;
+    double loop_edge_max_yaw_error_;
     double drift_coef_;
     double localization_timeout_;
     double floor_height_;

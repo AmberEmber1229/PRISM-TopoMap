@@ -100,7 +100,8 @@ public:
     PathResult getPathWithLength(int u, int v) const;
 
     // === FAISS 索引操作 ===
-    void addToIndex(const std::vector<float>& descriptor);
+    bool isDescriptorValid(const std::vector<float>& descriptor) const;
+    bool addToIndex(const std::vector<float>& descriptor, int vertex_id);
     std::pair<std::vector<float>, std::vector<int>>
     searchIndex(const std::vector<float>& query, int top_k) const;
 
@@ -111,6 +112,9 @@ public:
     // === 访问接口 ===
     int numVertices() const { return static_cast<int>(vertices_.size()); }
     int indexSize() const { return static_cast<int>(faiss_index_->ntotal); }
+    int indexIdentitySize() const {
+        return static_cast<int>(faiss_row_to_vertex_id_.size());
+    }
     int undirectedEdgeCount() const {
         size_t directed_count = 0;
         for (const auto& entries : adj_lists_) directed_count += entries.size();
@@ -126,6 +130,7 @@ private:
 
     // FAISS 索引 (C++ 原生)
     std::unique_ptr<faiss::IndexFlatL2> faiss_index_;
+    std::vector<int> faiss_row_to_vertex_id_;
     int descriptor_dim_;
 
     // Python 推理服务客户端

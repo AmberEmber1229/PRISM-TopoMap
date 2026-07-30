@@ -175,6 +175,14 @@ class InferenceServiceNode:
         front_shape = "NONE"
         back_shape = "NONE"
 
+        if self.trace_data_flow:
+            rospy.loginfo(
+                "[FLOW][FRAME=SERVICE-%d][STAMP=%.9f]"
+                "[STAGE=DESCRIPTOR_PY] action=HANDLER_BEGIN "
+                "raw_points=%d quantization=%.6f",
+                request_id, req.pointcloud.header.stamp.to_sec(),
+                raw_points, req.quantization_size)
+
         try:
             # 1. 解析点云
             cloud_array = []

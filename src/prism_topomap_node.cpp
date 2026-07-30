@@ -84,7 +84,15 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
 
     // --- topomap params (node-level) ---
     auto topomap_config = config_["topomap"];
-    pcd_process_interval_ = topomap_config["pcd_process_interval"].as<double>(0.1);
+    pcd_process_interval_ =
+        topomap_config["pcd_process_interval"].as<double>(0.0);
+    pnh_.param<double>("pcd_process_interval",
+                       pcd_process_interval_, pcd_process_interval_);
+    if (pcd_process_interval_ < 0.0) {
+        ROS_WARN("Negative pcd_process_interval %.3f is invalid; disabling "
+                 "algorithm-level sampling", pcd_process_interval_);
+        pcd_process_interval_ = 0.0;
+    }
 
     // --- visualization ---
     auto viz_config = config_["visualization"];
@@ -183,6 +191,13 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
     ROS_INFO("  Mode: %s", topo_slam_model_->mode().c_str());
     ROS_INFO("  PCD topic: %s", pcd_topic_.c_str());
     ROS_INFO("  Odom topic: %s", odom_topic_.c_str());
+    if (pcd_process_interval_ > 0.0) {
+        ROS_WARN("  PCD performance sampling ENABLED: interval=%.3f s "
+                 "(this changes the algorithm input sequence)",
+                 pcd_process_interval_);
+    } else {
+        ROS_INFO("  PCD performance sampling: disabled");
+    }
     ROS_INFO("  use_odom for rel_pose: %s", use_odom_ ? "true" : "false");
     ROS_INFO("  use_gt_pose: %s", use_gt_pose_ ? "true" : "false");
     if (use_gt_pose_) {
@@ -605,11 +620,19 @@ void PRISMTopomapNode::processPcdQueue() {
         auto msg = pcd_queue_.front();
         double stamp = msg->header.stamp.toSec();
 
-        // 对齐 Python 逻辑：控制处理帧率约为 2Hz
+        // 检测时间跳变（例如 rosbag 重新播放）。必须先于可选 interval
+        // 判断，否则负时间差会被误判为需要持续丢帧。
         static double last_processed_stamp = 0.0;
         static int skipped_count = 0;
-        if (last_processed_stamp > 0.0 && (stamp - last_processed_stamp) < pcd_process_interval_) {
-            // 距离上一帧处理不足 0.5s，直接丢弃该帧
+        if (last_processed_stamp > 0.0 && stamp < last_processed_stamp) {
+            ROS_WARN("[DIAG] Time jumped backwards! Resetting last_processed_stamp.");
+            last_processed_stamp = 0.0;
+        }
+
+        // 可选性能采样模式。默认关闭，以保持与原始 Python 输入序列一致。
+        if (pcd_process_interval_ > 0.0 &&
+            last_processed_stamp > 0.0 &&
+            (stamp - last_processed_stamp) < pcd_process_interval_) {
             skipped_count++;
             ROS_WARN_THROTTLE(2.0,
                 "[THROTTLE] Skipping PCD frame (stamp=%.3f, diff=%.3fs, skipped_total=%d, "
@@ -626,12 +649,6 @@ void PRISMTopomapNode::processPcdQueue() {
             }
             pcd_queue_.pop_front();
             continue;
-        }
-
-        // 检测时间跳变（例如 rosbag 重新播放）
-        if (stamp < last_processed_stamp) {
-            ROS_WARN("[DIAG] Time jumped backwards! Resetting last_processed_stamp.");
-            last_processed_stamp = 0.0;
         }
 
         // 1. 时间同步
@@ -800,6 +817,7 @@ void PRISMTopomapNode::processPcdQueue() {
                     frame_end - frame_start).count();
             ROS_INFO("[FLOW][FRAME=%d][STAMP=%.9f][STAGE=PUBLISH] "
                      "decision=%s current_vertex=%d nodes=%d edges=%d "
+                     "faiss_size=%d faiss_identity=%d "
                      "current_grid=true last_vertex_grid=%s localization_matched=%lu "
                      "localization_unmatched=%lu loop_closure_published=%s "
                      "path_published=%s path_size=%lu "
@@ -808,6 +826,8 @@ void PRISMTopomapNode::processPcdQueue() {
                      topo_slam_model_->lastVertexId(),
                      topo_slam_model_->graph().numVertices(),
                      topo_slam_model_->graph().undirectedEdgeCount(),
+                     topo_slam_model_->graph().indexSize(),
+                     topo_slam_model_->graph().indexIdentitySize(),
                      topo_slam_model_->lastVertexId() >= 0 ? "true" : "false",
                      static_cast<unsigned long>(loc_state.vertex_ids_matched.size()),
                      static_cast<unsigned long>(loc_state.vertex_ids_unmatched.size()),

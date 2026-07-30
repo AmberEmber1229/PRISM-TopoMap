@@ -12,6 +12,7 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/Image.h>
 #include <opencv2/core.hpp>
+#include <cstdint>
 #include <vector>
 #include <string>
 
@@ -103,8 +104,15 @@ public:
         const std::string& registration_type);
 
 private:
+    void resetDescriptorClient();
+    void resetRegistrationClient();
+
+    ros::NodeHandle nh_;
+    std::string descriptor_service_name_;
+    std::string registration_service_name_;
     ros::ServiceClient descriptor_client_;
     ros::ServiceClient registration_client_;
+    uint64_t descriptor_call_count_ = 0;
     FlowTraceConfig trace_config_;
     int trace_frame_id_ = -1;
     bool trace_detailed_ = false;

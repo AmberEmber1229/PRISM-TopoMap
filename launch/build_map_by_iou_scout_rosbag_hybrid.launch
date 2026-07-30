@@ -7,6 +7,7 @@
   <arg name="trace_every_n_processed_frames" default="1"/>
   <arg name="trace_descriptor_head_size" default="4"/>
   <arg name="trace_registration_candidates" default="true"/>
+  <arg name="pcd_process_interval" default="0.0"/>
 
   <node pkg="prism_topomap" type="inference_service_node.py"
         name="prism_inference_service" output="screen">
@@ -27,6 +28,7 @@
     <param name="trace_every_n_processed_frames" value="$(arg trace_every_n_processed_frames)"/>
     <param name="trace_descriptor_head_size" value="$(arg trace_descriptor_head_size)"/>
     <param name="trace_registration_candidates" value="$(arg trace_registration_candidates)"/>
+    <param name="pcd_process_interval" value="$(arg pcd_process_interval)"/>
   </node>
 
   <node pkg="prism_topomap" type="tf_manager.py" name="odometry_publisher" output="screen">
