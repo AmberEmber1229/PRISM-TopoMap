@@ -157,8 +157,8 @@ void Localizer::localize() {
         if (idx < 0) continue;
 
         const Vertex& cand_vertex = graph_.getVertex(idx);
-        LocalGrid cand_grid = cand_vertex.grid.copy();
-        LocalGrid grid_copy = start_grid.copy();
+        LocalGrid cand_grid = cand_vertex.grid.copy();//当前观测栅格
+        LocalGrid grid_copy = start_grid.copy();//候选节点历史栅格
 
         // 调用 Python 配准服务 (localization 类型)
         auto reg_result = inference_client_->gridRegistration(
@@ -171,13 +171,14 @@ void Localizer::localize() {
         ROS_INFO("Vertex %d registration score: %.3f", idx, reg_result.score);
 
         if (!reg_result.success || reg_result.score < reg_score_threshold_) {
+            //认为候选节点虽然描述符相似，但局部几何结构不匹配。
             pred_i_filtered.push_back(-1);
             pred_tf.push_back({0, 0, 0, 0, 0, 0});
         } else {
             // 计算位姿变换矩阵
             Eigen::Matrix4d tf_matrix = cand_grid.getTfMatrixXY(
                 reg_result.trans_i, reg_result.trans_j, reg_result.rot_angle);
-
+                //栅格像素平移，二维旋转
             pred_i_filtered.push_back(idx);
 
             // 提取旋转向量和平移向量
@@ -193,9 +194,9 @@ void Localizer::localize() {
     }
 
     // 4. 过滤结果
-    std::vector<int> vertex_ids_matched;
-    std::vector<Pose2D> rel_poses;
-    std::vector<int> vertex_ids_unmatched;
+    std::vector<int> vertex_ids_matched;//配准后候选结果id
+    std::vector<Pose2D> rel_poses;//配准成功节点相对位姿
+    std::vector<int> vertex_ids_unmatched;//被检索到但配准失败的节点ID
 
     // 未匹配的顶点
     for (int i = 0; i < static_cast<int>(pred_i.size()); ++i) {

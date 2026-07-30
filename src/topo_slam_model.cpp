@@ -149,7 +149,8 @@ void TopoSLAMModel::processObservations(
     const PointCloudPtr& cur_curbs,
     double x, double y, double theta) {
 
-    // 1. 调用 Python 推理服务提取描述符
+    // 1. 调用 Python 推理服务提取描述符，相似地点的描述符距离较小
+    //后续定位器会用这个描述符从所有拓扑节点中找出最相似的 top_k 个节点
     auto desc_result = inference_client_->getDescriptor(
         cloud_msg,
         has_image_front, has_image_back,
@@ -165,10 +166,10 @@ void TopoSLAMModel::processObservations(
         ROS_WARN("Descriptor extraction failed!");
     }
 
-    // 2. 点云投影到栅格 (C++ 本地计算)
+    // 2. 点云投影到栅格 (更新当前局部栅格)
     // 注意: Python 中传入的 theta 取反 (-theta)
     cur_grid_.updateFromCloudAndTransform(cur_cloud, x, y, -theta);
-
+    //此处的 cur_grid_ 不是某个拓扑节点已经存储的栅格，而是当前机器人正在维护的观测栅格。
     // 3. Curb update
     if (cur_curbs && !cur_curbs->empty()) {
         cur_grid_.updateCurbsFromCloud(cur_curbs);
@@ -219,16 +220,20 @@ bool TopoSLAMModel::checkPathCondition(int u, int v) {
     auto path_result = graph_.getPathWithLength(u, v);
     if (!path_result.found) return true;  // 不可达, 允许回环
 
-    Pose2D rel_pose_along_path = Pose2D::Zero();
+    Pose2D rel_pose_along_path = Pose2D::Zero();//初始化
     const auto& path = path_result.path;
-    for (int i = 1; i < static_cast<int>(path.size()); ++i) {
+    for (int i = 1; i < static_cast<int>(path.size()); ++i) {//遍历路径中的每一条边
         Pose2D edge = graph_.getEdge(path[i - 1], path[i]);
         rel_pose_along_path = applyPoseShift(rel_pose_along_path, edge);
     }
-
+    //rel_pose_along_path表示沿旧路径累积相对位姿
+    //straight_length近似表示从节点u直接到节点v的直线距离
     double straight_length = std::sqrt(rel_pose_along_path[0] * rel_pose_along_path[0] +
                                        rel_pose_along_path[1] * rel_pose_along_path[1]);
+    //path_result.length相当于机器人沿着旧路线实际走过的距离
     return (path_result.length > 3.0 * straight_length || straight_length < 10.0);
+    //条件A：沿图走的距离超过直接位移的三倍（旧路径很绕，存在捷径）
+    //条件B：即使路径没有超过直线距离三倍，只要两个节点的几何距离小于10米，也允许判断为回环(两个节点本身就比较近)
 }
 
 // ============================================================================
@@ -237,25 +242,26 @@ bool TopoSLAMModel::checkPathCondition(int u, int v) {
 // ============================================================================
 bool TopoSLAMModel::findLoopClosure(const std::vector<int>& vertex_ids,
                                     const std::vector<double>& dists) {
-    found_loop_closure_ = false;
-    path_.clear();
+                                       
+    found_loop_closure_ = false;//每一帧进入回环检测时，先清除上一帧的结果。
+    path_.clear();//保存发现回环前，节点u和v在旧拓扑图中的路径用于可视化
 
     const size_t n = std::min(vertex_ids.size(), dists.size());
-    for (size_t i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {//遍历所有节点对
         for (size_t j = 0; j < n; ++j) {
             int u = vertex_ids[i];
             int v = vertex_ids[j];
-            if (u < 0 || v < 0) continue;
-
+            if (u < 0 || v < 0) continue;//过滤无效节点
+            //Dijkstra 获取旧图路径
             auto path_result = graph_.getPathWithLength(u, v);
             if (!path_result.found) continue;
-
-            double dst_through_cur = dists[i] + dists[j];
-            if (path_result.length > 5.0 &&
-                path_result.length > 2.0 * dst_through_cur &&
-                checkPathCondition(u, v)) {
-                found_loop_closure_ = true;
-                path_ = path_result.path;
+            //返回：是否存在路径.found、具体节点序列.path、路径总长度.length
+            double dst_through_cur = dists[i] + dists[j];//计算当前位置到u、v两个点的距离之和作为新路径
+            if (path_result.length > 5.0 &&//旧路径必须超过5m，排除距离本来就很近的邻居节点防止反复触发回环
+                path_result.length > 2.0 * dst_through_cur &&//旧路径至少要比新路径长两倍
+                checkPathCondition(u, v)) {//额外检查几何结构
+                found_loop_closure_ = true;//存在回环
+                path_ = path_result.path;//存储路径，但不直接修改图结构，主循环里修改
                 ROS_INFO("\n\n\n=== LOOP CLOSURE FOUND! connect %d and %d through current ===\n\n\n",
                          u, v);
                 return true;
@@ -275,12 +281,12 @@ bool TopoSLAMModel::isInsideVcur() const {
 
     const Vertex& v = graph_.getVertex(last_vertex_id_);
     return v.grid.isInside(rel_pose_of_vcur_[0], rel_pose_of_vcur_[1], rel_pose_of_vcur_[2]);
+    //将机器人相对于当前节点的位姿传给节点栅格，本质上是在检查：机器人当前位置是否位于该节点栅格的已知或有效区域中？
 }
 
 // ============================================================================
 // reattachByEdge: 沿边匹配切换节点
 // 对应 Python: TopoSLAMModel.reattach_by_edge()
-//
 // 流程:
 // 1. 遍历当前节点的邻居
 // 2. 对每个邻居计算预测位置与实际位置偏移
@@ -288,23 +294,23 @@ bool TopoSLAMModel::isInsideVcur() const {
 // 4. 配准成功则切换到该邻居节点
 // ============================================================================
 bool TopoSLAMModel::reattachByEdge(bool require_match) {
-    if (last_vertex_id_ < 0) return false;
-
+    if (last_vertex_id_ < 0) return false;//当前节点还没初始化无法沿边切换
+//last_vertex_id_表示机器人当前被归属到哪个拓扑节点
     const auto& edges = graph_.getEdgesFrom(last_vertex_id_);
-    if (edges.empty()) return false;
+    if (edges.empty()) return false;//当前节点还没任何邻居边无法沿边切换
 
     double min_dist = std::numeric_limits<double>::infinity();
     int nearest_vertex_id = -1;
     Pose2D pose_on_edge;
-
-    // 计算当前位置距离自身的长度
+//rel_pose_of_vcur_表示机器人相对于当前节点中心坐标系的二维位姿
+    // 计算当前位置距离当前节点中心的长度
     double dist_to_vcur = std::sqrt(rel_pose_of_vcur_[0] * rel_pose_of_vcur_[0] +
                                     rel_pose_of_vcur_[1] * rel_pose_of_vcur_[1]);
 
     for (const auto& entry : edges) {
         int neighbor_id = entry.vertex_id;
         const Pose2D& edge_rel_pose = entry.rel_pose;
-
+//每条 edge_rel_pose 表示从当前节点中心到邻居节点中心的相对位姿
         double dx = rel_pose_of_vcur_[0] - edge_rel_pose[0];
         double dy = rel_pose_of_vcur_[1] - edge_rel_pose[1];
         double dist = std::sqrt(dx * dx + dy * dy);
@@ -314,47 +320,50 @@ bool TopoSLAMModel::reattachByEdge(bool require_match) {
             nearest_vertex_id = neighbor_id;
             pose_on_edge = edge_rel_pose;
         }
-    }
+    }//遍历所有邻居边，找最接近机器人当前位置的邻居节点中心（保存最小值）
 
     bool changed = false;
 
-    // 如果所有的边都太远，或者离目标点的距离还不如离当前原点的距离小，则退出
+    // 如果所有的边都太远，或者离目标节点的距离还不如离当前节点的距离小，则退出
     if (min_dist >= dist_to_vcur || min_dist >= 5.0 || nearest_vertex_id < 0) {
         return false;
     }
 
     Pose2D rel_pose_to_vertex = getRelPose(rel_pose_of_vcur_, pose_on_edge);
-
-    if (require_match) {
+//rel_pose_of_vcur_：当前节点 → 机器人；pose_on_edge：当前节点 → 邻居节点
+//rel_pose_to_vertex：机器人 → 邻居节点的位姿，但是这是基于拓扑边和里程计得到的初始预测
+    if (require_match) {//默认为true表示必须通过栅格配准再次验证，不能仅凭图中的边位姿和里程计直接切换，因为：
+        //边位姿可能包含建图误差；里程计会累积漂移；甚至可能存在之前错误建立的边
         // 先对齐栅格，然后再做配准
-        LocalGrid cur_grid_transformed = cur_grid_.copy();
+        LocalGrid cur_grid_transformed = cur_grid_.copy();//复制当前栅格，不能修改因为他仍是主循环当前观测
         Pose2D rel_pose_to_vertex_inv = graph_.inverseTransform(rel_pose_to_vertex[0], rel_pose_to_vertex[1], rel_pose_to_vertex[2]);
         cur_grid_transformed.transform(rel_pose_to_vertex_inv[0], rel_pose_to_vertex_inv[1], -rel_pose_to_vertex_inv[2]);
-
+//将当前栅格粗略变换到邻居节点坐标系，对rel_pose_to_vertex取逆得到邻居 → 机器人：根据已有拓扑边和里程计，把当前观测粗略放到邻居节点坐标系中，提供配准初值
         auto tf_result = graph_.getTransformToVertex(nearest_vertex_id, cur_grid_transformed);
-
+//比较：粗对齐后的当前栅格与邻居节点保存的历史栅格，配准失败则不切换
         if (tf_result.success) {
             Pose2D corr_inv = graph_.inverseTransform(tf_result.x, tf_result.y, tf_result.theta);
             Pose2D final_pose = applyPoseShift(rel_pose_to_vertex, corr_inv);
-            
+//将配准修正融合到原预测位姿：机器人与邻居节点位姿=里程计给出的粗估计+栅格配准给出的精修正
             double diff = std::sqrt((final_pose[0] - rel_pose_to_vertex[0]) * (final_pose[0] - rel_pose_to_vertex[0]) +
                                     (final_pose[1] - rel_pose_to_vertex[1]) * (final_pose[1] - rel_pose_to_vertex[1]));
-
-            if (diff < local_jump_threshold_) {
+//计算修正量：配准结果与拓扑先验结果之间的差值
+            if (diff < local_jump_threshold_) {//修正量是否小于阈值，检查局部一致性
                 ROS_INFO("Edge reattach: from vertex %d to vertex %d (match_dist=%.2f)",
                          last_vertex_id_, nearest_vertex_id, diff);
-                rel_pose_of_vcur_ = graph_.inverseTransform(final_pose[0], final_pose[1], final_pose[2]);
-                last_vertex_id_ = nearest_vertex_id;
+                //沿边切换成功后需要更新的状态
+                rel_pose_of_vcur_ = graph_.inverseTransform(final_pose[0], final_pose[1], final_pose[2]);//取逆表示新当前节点 → 机器人
+                last_vertex_id_ = nearest_vertex_id;//当前节点切换
                 edge_reattach_cnt_++;
                 last_successful_match_time_ = current_stamp_;
-                rel_poses_stamped_.clear();
+                rel_poses_stamped_.clear();//清空位姿时间历史，现在都换成当前节点→ 机器人
                 rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
                 changed = true;
             }
         }
     }
 
-    if (!changed && !require_match) {
+    if (!changed && !require_match) {//纯定位模式localization
         ROS_INFO("Edge reattach (no match): from vertex %d to vertex %d", last_vertex_id_, nearest_vertex_id);
         rel_pose_of_vcur_ = graph_.inverseTransform(rel_pose_to_vertex[0], rel_pose_to_vertex[1], rel_pose_to_vertex[2]);
         last_vertex_id_ = nearest_vertex_id;
@@ -365,10 +374,10 @@ bool TopoSLAMModel::reattachByEdge(bool require_match) {
     }
 
     if (changed) {
-        need_to_change_vcur_ = false;
+        need_to_change_vcur_ = false;//重置 need_to_change_vcur_表示切换已经解决了“当前节点不合适”的问题
         if (has_rel_pose_vcur_to_loc_) {
             Pose2D inv_pose_on_edge = graph_.inverseTransform(pose_on_edge[0], pose_on_edge[1], pose_on_edge[2]);
-            rel_pose_vcur_to_loc_ = applyPoseShift(inv_pose_on_edge, rel_pose_vcur_to_loc_);
+            rel_pose_vcur_to_loc_ = applyPoseShift(inv_pose_on_edge, rel_pose_vcur_to_loc_);//新节点坐标系下的定位参考位姿
         }
     }
 
@@ -378,48 +387,55 @@ bool TopoSLAMModel::reattachByEdge(bool require_match) {
 // ============================================================================
 // reattachByLocalization: 根据定位结果切换节点
 // 对应 Python: TopoSLAMModel.reattach_by_localization()
+//它可以实现：
+//1.回到很早以前经过的区域；
+//2.跨越非邻接节点重新归属；
+//3.从局部里程计错误中恢复。
 // ============================================================================
 bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
                                            double localized_stamp) {
     const auto& vertex_ids = localization_results_.vertex_ids_matched;
     const auto& rel_poses = localization_results_.rel_poses;
-    if (vertex_ids.empty() || rel_poses.empty()) return false;
+    //rel_poses[i] 是定位时刻当前观测相对于候选节点的配准位姿
+    if (vertex_ids.empty() || rel_poses.empty()) return false;//没有定位结果就失败
     if (last_vertex_id_ < 0) return false;
 
     if (!rel_poses_stamped_.empty() && localized_stamp < rel_poses_stamped_.front().timestamp) {
         ROS_WARN("Old localization! Ignore it");
-        return false;
+        return false;//拒绝跨节点坐标系的旧结果
     }
-
-    rel_pose_vcur_to_loc_ = getRelPoseFromStamp(localized_stamp);
+//定位延迟补偿的关键变量
+    rel_pose_vcur_to_loc_ = getRelPoseFromStamp(localized_stamp);//表示在定位快照被取走的那一刻，机器人相对于当前节点的位姿
     has_rel_pose_vcur_to_loc_ = true;
-    const Pose2D rel_pose_after_localization = getRelPose(rel_pose_vcur_to_loc_, rel_pose_of_vcur_);
-    const Pose2D rel_since_loc = getRelPoseSinceLocalization();
+    const Pose2D rel_pose_after_localization = getRelPose(rel_pose_vcur_to_loc_, rel_pose_of_vcur_);//表示从定位时刻到当前时刻，机器人又运动了多少
+    const Pose2D rel_since_loc = getRelPoseSinceLocalization();//本质上也在计算定位发生以后累计的运动，后续用于将当前栅格对齐到候选节点
     const size_t n = std::min(vertex_ids.size(), rel_poses.size());
 
-    for (size_t i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {//逐个处理定位切换候选
         const int vid = vertex_ids[i];
         if (vid < 0 || vid >= graph_.numVertices()) continue;
         const Pose2D& loc_rel = rel_poses[i];
 
         Pose2D inv_loc_rel = graph_.inverseTransform(loc_rel[0], loc_rel[1], loc_rel[2]);
         Pose2D pred_rel_pose_vcur_to_v = applyPoseShift(rel_pose_vcur_to_loc_, inv_loc_rel);
+        //旧当前节点 → 定位时刻机器人+定位时刻机器人 → 候选节点=旧当前节点 → 候选节点，用于于在 mapping 模式中添加：旧当前节点 ↔ 候选节点的拓扑边
         Pose2D rel_pose_robot_to_loc = getRelPose(rel_since_loc, loc_rel);
         double iou = cur_grid_.getIoU(graph_.getVertex(vid).grid,
                                       rel_pose_robot_to_loc[0],
                                       rel_pose_robot_to_loc[1],
                                       rel_pose_robot_to_loc[2]);
-
+        //计算当前观测与候选节点的 IoU：将异步定位时刻的配准结果，补偿到当前时刻，再检查当前栅格与候选节点栅格是否仍然重叠
         Pose2D vcur_to_v = getRelPose(graph_.getVertex(last_vertex_id_).pose_for_visualization,
                                       graph_.getVertex(vid).pose_for_visualization);
         Pose2D cur_to_v = getRelPose(vcur_to_v, rel_pose_of_vcur_);
-        double dst = std::sqrt(cur_to_v[0] * cur_to_v[0] + cur_to_v[1] * cur_to_v[1]);
+        double dst = std::sqrt(cur_to_v[0] * cur_to_v[0] + cur_to_v[1] * cur_to_v[1]);//使用两个节点的全局可视化位姿估算候选节点相对于当前机器人位置有多远
         if (dst > drift_coef_ * (current_stamp_ - last_successful_match_time_) + 10.0) {
-            ROS_INFO("Vertex %d is too far to match", vid);
+            ROS_INFO("Vertex %d is too far to match", vid);//距离上次可靠匹配越久，里程计可能漂移得越大，因此允许的候选距离也逐渐增大。
+            //如果候选节点远得超出合理运动范围，则认为定位结果不可信。
             continue;
         }
 
-        if (iou > iou_threshold_val || need_to_change_vcur_) {
+        if (iou > iou_threshold_val || need_to_change_vcur_) {//IoU足够高或者系统已经明确要求离开当前节点，后面恒为true
             ROS_INFO("Localization reattach: to vertex %d (IoU=%.3f, need_change=%s)",
                      vid, iou, need_to_change_vcur_ ? "true" : "false");
             last_successful_match_time_ = localized_stamp;
@@ -429,21 +445,21 @@ bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
                                pred_rel_pose_vcur_to_v[0],
                                pred_rel_pose_vcur_to_v[1],
                                pred_rel_pose_vcur_to_v[2]);
-            }
+            }//添加：旧当前节点 → 定位候选节点的边
 
             last_vertex_id_ = vid;
-            need_to_change_vcur_ = false;
+            need_to_change_vcur_ = false;//候选节点正式成为新的当前节点
             Pose2D pred_rel_pose = applyPoseShift(loc_rel, rel_pose_after_localization);
-            rel_pose_of_vcur_ = pred_rel_pose;
+            rel_pose_of_vcur_ = pred_rel_pose;//当前时刻机器人相对于候选节点的位姿，防止机器人因使用旧定位结果而瞬间跳回历史位置
 
             Pose2D inv_pred_rel_pose_vcur_to_v =
                 graph_.inverseTransform(pred_rel_pose_vcur_to_v[0], pred_rel_pose_vcur_to_v[1], pred_rel_pose_vcur_to_v[2]);
             rel_pose_vcur_to_loc_ = applyPoseShift(inv_pred_rel_pose_vcur_to_v, rel_pose_vcur_to_loc_);
             has_rel_pose_vcur_to_loc_ = true;
-
+//切换前：rel_pose_vcur_to_loc_是基于旧当前节点的；切换后需要转换成基于候选节点的表达，确保后续异步定位时间补偿仍然使用同一个坐标系
             rel_poses_stamped_.clear();
             rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
-            return true;
+            return true;//清空历史因为当前节点坐标系已经改变
         }
     }
 
@@ -456,19 +472,19 @@ bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
 // ============================================================================
 void TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
                                   const std::vector<Pose2D>& rel_poses) {
-    int new_id = graph_.addVertex(
-        global_pose_for_visualization_,
-        cur_desc_,
-        cur_grid_
+    int new_id = graph_.addVertex(//创建新节点保存当前帧的
+        global_pose_for_visualization_,//全局可视化位姿
+        cur_desc_,//当前描述符
+        cur_grid_//当前局部栅格
     );
 
-    Pose2D pose_stamped = getRelPoseFromStamp(current_stamp_);
+    Pose2D pose_stamped = getRelPoseFromStamp(current_stamp_);//旧当前节点 → 新节点创建位置
     Pose2D new_rel_pose_of_vcur = getRelPose(pose_stamped, rel_pose_of_vcur_);
-
+    //重置重置机器人在新节点中的位姿，理论上为[0，0，0]
     // Safety check: warn if edge is abnormally long
     double edge_dist = std::sqrt(pose_stamped[0] * pose_stamped[0] +
                                  pose_stamped[1] * pose_stamped[1]);
-    if (edge_dist > max_edge_length_ * 3.0) {
+    if (edge_dist > max_edge_length_ * 3.0) {//添加安全性校验，剔除不符合检验的长边
         ROS_WARN("[DIAG] Abnormally long edge: %.2f m (pose_stamped=(%.2f,%.2f,%.2f))",
                  edge_dist, pose_stamped[0], pose_stamped[1], pose_stamped[2]);
     }
@@ -496,7 +512,7 @@ void TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
                  vertex_ids.size(), rel_poses.size(), has_rel_pose_vcur_to_loc_ ? 1 : 0);
     }
 
-    // Add edge from last vertex to new vertex
+    // 建立新旧节点之间的拓扑边
     if (last_vertex_id_ >= 0) {
         graph_.addEdge(last_vertex_id_, new_id,
                        pose_stamped[0], pose_stamped[1], pose_stamped[2]);
@@ -519,7 +535,7 @@ void TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
         if (!has_rel_pose_vcur_to_loc_) continue;
 
         Pose2D inv_rel = graph_.inverseTransform(rel_poses[i][0], rel_poses[i][1], rel_poses[i][2]);
-        Pose2D pred_rel_pose = applyPoseShift(rel_pose_vcur_to_loc_, inv_rel);
+        Pose2D pred_rel_pose = applyPoseShift(rel_pose_vcur_to_loc_, inv_rel);//新节点与候选历史节点预测边位姿
 
         // 仿照 Python 注释: if np.sqrt(pred_rel_pose[0]**2 + pred_rel_pose[1]**2) < 5
         double pred_dist = std::sqrt(pred_rel_pose[0] * pred_rel_pose[0] +
@@ -550,7 +566,7 @@ void TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
                  new_id, vid, pred_rel_pose[0], pred_rel_pose[1], pred_rel_pose[2],
                  pred_dist, direct_dist);
     }
-
+//新节点成为当前节点
     last_vertex_id_ = new_id;
     need_to_change_vcur_ = false;
     rel_poses_stamped_.clear();
@@ -689,10 +705,11 @@ void TopoSLAMModel::update(
     //          odom_pose_[0], odom_pose_[1], odom_pose_[2],
     //          odom_initialized_ ? 1 : 0, last_vertex_id_);
 
-    // Step A: Odometry integration — grid_shift for grid transform
-    // Python original: x,y,theta = get_rel_pose(*cur_odom_pose, *self.odom_pose)
-    // i.e., (from=NEW, to=OLD) — reverse transform, combined with -theta in
-    // process_observations to form the correct grid affine shift.
+    // 步骤A：里程计积分运算 —— grid_shift 用于栅格坐标变换
+    // Python原版代码：x,y,theta = get_rel_pose(*cur_odom_pose, *self.odom_pose)
+    // 含义：（源坐标系=新位姿，目标坐标系=旧位姿）——逆变换；
+    // 该逆变换会在观测处理函数 process_observations 中与负偏角(-theta)结合，
+    // 最终算出正确的栅格仿射偏移量。
     // =============================================
     Pose2D grid_shift = Pose2D::Zero();
     if (odom_initialized_) {
@@ -717,7 +734,8 @@ void TopoSLAMModel::update(
     // 步骤 C: 更新定位器状态
     // =============================================
     localizer_.updateCurrentState(global_pose, cur_desc_, cur_grid_, current_stamp_);
-
+    //global_pose	当前全局可视化位姿 cur_desc_	当前地点描述符
+    //cur_grid_	当前局部占据栅格  current_stamp_	当前观测时间戳
     // 记录带时间戳的相对位姿
     rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
 
@@ -756,16 +774,17 @@ void TopoSLAMModel::update(
     // 步骤 F: 回环检测 (mapping 模式)
     // =============================================
     if (mode_ == "mapping" && localization_is_fresh) {
-        std::vector<int> vertex_ids = localization_results_.vertex_ids_matched;
-        std::vector<Pose2D> rel_poses = localization_results_.rel_poses;
+        std::vector<int> vertex_ids = localization_results_.vertex_ids_matched;//当前观测可能匹配到的拓扑节点 ID
+        std::vector<Pose2D> rel_poses = localization_results_.rel_poses;//当前观测到这些候选节点的估计距离
         if (vertex_ids.size() == rel_poses.size()) {
-            bool has_last_vertex = false;
+            bool has_last_vertex = false;//主动将当前节点也加入候选
             for (int id : vertex_ids) {
                 if (id == last_vertex_id_) {
                     has_last_vertex = true;
                     break;
                 }
             }
+            //如果当前节点不在定位结果中：
             if (!has_last_vertex && last_vertex_id_ >= 0 && has_rel_pose_vcur_to_loc_) {
                 vertex_ids.push_back(last_vertex_id_);
                 Pose2D inv_rel_pose = graph_.inverseTransform(rel_pose_vcur_to_loc_[0],
@@ -777,7 +796,7 @@ void TopoSLAMModel::update(
             std::vector<double> dists;
             dists.reserve(rel_poses.size());
             for (const auto& rp : rel_poses) {
-                dists.push_back(std::sqrt(rp[0] * rp[0] + rp[1] * rp[1]));
+                dists.push_back(std::sqrt(rp[0] * rp[0] + rp[1] * rp[1]));//根据相对位姿只使用平移部分计算距离
             }
             if (findLoopClosure(vertex_ids, dists)) {
                 ROS_INFO("Found loop closure. Add new vertex to close loop");
@@ -793,7 +812,7 @@ void TopoSLAMModel::update(
 
     // G.1: 沿边匹配切换
     bool changed = reattachByEdge(true);
-
+//成功的话last_vertex_id_已经变成新节点；rel_pose_of_vcur_也已经变成机器人相对于新节点的位姿，后面的IoU就会自动针对新节点重新计算
     // G.2: IoU 判定
     Pose2D inv_rel_pose = graph_.inverseTransform(rel_pose_of_vcur_[0],
                                                   rel_pose_of_vcur_[1],
@@ -821,11 +840,11 @@ void TopoSLAMModel::update(
         }
 
         if (!changed) {
-            // 判断 localization 是否过旧
+            // 判断异步定位结果是否过旧
             if (current_stamp_ - localization_results_.timestamp < 5.0) {
                 // 尝试根据定位结果直接跳过去
                 changed = reattachByLocalization(cur_iou_, localization_results_.timestamp);
-                
+                //当前节点的直接邻居中没有合适节点，但全局位置识别认为机器人可能位于图中的其他节点
                 // 如果定位也没能跳成功
                 if (!changed && mode_ == "mapping") {
                     ROS_INFO("No proper vertex to change. Add new vertex");
