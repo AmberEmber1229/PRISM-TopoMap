@@ -13,6 +13,8 @@ input:
     type: Odometry
     use_odom: false
   subscribe_to_gt_pose: true
+  # Mapping must not create the first vertex from odometry before GT arrives.
+  require_gt_pose: true
   gt_pose:
     topic: /odom_gt
     type: Odometry
@@ -27,6 +29,20 @@ topomap:
   loop_edge_max_distance_ratio: 2.0
   loop_edge_ratio_min_distance: 0.5
   loop_edge_max_yaw_error: 0.5
+  # Allows one 10 Hz frame of overshoot beyond the 5 m creation threshold.
+  max_sequential_edge_length: 5.5
+  # IoU-only changes must persist; a single frame below 0.3 is treated as noise.
+  iou_low_confirm_frames: 3
+  # Do not create an IoU-only vertex too close to the current vertex center.
+  # Distance/outside triggers are intentionally unaffected.
+  iou_new_vertex_min_distance: 1.0
+  # If a loop is detected immediately after a vertex was created, reuse that
+  # vertex and connect it directly instead of creating a centimetre-scale node.
+  loop_reuse_current_max_distance: 0.5
+  # A close, registration-matched, pose-consistent old vertex may be reused
+  # even when reverse-view IoU is lower than the current vertex IoU.
+  localization_reuse_min_iou: 0.1
+  localization_reuse_max_distance: 1.0
   localization_frequency: 2.0
   localization_timeout: 0.0
   rel_pose_correction_frequency: 0.5

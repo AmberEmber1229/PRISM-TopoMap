@@ -61,6 +61,12 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
 
     // --- input.gt_pose ---
     use_gt_pose_ = input_config["subscribe_to_gt_pose"].as<bool>(true);
+    require_gt_pose_ = input_config["require_gt_pose"].as<bool>(false);
+    if (require_gt_pose_ && !use_gt_pose_) {
+        ROS_WARN("input.require_gt_pose=true requires subscribe_to_gt_pose=true; "
+                 "disabling the strict GT requirement");
+        require_gt_pose_ = false;
+    }
     if (use_gt_pose_ && input_config["gt_pose"]) {
         auto gt_pose_config = input_config["gt_pose"];
         gt_topic_ = gt_pose_config["topic"].as<std::string>("/odom_gt");
@@ -200,6 +206,7 @@ PRISMTopomapNode::PRISMTopomapNode(ros::NodeHandle& nh, ros::NodeHandle& pnh)
     }
     ROS_INFO("  use_odom for rel_pose: %s", use_odom_ ? "true" : "false");
     ROS_INFO("  use_gt_pose: %s", use_gt_pose_ ? "true" : "false");
+    ROS_INFO("  require_gt_pose: %s", require_gt_pose_ ? "true" : "false");
     if (use_gt_pose_) {
         ROS_INFO("  GT topic: %s", gt_topic_.c_str());
         ROS_INFO("  GT type: %s", use_gt_pose_pose_stamped_ ? "PoseStamped" : "Odometry");
@@ -403,6 +410,17 @@ PRISMTopomapNode::SyncResult PRISMTopomapNode::getSyncPoseAndImages(double times
                 }
             }
         } else {
+            if (use_gt_pose_ && require_gt_pose_) {
+                result.failure_reason = gt_poses_.empty()
+                    ? "WAIT_REQUIRED_GT"
+                    : "REQUIRED_GT_UNAVAILABLE";
+                ROS_WARN_THROTTLE(
+                    5.0,
+                    "[SYNC] Waiting for required GT pose on %s "
+                    "(gt_buf=%lu, odom_buf=%lu); point cloud is not processed.",
+                    gt_topic_.c_str(), gt_poses_.size(), odom_poses_.size());
+                return result;
+            }
             // 无 GT 数据: 从 odometry 获取 global_pose
             double odom_diff = std::numeric_limits<double>::max();
             if (!getNearestPose(odom_poses_, result.global_pose, odom_diff) || odom_diff > kPoseSyncTolerance) {

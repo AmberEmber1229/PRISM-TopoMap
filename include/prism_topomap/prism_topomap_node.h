@@ -136,6 +136,7 @@ private:
     bool subscribe_to_images_ = false;
     bool subscribe_to_curbs_ = false;
     bool use_gt_pose_ = true;
+    bool require_gt_pose_ = false;
     bool use_odom_ = false;
     bool use_gt_pose_pose_stamped_ = false;
     std::string map_frame_;

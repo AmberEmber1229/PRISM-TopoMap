@@ -125,6 +125,20 @@ private:
     bool reattachByEdge(bool require_match = true);
     bool reattachByLocalization(double iou_threshold, double localized_stamp);
 
+    struct PoseConsistencyResult {
+        bool consistent = false;
+        double predicted_length = 0.0;
+        double direct_length = 0.0;
+        double abs_distance_error = 0.0;
+        double distance_ratio = 1.0;
+        double direct_yaw = 0.0;
+        double yaw_error = 0.0;
+    };
+    PoseConsistencyResult checkPoseConsistency(
+        const Pose2D& predicted_rel_pose,
+        const Pose2D& source_global_pose,
+        const Pose2D& target_global_pose) const;
+
     struct ValidatedLoopEdge {
         int vertex_id;
         Pose2D rel_pose;
@@ -135,6 +149,10 @@ private:
         const std::vector<int>& vertex_ids,
         const std::vector<Pose2D>& rel_poses,
         const Pose2D& pose_stamped) const;
+    bool reuseCurrentVertexForLoop(
+        const std::vector<int>& vertex_ids,
+        const std::vector<Pose2D>& rel_poses,
+        const LoopClosureCandidate& loop_candidate);
     bool addNewVertex(const std::vector<int>& vertex_ids,
                       const std::vector<Pose2D>& rel_poses,
                       const LoopClosureCandidate* required_loop = nullptr);
@@ -181,6 +199,7 @@ private:
     int edge_reattach_cnt_ = 0;
     int rel_pose_cnt_ = 0;
     int iou_cnt_ = 0;
+    int consecutive_low_iou_frames_ = 0;
 
     // 参数 (从 config 读取)
     std::string mode_;
@@ -192,6 +211,12 @@ private:
     double loop_edge_max_distance_ratio_;
     double loop_edge_ratio_min_distance_;
     double loop_edge_max_yaw_error_;
+    double max_sequential_edge_length_;
+    int iou_low_confirm_frames_;
+    double iou_new_vertex_min_distance_;
+    double loop_reuse_current_max_distance_;
+    double localization_reuse_min_iou_;
+    double localization_reuse_max_distance_;
     double drift_coef_;
     double localization_timeout_;
     double floor_height_;
@@ -225,6 +250,7 @@ private:
     bool trace_inside_valid_ = false;
     bool trace_inside_ = false;
     double trace_rel_dist_ = 0.0;
+    std::string last_add_vertex_failure_reason_;
 };
 
 } // namespace prism_topomap

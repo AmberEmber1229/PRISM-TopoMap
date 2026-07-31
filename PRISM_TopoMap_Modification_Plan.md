@@ -1,6 +1,6 @@
 # PRISM-TopoMap 修改计划（仅供审阅）
 
-> 实施状态（2026-07-30）：已在当前混合架构工作空间实施首帧 descriptor 与 registration 传输恢复、无效 descriptor 建点保护、FAISS 显式身份映射、默认关闭 0.3 秒 PCD 限流。第一轮回环边预检虽然消除了“零有效边仍建点”，但完整日志又揭示了“触发回环的节点对”和“通过预检的无关候选”不一致；现已进一步改为保存触发节点 `u/v`，要求两个触发端点都得到顺序边或已通过几何检查的回环边覆盖，才允许创建回环节点。Scout rosbag 还启用了显式距离、比例和朝向门槛。纯 Python Timer 修复仍保留为外部原始 Python 工作空间待办。
+> 实施状态（2026-07-31）：已在当前混合架构工作空间实施首帧 descriptor 与 registration 传输恢复、无效 descriptor 建点保护、FAISS 显式身份映射、默认关闭 0.3 秒 PCD 限流、回环触发端点一致性保护。第二轮完整日志确认回环节点由 24 个降至 8 个，但又暴露 localization/self switch、沿边切换和未校验顺序边会破坏 5 m 相对位姿基准；现已禁止同节点 localization switch，取消 `need_change` 对 IoU 的绕过，并为 localization、EDGE_SWITCH、顺序边和回环 current 端点统一增加 Scout 距离/比例/朝向门槛。第三轮日志进一步确认所有 20 次 IoU 建点都发生在第一次跌破 0.3 的单帧，节点 25 由近距离回环强制创建，节点 27–30 则由反向视角下的旧节点复用失败形成重复链；现已增加三帧 IoU 确认、IoU-only 最小建点距离、近距离回环直接复用当前节点，以及近距离 `CLOSE_GEOMETRY` 旧节点复用。Scout 还要求首个 GT 到达后才处理点云。纯 Python Timer 修复仍保留为外部原始 Python 工作空间待办。
 
 本文件保留计划行为、修改边界和验证方法，不包含代码、伪代码或 diff。上方已实施项目来自用户后续授权；未标记实施的项目仍需根据新日志再决定。依赖顺序是：先找到并修复首帧 descriptor service 调用失败的直接原因，再补强索引身份约束和回环节点创建逻辑，最后统一实验条件并做数值等价性比较。
 
@@ -76,6 +76,7 @@
 - **涉及文件与函数：** `config/scout_rosbag.yaml` 的 timer/pose 参数；混合 node 的 timer 创建和 pose buffer 同步；对应 launch。纯 Python 侧的必要修改仍在原始 Python 工作空间实施。
 - **目标行为：** 同一参数代表相同 timer 周期；对照运行使用相同 global pose 来源和点云时刻 odom；若必需 GT 缺失，应明确失败而不是静默改变实验条件。
 - **计划修改范围：** 明确 timer 参数的单位并统一实际周期；规定 GT 必需或允许降级的模式；统一 pose 插值/采样和容差；启动日志输出最终生效值。PCD 0.3 秒限流单独由下一计划项处理。
+- **当前实施进度：** Scout 混合配置已启用 `require_gt_pose`；GT buffer 为空时点云不会进入算法，也不会再用 ODOM 创建首节点。timer 单位和原始 Python 工作空间的同步语义仍保留为后续跨工作空间任务。
 - **不应改变的行为：** 用户明确选择的运行模式、合法 topic 配置和与算法无关的发布内容。
 - **风险：** timer cadence 改变会影响负载；严格 GT 策略可能中止现有 launch；插值要正确处理角度环绕。
 - **单元级验证：** 验证 timer 实际周期、GT 缺失策略、点云时刻线性/角度插值和超时边界。
@@ -118,12 +119,12 @@
 
 ## P1：为 localization reattach 与节点切换补齐几何一致性保护
 
-- **已验证问题：** `need_to_change_vcur_` 为 true 时可绕过 IoU 接受候选；日志中存在预测长度 1.5338 m、全局直线 6.6898 m、ratio 4.3616 仍加入的 localization edge。
+- **已验证问题：** `need_to_change_vcur_` 为 true 时可绕过 IoU 接受候选；`full_trace_after_loop_consistency_fix.log` 的 26 次 localization switch 中有 15 次 `from==to`。FRAME 394 的 `1→1` 把已累计到 5.0758 m 的相对位姿重置为 0.954 m，直接造成后续节点 `1→2` 的全局距离 7.82 m、边长却只有 3.40 m。40 次 EDGE_SWITCH 中 9 次切换后的相对位姿与 GT 明显冲突；最终 50 条边中有 12 条不满足 Scout 几何门槛。
 - **证据：** `full_trace.log` stamp `1517156328.134530`；`src/topo_slam_model.cpp:650-704`；Python继承逻辑 `scripts/prism_topomap.py:498-505`。
 - **根因：** “必须离开当前节点”被等同于“任意定位候选都可接受”，而 global geometry 只记录、不作为同级拒绝条件。
 - **涉及文件与函数：** 两套 `reattachByLocalization()` / `reattach_by_localization()`；localization edge 添加与 current vertex 更新；相关 drift/IoU 条件。
 - **目标行为：** 必须切换 current 时仍只能选择通过 descriptor、registration、IoU/几何一致性和时间一致性的候选；没有合格候选时进入显式降级而非强行附着。
-- **计划修改范围：** 统一候选排序和拒绝原因；为 localization edge 与 current 切换应用可审计的全局/局部几何门槛；把“需要离开”与“候选已验证”分离；消除自环成功日志。
+- **已实施范围：** 当前节点自身候选直接以 `SAME_AS_CURRENT` 拒绝；`need_change` 不再替代 IoU；localization edge、切换后的机器人位姿和 EDGE_SWITCH 均必须通过统一距离、比例、朝向及 5 m 归属范围检查。首次 drift limit 不再使用 `current_stamp-0`。新节点提交前预检顺序边并限制 Scout 顺序边最大 5.5 m；失败时不修改图。回环 current 端点只有在该顺序边预检通过后才算覆盖。
 - **不应改变的行为：** 合法沿边切换、真实重定位、drift 随时间放宽的既有设计意图。
 - **风险：** 全局 pose 本身不可靠时会误拒绝；门槛必须与 GT/odom source 策略联动；过度收紧会导致 current 长时间失配。
 - **单元级验证：** 覆盖 IoU 高/低、need-change true/false、全局比例一致/不一致、自环、既有边、多候选排序。

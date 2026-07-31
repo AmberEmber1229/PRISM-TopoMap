@@ -48,6 +48,23 @@ void TopoSLAMModel::initParamsFromConfig(const YAML::Node& config) {
         topomap_config["loop_edge_ratio_min_distance"].as<double>(0.5);
     loop_edge_max_yaw_error_ =
         topomap_config["loop_edge_max_yaw_error"].as<double>(M_PI);
+    max_sequential_edge_length_ =
+        topomap_config["max_sequential_edge_length"].as<double>(1e9);
+    iou_low_confirm_frames_ = std::max(
+        1, topomap_config["iou_low_confirm_frames"].as<int>(1));
+    iou_new_vertex_min_distance_ = std::max(
+        0.0,
+        topomap_config["iou_new_vertex_min_distance"].as<double>(0.0));
+    loop_reuse_current_max_distance_ = std::max(
+        0.0,
+        topomap_config["loop_reuse_current_max_distance"].as<double>(0.0));
+    localization_reuse_min_iou_ = std::max(
+        0.0,
+        topomap_config["localization_reuse_min_iou"].as<double>(
+            iou_threshold_));
+    localization_reuse_max_distance_ = std::max(
+        0.0,
+        topomap_config["localization_reuse_max_distance"].as<double>(0.0));
     drift_coef_ = topomap_config["drift_coef"].as<double>(0.02);
     localization_timeout_ = topomap_config["localization_timeout"].as<double>(10.0);
 
@@ -123,11 +140,22 @@ TopoSLAMModel::TopoSLAMModel(const YAML::Node& config,
     inference_client_->setTraceConfig(trace_config_);
     ROS_INFO("Loop edge validation: max_abs_distance_error=%.3f m, "
              "max_distance_ratio=%.3f (active above %.3f m), "
-             "max_yaw_error=%.3f rad",
+             "max_yaw_error=%.3f rad, max_sequential_edge_length=%.3f m",
              loop_edge_max_abs_distance_error_,
              loop_edge_max_distance_ratio_,
              loop_edge_ratio_min_distance_,
-             loop_edge_max_yaw_error_);
+             loop_edge_max_yaw_error_,
+             max_sequential_edge_length_);
+    ROS_INFO("Vertex reuse policy: iou_confirm_frames=%d, "
+             "iou_min_creation_distance=%.3f m, "
+             "loop_reuse_current_distance=%.3f m, "
+             "localization_reuse_min_iou=%.3f, "
+             "localization_reuse_max_distance=%.3f m",
+             iou_low_confirm_frames_,
+             iou_new_vertex_min_distance_,
+             loop_reuse_current_max_distance_,
+             localization_reuse_min_iou_,
+             localization_reuse_max_distance_);
 
     // 如果有预加载图
     if (!path_to_load_graph_.empty()) {
@@ -525,10 +553,47 @@ bool TopoSLAMModel::reattachByEdge(bool require_match) {
 //计算修正量：配准结果与拓扑先验结果之间的差值
             if (diff < local_jump_threshold_) {//修正量是否小于阈值，检查局部一致性
                 const int old_vertex_id = last_vertex_id_;
+                const Pose2D proposed_rel_pose = graph_.inverseTransform(
+                    final_pose[0], final_pose[1], final_pose[2]);
+                const PoseConsistencyResult consistency =
+                    checkPoseConsistency(
+                        proposed_rel_pose,
+                        graph_.getVertex(nearest_vertex_id)
+                            .pose_for_visualization,
+                        global_pose_for_visualization_);
+                const bool candidate_too_far =
+                    std::max(
+                        consistency.predicted_length,
+                        consistency.direct_length) > max_edge_length_;
+                if (!consistency.consistent || candidate_too_far) {
+                    ROS_WARN(
+                        "Rejecting edge switch %d->%d: proposed robot pose "
+                        "is inconsistent with global pose",
+                        old_vertex_id, nearest_vertex_id);
+                    if (trace_config_.enabled) {
+                        ROS_WARN(
+                            "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
+                            "step=EDGE_REATTACH candidate=%d result=REJECT "
+                            "reason=POSE_INCONSISTENT predicted_length=%.4f "
+                            "global_direct_length=%.4f abs_diff=%.4f "
+                            "ratio=%.4f yaw_error=%.6f "
+                            "candidate_too_far=%s max_edge_length=%.4f",
+                            trace_frame_id_, current_stamp_,
+                            nearest_vertex_id,
+                            consistency.predicted_length,
+                            consistency.direct_length,
+                            consistency.abs_distance_error,
+                            consistency.distance_ratio,
+                            consistency.yaw_error,
+                            candidate_too_far ? "true" : "false",
+                            max_edge_length_);
+                    }
+                    return false;
+                }
                 ROS_INFO("Edge reattach: from vertex %d to vertex %d (match_dist=%.2f)",
                          last_vertex_id_, nearest_vertex_id, diff);
                 //沿边切换成功后需要更新的状态
-                rel_pose_of_vcur_ = graph_.inverseTransform(final_pose[0], final_pose[1], final_pose[2]);//取逆表示新当前节点 → 机器人
+                rel_pose_of_vcur_ = proposed_rel_pose;//取逆表示新当前节点 → 机器人
                 last_vertex_id_ = nearest_vertex_id;//当前节点切换
                 edge_reattach_cnt_++;
                 last_successful_match_time_ = current_stamp_;
@@ -562,8 +627,36 @@ bool TopoSLAMModel::reattachByEdge(bool require_match) {
 
     if (!changed && !require_match) {//纯定位模式localization
         const int old_vertex_id = last_vertex_id_;
+        const Pose2D proposed_rel_pose = graph_.inverseTransform(
+            rel_pose_to_vertex[0],
+            rel_pose_to_vertex[1],
+            rel_pose_to_vertex[2]);
+        const PoseConsistencyResult consistency = checkPoseConsistency(
+            proposed_rel_pose,
+            graph_.getVertex(nearest_vertex_id).pose_for_visualization,
+            global_pose_for_visualization_);
+        if (!consistency.consistent ||
+            std::max(
+                consistency.predicted_length,
+                consistency.direct_length) > max_edge_length_) {
+            if (trace_config_.enabled) {
+                ROS_WARN(
+                    "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
+                    "step=LOCALIZATION_FALLBACK candidate=%d result=REJECT "
+                    "reason=POSE_INCONSISTENT predicted_length=%.4f "
+                    "global_direct_length=%.4f abs_diff=%.4f "
+                    "ratio=%.4f yaw_error=%.6f",
+                    trace_frame_id_, current_stamp_, nearest_vertex_id,
+                    consistency.predicted_length,
+                    consistency.direct_length,
+                    consistency.abs_distance_error,
+                    consistency.distance_ratio,
+                    consistency.yaw_error);
+            }
+            return false;
+        }
         ROS_INFO("Edge reattach (no match): from vertex %d to vertex %d", last_vertex_id_, nearest_vertex_id);
-        rel_pose_of_vcur_ = graph_.inverseTransform(rel_pose_to_vertex[0], rel_pose_to_vertex[1], rel_pose_to_vertex[2]);
+        rel_pose_of_vcur_ = proposed_rel_pose;
         last_vertex_id_ = nearest_vertex_id;
         edge_reattach_cnt_++;
         rel_poses_stamped_.clear();
@@ -582,6 +675,7 @@ bool TopoSLAMModel::reattachByEdge(bool require_match) {
 
     if (changed) {
         need_to_change_vcur_ = false;//重置 need_to_change_vcur_表示切换已经解决了“当前节点不合适”的问题
+        consecutive_low_iou_frames_ = 0;
         if (has_rel_pose_vcur_to_loc_) {
             Pose2D inv_pose_on_edge = graph_.inverseTransform(pose_on_edge[0], pose_on_edge[1], pose_on_edge[2]);
             rel_pose_vcur_to_loc_ = applyPoseShift(inv_pose_on_edge, rel_pose_vcur_to_loc_);//新节点坐标系下的定位参考位姿
@@ -635,6 +729,16 @@ bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
     for (size_t i = 0; i < n; ++i) {//逐个处理定位切换候选
         const int vid = vertex_ids[i];
         if (vid < 0 || vid >= graph_.numVertices()) continue;
+        if (vid == last_vertex_id_) {
+            if (trace_config_.enabled) {
+                ROS_INFO(
+                    "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
+                    "step=LOCALIZATION_CANDIDATE candidate=%d "
+                    "result=REJECT reason=SAME_AS_CURRENT",
+                    trace_frame_id_, current_stamp_, vid);
+            }
+            continue;
+        }
         const Pose2D& loc_rel = rel_poses[i];
 
         Pose2D inv_loc_rel = graph_.inverseTransform(loc_rel[0], loc_rel[1], loc_rel[2]);
@@ -645,13 +749,26 @@ bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
                                       rel_pose_robot_to_loc[0],
                                       rel_pose_robot_to_loc[1],
                                       rel_pose_robot_to_loc[2]);
+        const Pose2D proposed_rel_pose =
+            applyPoseShift(loc_rel, rel_pose_after_localization);
+        const PoseConsistencyResult edge_consistency =
+            checkPoseConsistency(
+                pred_rel_pose_vcur_to_v,
+                graph_.getVertex(last_vertex_id_).pose_for_visualization,
+                graph_.getVertex(vid).pose_for_visualization);
+        const PoseConsistencyResult robot_pose_consistency =
+            checkPoseConsistency(
+                proposed_rel_pose,
+                graph_.getVertex(vid).pose_for_visualization,
+                global_pose_for_visualization_);
         //计算当前观测与候选节点的 IoU：将异步定位时刻的配准结果，补偿到当前时刻，再检查当前栅格与候选节点栅格是否仍然重叠
-        Pose2D vcur_to_v = getRelPose(graph_.getVertex(last_vertex_id_).pose_for_visualization,
-                                      graph_.getVertex(vid).pose_for_visualization);
-        Pose2D cur_to_v = getRelPose(vcur_to_v, rel_pose_of_vcur_);
-        double dst = std::sqrt(cur_to_v[0] * cur_to_v[0] + cur_to_v[1] * cur_to_v[1]);//使用两个节点的全局可视化位姿估算候选节点相对于当前机器人位置有多远
+        const double dst = robot_pose_consistency.direct_length;
+        const double elapsed_since_match =
+            last_successful_match_time_ > 0.0
+                ? std::max(0.0, current_stamp_ - last_successful_match_time_)
+                : 0.0;
         const double drift_limit =
-            drift_coef_ * (current_stamp_ - last_successful_match_time_) + 10.0;
+            drift_coef_ * elapsed_since_match + 10.0;
 
         if (trace_config_.enabled && trace_detailed_) {
             ROS_INFO("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
@@ -683,28 +800,93 @@ bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
             continue;
         }
 
-        if (iou > iou_threshold_val || need_to_change_vcur_) {//IoU足够高或者系统已经明确要求离开当前节点，后面恒为true
-            ROS_INFO("Localization reattach: to vertex %d (IoU=%.3f, need_change=%s)",
-                     vid, iou, need_to_change_vcur_ ? "true" : "false");
+        const double candidate_robot_distance =
+            std::max(
+                robot_pose_consistency.predicted_length,
+                robot_pose_consistency.direct_length);
+        const double candidate_edge_distance =
+            std::max(
+                edge_consistency.predicted_length,
+                edge_consistency.direct_length);
+        const bool candidate_too_far =
+            candidate_robot_distance > max_edge_length_ ||
+            candidate_edge_distance > max_edge_length_;
+        if (!edge_consistency.consistent ||
+            !robot_pose_consistency.consistent ||
+            candidate_too_far) {
+            ROS_WARN(
+                "Rejecting localization switch %d->%d: pose geometry "
+                "is inconsistent",
+                last_vertex_id_, vid);
+            if (trace_config_.enabled) {
+                ROS_WARN(
+                    "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
+                    "step=LOCALIZATION_CANDIDATE candidate=%d "
+                    "result=REJECT reason=POSE_INCONSISTENT "
+                    "edge_predicted_length=%.4f edge_global_length=%.4f "
+                    "edge_abs_diff=%.4f edge_ratio=%.4f "
+                    "edge_yaw_error=%.6f "
+                    "robot_predicted_length=%.4f "
+                    "robot_global_length=%.4f robot_abs_diff=%.4f "
+                    "robot_ratio=%.4f robot_yaw_error=%.6f "
+                    "candidate_edge_distance=%.4f "
+                    "candidate_robot_distance=%.4f "
+                    "candidate_too_far=%s max_edge_length=%.4f",
+                    trace_frame_id_, current_stamp_, vid,
+                    edge_consistency.predicted_length,
+                    edge_consistency.direct_length,
+                    edge_consistency.abs_distance_error,
+                    edge_consistency.distance_ratio,
+                    edge_consistency.yaw_error,
+                    robot_pose_consistency.predicted_length,
+                    robot_pose_consistency.direct_length,
+                    robot_pose_consistency.abs_distance_error,
+                    robot_pose_consistency.distance_ratio,
+                    robot_pose_consistency.yaw_error,
+                    candidate_edge_distance,
+                    candidate_robot_distance,
+                    candidate_too_far ? "true" : "false",
+                    max_edge_length_);
+            }
+            continue;
+        }
+
+        const bool standard_iou_match = iou > iou_threshold_val;
+        const bool close_geometry_reuse =
+            need_to_change_vcur_ &&
+            localization_reuse_max_distance_ > 0.0 &&
+            candidate_robot_distance <= localization_reuse_max_distance_ &&
+            iou >= localization_reuse_min_iou_;
+        if (!standard_iou_match && !close_geometry_reuse) {
+            if (trace_config_.enabled && trace_detailed_) {
+                ROS_INFO(
+                    "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
+                    "step=LOCALIZATION_CANDIDATE candidate=%d "
+                    "result=REJECT reason=IOU_GATE iou=%.6f "
+                    "required_iou=%.6f reuse_min_iou=%.6f "
+                    "candidate_robot_distance=%.4f "
+                    "reuse_max_distance=%.4f need_change=%s",
+                    trace_frame_id_, current_stamp_, vid, iou,
+                    iou_threshold_val, localization_reuse_min_iou_,
+                    candidate_robot_distance,
+                    localization_reuse_max_distance_,
+                    need_to_change_vcur_ ? "true" : "false");
+            }
+            continue;
+        }
+
+        {//候选必须同时通过 IoU、漂移距离和全局几何检查
+            const char* reuse_mode =
+                standard_iou_match ? "STANDARD_IOU" : "CLOSE_GEOMETRY";
+            ROS_INFO("Localization reattach: to vertex %d "
+                     "(IoU=%.3f, need_change=%s, mode=%s)",
+                     vid, iou, need_to_change_vcur_ ? "true" : "false",
+                     reuse_mode);
             last_successful_match_time_ = localized_stamp;
             const int old_vertex_id = last_vertex_id_;
 
             if (mode_ == "mapping") {
                 if (trace_config_.enabled) {
-                    const double predicted_length = std::hypot(
-                        pred_rel_pose_vcur_to_v[0], pred_rel_pose_vcur_to_v[1]);
-                    const Pose2D& old_global =
-                        graph_.getVertex(old_vertex_id).pose_for_visualization;
-                    const Pose2D& candidate_global =
-                        graph_.getVertex(vid).pose_for_visualization;
-                    const double direct_length = std::hypot(
-                        candidate_global[0] - old_global[0],
-                        candidate_global[1] - old_global[1]);
-                    const double abs_diff =
-                        std::abs(predicted_length - direct_length);
-                    const double ratio =
-                        std::max(predicted_length, direct_length) /
-                        std::max(1e-6, std::min(predicted_length, direct_length));
                     const bool already_exists =
                         graph_.hasEdge(old_vertex_id, vid);
                     ROS_INFO("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=EDGE] "
@@ -712,13 +894,18 @@ bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
                              "rel_pose=(%.4f,%.4f,%.6f) predicted_length=%.4f "
                              "global_direct_length=%.4f abs_diff=%.4f ratio=%.4f "
                              "already_exists=%s "
-                             "validation=DRIFT_AND_IOU_ONLY action=%s",
+                             "validation=DRIFT_IOU_AND_POSE reuse_mode=%s "
+                             "action=%s",
                              trace_frame_id_, current_stamp_, old_vertex_id, vid,
                              pred_rel_pose_vcur_to_v[0],
                              pred_rel_pose_vcur_to_v[1],
-                             pred_rel_pose_vcur_to_v[2], predicted_length,
-                             direct_length, abs_diff, ratio,
+                             pred_rel_pose_vcur_to_v[2],
+                             edge_consistency.predicted_length,
+                             edge_consistency.direct_length,
+                             edge_consistency.abs_distance_error,
+                             edge_consistency.distance_ratio,
                              already_exists ? "true" : "false",
+                             reuse_mode,
                              already_exists ? "KEEP_EXISTING" : "ADD");
                 }
                 graph_.addEdge(last_vertex_id_, vid,
@@ -729,8 +916,8 @@ bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
 
             last_vertex_id_ = vid;
             need_to_change_vcur_ = false;//候选节点正式成为新的当前节点
-            Pose2D pred_rel_pose = applyPoseShift(loc_rel, rel_pose_after_localization);
-            rel_pose_of_vcur_ = pred_rel_pose;//当前时刻机器人相对于候选节点的位姿，防止机器人因使用旧定位结果而瞬间跳回历史位置
+            consecutive_low_iou_frames_ = 0;
+            rel_pose_of_vcur_ = proposed_rel_pose;//当前时刻机器人相对于候选节点的位姿，防止机器人因使用旧定位结果而瞬间跳回历史位置
 
             Pose2D inv_pred_rel_pose_vcur_to_v =
                 graph_.inverseTransform(pred_rel_pose_vcur_to_v[0], pred_rel_pose_vcur_to_v[1], pred_rel_pose_vcur_to_v[2]);
@@ -744,24 +931,56 @@ bool TopoSLAMModel::reattachByLocalization(double iou_threshold_val,
                 ROS_INFO("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
                          "event=LOCALIZATION_SWITCH from=%d to=%d loc_stamp=%.6f "
                          "iou=%.6f drift_distance=%.4f drift_limit=%.4f "
-                         "new_rel_pose=(%.4f,%.4f,%.6f)",
+                         "reuse_mode=%s new_rel_pose=(%.4f,%.4f,%.6f)",
                          trace_frame_id_, current_stamp_, old_vertex_id, vid,
                          localized_stamp, iou, dst, drift_limit,
+                         reuse_mode,
                          rel_pose_of_vcur_[0], rel_pose_of_vcur_[1],
                          rel_pose_of_vcur_[2]);
             }
             return true;//清空历史因为当前节点坐标系已经改变
         }
-
-        if (trace_config_.enabled && trace_detailed_) {
-            ROS_INFO("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
-                     "step=LOCALIZATION_CANDIDATE candidate=%d result=REJECT "
-                     "reason=IOU_AND_CHANGE_GATE",
-                     trace_frame_id_, current_stamp_, vid);
-        }
     }
 
     return false;
+}
+
+TopoSLAMModel::PoseConsistencyResult
+TopoSLAMModel::checkPoseConsistency(
+    const Pose2D& predicted_rel_pose,
+    const Pose2D& source_global_pose,
+    const Pose2D& target_global_pose) const {
+    PoseConsistencyResult result;
+    result.predicted_length = std::hypot(
+        predicted_rel_pose[0], predicted_rel_pose[1]);
+    result.direct_length = std::hypot(
+        target_global_pose[0] - source_global_pose[0],
+        target_global_pose[1] - source_global_pose[1]);
+    result.abs_distance_error = std::abs(
+        result.predicted_length - result.direct_length);
+    result.distance_ratio =
+        std::max(result.predicted_length, result.direct_length) /
+        std::max(
+            1e-6,
+            std::min(result.predicted_length, result.direct_length));
+    result.direct_yaw = normalize(
+        target_global_pose[2] - source_global_pose[2]);
+    result.yaw_error = std::abs(normalize(
+        predicted_rel_pose[2] - result.direct_yaw));
+
+    const bool abs_distance_inconsistent =
+        result.abs_distance_error > loop_edge_max_abs_distance_error_;
+    const bool ratio_inconsistent =
+        std::min(result.predicted_length, result.direct_length) >
+            loop_edge_ratio_min_distance_ &&
+        result.distance_ratio > loop_edge_max_distance_ratio_;
+    const bool yaw_inconsistent =
+        result.yaw_error > loop_edge_max_yaw_error_;
+    result.consistent =
+        !abs_distance_inconsistent &&
+        !ratio_inconsistent &&
+        !yaw_inconsistent;
+    return result;
 }
 
 // ============================================================================
@@ -818,26 +1037,16 @@ TopoSLAMModel::validateLoopEdges(
             rel_poses[i][0], rel_poses[i][1], rel_poses[i][2]);
         const Pose2D pred_rel_pose =
             applyPoseShift(proposed_vcur_to_loc, inv_rel);
-        const double pred_dist = std::sqrt(
-            pred_rel_pose[0] * pred_rel_pose[0] +
-            pred_rel_pose[1] * pred_rel_pose[1]);
-        const double direct_dx =
-            global_pose_for_visualization_[0] -
-            graph_.getVertex(vid).pose_for_visualization[0];
-        const double direct_dy =
-            global_pose_for_visualization_[1] -
-            graph_.getVertex(vid).pose_for_visualization[1];
-        const double direct_dist =
-            std::sqrt(direct_dx * direct_dx + direct_dy * direct_dy);
-        const double abs_diff = std::abs(pred_dist - direct_dist);
-        const double ratio =
-            std::max(pred_dist, direct_dist) /
-            std::max(1e-6, std::min(pred_dist, direct_dist));
-        const double direct_yaw = normalize(
-            graph_.getVertex(vid).pose_for_visualization[2] -
-            global_pose_for_visualization_[2]);
-        const double yaw_error =
-            std::abs(normalize(pred_rel_pose[2] - direct_yaw));
+        const PoseConsistencyResult consistency = checkPoseConsistency(
+            pred_rel_pose,
+            global_pose_for_visualization_,
+            graph_.getVertex(vid).pose_for_visualization);
+        const double pred_dist = consistency.predicted_length;
+        const double direct_dist = consistency.direct_length;
+        const double abs_diff = consistency.abs_distance_error;
+        const double ratio = consistency.distance_ratio;
+        const double direct_yaw = consistency.direct_yaw;
+        const double yaw_error = consistency.yaw_error;
 
         if (pred_dist > max_edge_length_) {
             ROS_WARN("[NEWVTX] Rejecting proposed loop edge %d->%d: "
@@ -861,17 +1070,15 @@ TopoSLAMModel::validateLoopEdges(
             continue;
         }
 
-        const double min_dist = std::min(pred_dist, direct_dist);
         const bool abs_distance_inconsistent =
             abs_diff > loop_edge_max_abs_distance_error_;
         const bool ratio_inconsistent =
-            min_dist > loop_edge_ratio_min_distance_ &&
+            std::min(pred_dist, direct_dist) >
+                loop_edge_ratio_min_distance_ &&
             ratio > loop_edge_max_distance_ratio_;
         const bool yaw_inconsistent =
             yaw_error > loop_edge_max_yaw_error_;
-        if (abs_distance_inconsistent ||
-            ratio_inconsistent ||
-            yaw_inconsistent) {
+        if (!consistency.consistent) {
             ROS_WARN("[NEWVTX] Rejecting inconsistent proposed loop edge "
                      "%d->%d: pred_dist=%.1f direct_dist=%.1f "
                      "(ratio=%.1f, diff=%.1f, yaw_error=%.2f)",
@@ -918,13 +1125,146 @@ TopoSLAMModel::validateLoopEdges(
 }
 
 // ============================================================================
+// reuseCurrentVertexForLoop:
+// When a loop is detected immediately after creating/switching to the current
+// vertex, connect that existing vertex directly to the other loop endpoint.
+// This prevents a second vertex from being created only a few centimetres away.
+// ============================================================================
+bool TopoSLAMModel::reuseCurrentVertexForLoop(
+    const std::vector<int>& vertex_ids,
+    const std::vector<Pose2D>& rel_poses,
+    const LoopClosureCandidate& loop_candidate) {
+    if (last_vertex_id_ < 0 ||
+        loop_reuse_current_max_distance_ <= 0.0 ||
+        !has_rel_pose_vcur_to_loc_) {
+        return false;
+    }
+
+    const bool current_is_u = loop_candidate.u == last_vertex_id_;
+    const bool current_is_v = loop_candidate.v == last_vertex_id_;
+    if (!current_is_u && !current_is_v) {
+        return false;
+    }
+
+    const double distance_from_current = std::hypot(
+        rel_pose_of_vcur_[0], rel_pose_of_vcur_[1]);
+    if (distance_from_current > loop_reuse_current_max_distance_) {
+        if (trace_config_.enabled && trace_detailed_) {
+            ROS_INFO(
+                "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
+                "step=LOOP_REUSE_CURRENT result=SKIP "
+                "reason=TOO_FAR_FROM_CURRENT current_vertex=%d "
+                "distance=%.4f max_distance=%.4f",
+                trace_frame_id_, current_stamp_, last_vertex_id_,
+                distance_from_current,
+                loop_reuse_current_max_distance_);
+        }
+        return false;
+    }
+
+    const int target_vertex =
+        current_is_u ? loop_candidate.v : loop_candidate.u;
+    const auto candidate_it =
+        std::find(vertex_ids.begin(), vertex_ids.end(), target_vertex);
+    if (candidate_it == vertex_ids.end()) {
+        if (trace_config_.enabled) {
+            ROS_WARN(
+                "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=EDGE] "
+                "EDGE_TYPE=LOOP_REUSE_CURRENT_PRECHECK source=%d target=%d "
+                "action=REJECT reason=TRIGGER_ENDPOINT_MISSING",
+                trace_frame_id_, current_stamp_, last_vertex_id_,
+                target_vertex);
+        }
+        return false;
+    }
+
+    const size_t candidate_index = static_cast<size_t>(
+        std::distance(vertex_ids.begin(), candidate_it));
+    if (candidate_index >= rel_poses.size()) {
+        if (trace_config_.enabled) {
+            ROS_WARN(
+                "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=EDGE] "
+                "EDGE_TYPE=LOOP_REUSE_CURRENT_PRECHECK source=%d target=%d "
+                "action=REJECT reason=TRIGGER_REL_POSE_MISSING",
+                trace_frame_id_, current_stamp_, last_vertex_id_,
+                target_vertex);
+        }
+        return false;
+    }
+
+    const Pose2D& localized_pose = rel_poses[candidate_index];
+    const Pose2D inv_localized_pose = graph_.inverseTransform(
+        localized_pose[0], localized_pose[1], localized_pose[2]);
+    const Pose2D predicted_edge = applyPoseShift(
+        rel_pose_vcur_to_loc_, inv_localized_pose);
+    const PoseConsistencyResult consistency = checkPoseConsistency(
+        predicted_edge,
+        graph_.getVertex(last_vertex_id_).pose_for_visualization,
+        graph_.getVertex(target_vertex).pose_for_visualization);
+    const bool edge_too_long =
+        std::max(consistency.predicted_length, consistency.direct_length) >
+        max_edge_length_;
+
+    if (!consistency.consistent || edge_too_long) {
+        if (trace_config_.enabled) {
+            ROS_WARN(
+                "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=EDGE] "
+                "EDGE_TYPE=LOOP_REUSE_CURRENT_PRECHECK source=%d target=%d "
+                "rel_pose=(%.4f,%.4f,%.6f) predicted_length=%.4f "
+                "global_direct_length=%.4f abs_diff=%.4f ratio=%.4f "
+                "yaw_error=%.6f edge_too_long=%s max_edge_length=%.4f "
+                "action=REJECT reason=GEOMETRY_INCONSISTENT",
+                trace_frame_id_, current_stamp_, last_vertex_id_,
+                target_vertex,
+                predicted_edge[0], predicted_edge[1], predicted_edge[2],
+                consistency.predicted_length, consistency.direct_length,
+                consistency.abs_distance_error, consistency.distance_ratio,
+                consistency.yaw_error,
+                edge_too_long ? "true" : "false", max_edge_length_);
+        }
+        return false;
+    }
+
+    const bool already_exists =
+        graph_.hasEdge(last_vertex_id_, target_vertex);
+    if (trace_config_.enabled) {
+        ROS_INFO(
+            "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=EDGE] "
+            "EDGE_TYPE=LOOP_REUSE_CURRENT source=%d target=%d "
+            "rel_pose=(%.4f,%.4f,%.6f) predicted_length=%.4f "
+            "global_direct_length=%.4f current_distance=%.4f "
+            "already_exists=%s validation=LOCALIZATION_AND_POSE action=%s",
+            trace_frame_id_, current_stamp_, last_vertex_id_,
+            target_vertex,
+            predicted_edge[0], predicted_edge[1], predicted_edge[2],
+            consistency.predicted_length, consistency.direct_length,
+            distance_from_current,
+            already_exists ? "true" : "false",
+            already_exists ? "KEEP_EXISTING" : "ADD");
+    }
+    graph_.addEdge(
+        last_vertex_id_, target_vertex,
+        predicted_edge[0], predicted_edge[1], predicted_edge[2]);
+
+    last_successful_match_time_ =
+        localization_results_.timestamp > 0.0
+            ? localization_results_.timestamp
+            : current_stamp_;
+    need_to_change_vcur_ = false;
+    consecutive_low_iou_frames_ = 0;
+    return true;
+}
+
+// ============================================================================
 // addNewVertex: 创建新的拓扑节点
 // 对应 Python: TopoSLAMModel.add_new_vertex()
 // ============================================================================
 bool TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
                                  const std::vector<Pose2D>& rel_poses,
                                  const LoopClosureCandidate* required_loop) {
+    last_add_vertex_failure_reason_.clear();
     if (!graph_.isDescriptorValid(cur_desc_)) {
+        last_add_vertex_failure_reason_ = "INVALID_DESCRIPTOR";
         ROS_ERROR("[NEWVTX] Refusing to create vertex with invalid descriptor "
                   "(dim=%lu)", cur_desc_.size());
         if (trace_config_.enabled) {
@@ -940,6 +1280,78 @@ bool TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
     }
 
     const Pose2D pose_stamped = getRelPoseFromStamp(current_stamp_);
+    if (last_vertex_id_ >= 0) {
+        const PoseConsistencyResult sequential_consistency =
+            checkPoseConsistency(
+                pose_stamped,
+                graph_.getVertex(last_vertex_id_).pose_for_visualization,
+                global_pose_for_visualization_);
+        const bool sequential_too_long =
+            std::max(
+                sequential_consistency.predicted_length,
+                sequential_consistency.direct_length) >
+                max_sequential_edge_length_;
+        if (!sequential_consistency.consistent ||
+            sequential_too_long) {
+            last_add_vertex_failure_reason_ =
+                "SEQUENTIAL_POSE_INCONSISTENT";
+            ROS_WARN(
+                "[NEWVTX] Refusing to create vertex: sequential edge "
+                "from %d is inconsistent with global pose",
+                last_vertex_id_);
+            if (trace_config_.enabled) {
+                ROS_WARN(
+                    "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=EDGE] "
+                    "EDGE_TYPE=SEQUENTIAL_PRECHECK source=%d target=%d "
+                    "rel_pose=(%.4f,%.4f,%.6f) predicted_length=%.4f "
+                    "global_direct_length=%.4f abs_diff=%.4f ratio=%.4f "
+                    "direct_yaw=%.6f yaw_error=%.6f "
+                    "max_sequential_edge_length=%.4f "
+                    "too_long=%s action=REJECT "
+                    "reason=POSE_INCONSISTENT",
+                    trace_frame_id_, current_stamp_, last_vertex_id_,
+                    graph_.numVertices(),
+                    pose_stamped[0], pose_stamped[1], pose_stamped[2],
+                    sequential_consistency.predicted_length,
+                    sequential_consistency.direct_length,
+                    sequential_consistency.abs_distance_error,
+                    sequential_consistency.distance_ratio,
+                    sequential_consistency.direct_yaw,
+                    sequential_consistency.yaw_error,
+                    max_sequential_edge_length_,
+                    sequential_too_long ? "true" : "false");
+                if (required_loop != nullptr) {
+                    ROS_WARN(
+                        "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
+                        "event=LOOP_REJECTED "
+                        "reason=SEQUENTIAL_POSE_INCONSISTENT "
+                        "trigger_u=%d trigger_v=%d last_vertex=%d "
+                        "graph_vertices=%d graph_edges=%d",
+                        trace_frame_id_, current_stamp_,
+                        required_loop->u, required_loop->v,
+                        last_vertex_id_, graph_.numVertices(),
+                        graph_.undirectedEdgeCount());
+                }
+            }
+            return false;
+        }
+        if (trace_config_.enabled && trace_detailed_) {
+            ROS_INFO(
+                "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=EDGE] "
+                "EDGE_TYPE=SEQUENTIAL_PRECHECK source=%d target=%d "
+                "predicted_length=%.4f global_direct_length=%.4f "
+                "abs_diff=%.4f ratio=%.4f yaw_error=%.6f "
+                "action=ACCEPT",
+                trace_frame_id_, current_stamp_, last_vertex_id_,
+                graph_.numVertices(),
+                sequential_consistency.predicted_length,
+                sequential_consistency.direct_length,
+                sequential_consistency.abs_distance_error,
+                sequential_consistency.distance_ratio,
+                sequential_consistency.yaw_error);
+        }
+    }
+
     std::vector<int> vertices_to_validate = vertex_ids;
     std::vector<Pose2D> rel_poses_to_validate = rel_poses;
     if (required_loop != nullptr) {
@@ -956,6 +1368,8 @@ bool TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
             if (it == vertex_ids.end()) {
                 ROS_WARN("[LOOP] Trigger endpoint %d is missing from "
                          "localization candidates", endpoint);
+                last_add_vertex_failure_reason_ =
+                    "TRIGGER_ENDPOINT_MISSING";
                 if (trace_config_.enabled) {
                     ROS_WARN("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
                              "event=LOOP_REJECTED "
@@ -974,6 +1388,8 @@ bool TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
             if (index >= rel_poses.size()) {
                 ROS_WARN("[LOOP] Trigger endpoint %d has no matching "
                          "relative pose", endpoint);
+                last_add_vertex_failure_reason_ =
+                    "TRIGGER_REL_POSE_MISSING";
                 if (trace_config_.enabled) {
                     ROS_WARN("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
                              "event=LOOP_REJECTED "
@@ -1022,6 +1438,8 @@ bool TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
                      (u_covered && v_covered) ? "ACCEPT" : "REJECT");
         }
         if (!u_covered || !v_covered) {
+            last_add_vertex_failure_reason_ =
+                "TRIGGER_ENDPOINTS_NOT_COVERED";
             ROS_WARN("[LOOP] Candidate rejected before vertex creation: "
                      "trigger endpoints are not both covered");
             if (trace_config_.enabled) {
@@ -1060,6 +1478,7 @@ bool TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
         cur_grid_//当前局部栅格
     );
     if (new_id < 0) {
+        last_add_vertex_failure_reason_ = "GRAPH_OR_FAISS_REJECTED";
         if (trace_config_.enabled) {
             ROS_ERROR("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=VERTEX] "
                       "event=SKIP_CREATE reason=GRAPH_OR_FAISS_REJECTED "
@@ -1070,6 +1489,10 @@ bool TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
                       graph_.indexIdentitySize());
         }
         return false;
+    }
+    if (vertices_before == 0 &&
+        last_successful_match_time_ <= 0.0) {
+        last_successful_match_time_ = current_stamp_;
     }
 
     if (trace_config_.enabled) {
@@ -1172,6 +1595,7 @@ bool TopoSLAMModel::addNewVertex(const std::vector<int>& vertex_ids,
 //新节点成为当前节点
     last_vertex_id_ = new_id;
     need_to_change_vcur_ = false;
+    consecutive_low_iou_frames_ = 0;
     rel_poses_stamped_.clear();
     rel_poses_stamped_.push_back({current_stamp_, rel_pose_of_vcur_});
     if (trace_config_.enabled) {
@@ -1428,7 +1852,10 @@ void TopoSLAMModel::update(
             if (addNewVertex({}, {})) {
                 trace_decision_ = "FIRST_VERTEX";
             } else {
-                trace_decision_ = "WAIT_DESCRIPTOR";
+                trace_decision_ =
+                    last_add_vertex_failure_reason_ == "INVALID_DESCRIPTOR"
+                        ? "WAIT_DESCRIPTOR"
+                        : "WAIT_VERTEX_CONSISTENCY";
             }
             logFlowSummary(flow_update_start);
             return;
@@ -1516,8 +1943,35 @@ void TopoSLAMModel::update(
             const LoopClosureCandidate loop_candidate =
                 findLoopClosure(vertex_ids, dists);
             if (loop_candidate.found) {
-                ROS_INFO("Loop candidate found. Validate loop edges before "
-                         "creating a vertex");
+                ROS_INFO("Loop candidate found. Try reusing the current "
+                         "vertex before creating a new vertex");
+                if (reuseCurrentVertexForLoop(
+                        vertex_ids, rel_poses, loop_candidate)) {
+                    found_loop_closure_ = true;
+                    trace_decision_ = "LOOP_REUSE_CURRENT";
+                    if (trace_config_.enabled) {
+                        const int path_start =
+                            path_.empty() ? -1 : path_.front();
+                        const int path_end =
+                            path_.empty() ? -1 : path_.back();
+                        ROS_INFO(
+                            "[FLOW][FRAME=%d][STAMP=%.6f]"
+                            "[STAGE=DECISION] event=LOOP_DETECTED "
+                            "result=CONFIRMED commit=REUSE_CURRENT "
+                            "trigger_u=%d trigger_v=%d "
+                            "path_start=%d path_end=%d "
+                            "graph_vertices=%d graph_edges=%d",
+                            trace_frame_id_, current_stamp_,
+                            loop_candidate.u, loop_candidate.v,
+                            path_start, path_end, graph_.numVertices(),
+                            graph_.undirectedEdgeCount());
+                    }
+                    logFlowSummary(flow_update_start);
+                    return;
+                }
+
+                ROS_INFO("Current vertex cannot be reused for this loop. "
+                         "Validate a new loop vertex");
                 if (addNewVertex(
                         vertex_ids, rel_poses, &loop_candidate)) {
                     found_loop_closure_ = true;
@@ -1579,21 +2033,64 @@ void TopoSLAMModel::update(
                  rel_dist, max_edge_length_, changed ? "true" : "false");
     }
 
-    if (!inside_vcur || cur_iou_ < iou_threshold_ || rel_dist > max_edge_length_) {
+    const bool reason_outside = !inside_vcur;
+    const bool reason_iou = cur_iou_ < iou_threshold_;
+    const bool reason_distance = rel_dist > max_edge_length_;
+    const bool iou_only_trigger =
+        reason_iou && !reason_outside && !reason_distance;
+
+    if (iou_only_trigger) {
+        consecutive_low_iou_frames_ = std::min(
+            consecutive_low_iou_frames_ + 1,
+            iou_low_confirm_frames_);
+    } else {
+        consecutive_low_iou_frames_ = 0;
+    }
+
+    const bool iou_confirmed =
+        !iou_only_trigger ||
+        consecutive_low_iou_frames_ >= iou_low_confirm_frames_;
+    const bool iou_spacing_ready =
+        !iou_only_trigger ||
+        rel_dist >= iou_new_vertex_min_distance_;
+    const bool defer_iou_change =
+        iou_only_trigger && (!iou_confirmed || !iou_spacing_ready);
+
+    if (defer_iou_change) {
+        need_to_change_vcur_ = false;
+        trace_decision_ = !iou_confirmed
+            ? "WAIT_IOU_CONFIRMATION"
+            : "WAIT_IOU_MIN_DISTANCE";
+        if (trace_config_.enabled) {
+            ROS_INFO(
+                "[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
+                "decision=%s reason=IOU_ONLY iou=%.6f threshold=%.6f "
+                "low_iou_frames=%d required_frames=%d rel_dist=%.4f "
+                "min_creation_distance=%.4f",
+                trace_frame_id_, current_stamp_, trace_decision_.c_str(),
+                cur_iou_, iou_threshold_, consecutive_low_iou_frames_,
+                iou_low_confirm_frames_, rel_dist,
+                iou_new_vertex_min_distance_);
+        }
+    } else if (reason_outside || reason_iou || reason_distance) {
         need_to_change_vcur_ = true;
         if (trace_config_.enabled && trace_detailed_) {
             ROS_INFO("[FLOW][FRAME=%d][STAMP=%.6f][STAGE=DECISION] "
                      "decision=NEED_CHANGE reason_inside=%s reason_iou=%s "
-                     "reason_distance=%s",
+                     "reason_distance=%s low_iou_frames=%d "
+                     "required_iou_frames=%d iou_spacing_ready=%s",
                      trace_frame_id_, current_stamp_,
-                     inside_vcur ? "false" : "true",
-                     cur_iou_ < iou_threshold_ ? "true" : "false",
-                     rel_dist > max_edge_length_ ? "true" : "false");
+                     reason_outside ? "true" : "false",
+                     reason_iou ? "true" : "false",
+                     reason_distance ? "true" : "false",
+                     consecutive_low_iou_frames_,
+                     iou_low_confirm_frames_,
+                     iou_spacing_ready ? "true" : "false");
         }
         // 打印因为什么原因想切换/创建顶点
-        if (!inside_vcur) {
+        if (reason_outside) {
             ROS_INFO("Moved outside vcur %d", last_vertex_id_);
-        } else if (cur_iou_ < iou_threshold_) {
+        } else if (reason_iou) {
             ROS_INFO("Low IoU %.3f < %.3f", cur_iou_, iou_threshold_);
         } else {
             ROS_INFO("Too far from location center (dist=%.2f > %.2f)", rel_dist, max_edge_length_);
@@ -1618,15 +2115,26 @@ void TopoSLAMModel::update(
                         vertex_created = addNewVertex({}, {});
                     }
                     if (!vertex_created) {
-                        trace_decision_ = "WAIT_DESCRIPTOR";
+                        trace_decision_ =
+                            last_add_vertex_failure_reason_ ==
+                                    "INVALID_DESCRIPTOR"
+                                ? "WAIT_DESCRIPTOR"
+                                : "WAIT_VERTEX_CONSISTENCY";
                     }
                 }
             } else {
                 // 定位数据太旧了
                 if (mode_ == "mapping") {
                     ROS_INFO("No recent localization. Add new vertex");
-                    trace_decision_ =
-                        addNewVertex({}, {}) ? "NEW_VERTEX" : "WAIT_DESCRIPTOR";
+                    if (addNewVertex({}, {})) {
+                        trace_decision_ = "NEW_VERTEX";
+                    } else {
+                        trace_decision_ =
+                            last_add_vertex_failure_reason_ ==
+                                    "INVALID_DESCRIPTOR"
+                                ? "WAIT_DESCRIPTOR"
+                                : "WAIT_VERTEX_CONSISTENCY";
+                    }
                 } else {
                     ROS_WARN("No recent localization");
                     trace_decision_ = "WAIT_LOCALIZATION";
@@ -1642,6 +2150,7 @@ void TopoSLAMModel::update(
             }
         }
     } else if (trace_decision_ == "UNSET") {
+        need_to_change_vcur_ = false;
         trace_decision_ = "KEEP";
     }
 

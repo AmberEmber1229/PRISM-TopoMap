@@ -12,6 +12,13 @@
 4. “可能存在回环”只会成为候选。回环检测所依据的两个触发端点必须都由顺序边或通过几何检查的回环边覆盖；无关候选不能促成 `LOOP_NEW_VERTEX`。
 5. 默认关闭混合架构独有的 `0.3 s` PCD interval；性能采样只能通过显式 launch 参数开启。
 6. Scout rosbag 的回环边同时检查全局距离绝对误差、距离比例和朝向误差；启动日志会打印实际门槛。
+7. `need_change` 不再绕过定位候选的 IoU 和几何检查；当前节点自身不能成为 localization switch 目标。
+8. `EDGE_SWITCH` 和新节点顺序边都必须与 GT 全局位姿一致；顺序边长度上限为 5.5 m，给 5 m 建点门槛保留一帧超调。
+9. 回环的 current 端点只有在顺序边预检通过后才算被覆盖。
+10. Scout 严格要求 GT；GT 尚未到达时丢弃该点云，不再用 ODOM 创建首节点。
+11. 仅由 IoU 触发的切换必须连续 3 帧低于门限，且相对当前节点至少移动 1.0 m；距离超过 5 m或移出有效区域不受这两个门槛影响。
+12. 当前节点附近 0.5 m内检测到回环时直接复用当前节点并提交回环边，不再创建厘米级 `LOOP_NEW_VERTEX`。
+13. 与机器人相距不超过 1.0 m的旧候选，在 registration、位姿一致性和最低 IoU 均通过时允许以 `CLOSE_GEOMETRY` 模式复用，避免先拒绝切换再创建重复节点。
 
 ## 2. 构建
 
@@ -126,10 +133,10 @@ graph_vertices=0 ... faiss_size=0 faiss_identity=0
 
 下一次 descriptor 成功后才应创建第一个节点。即使发生这种情况，也不应再产生 graph/FAISS ID 偏移。
 
-## 4. 回环一致性回归
+## 4. 节点复用与位姿一致性完整回归
 
 请重新启动终端 A，并使用新的文件名；不要覆盖上一轮已经生成的
-`full_trace_after_fix.log`：
+`full_trace_after_loop_consistency_fix.log`：
 
 ```bash
 source /home/tom/host_catkin_ws/devel/setup.bash
@@ -140,19 +147,19 @@ roslaunch prism_topomap build_map_by_iou_scout_rosbag_hybrid.launch \
   trace_descriptor_head_size:=4 \
   trace_registration_candidates:=true \
   pcd_process_interval:=0.0 \
-  2>&1 | tee full_trace_after_loop_consistency_fix.log
+  2>&1 | tee full_trace_after_vertex_reuse_fix.log
 ```
 
 在另一个终端用原参数播放同一个 bag。建议先播放到约 245 秒，快速覆盖上一轮约 217 秒之后出现的密集回环节点区段；若节点增长正常，再完整播放到你之前采用的约 320 秒。停止 rosbag 后等待约 5 秒，让节点处理完队列，再停止 roslaunch。
 
-最终需要分析的文件是 `full_trace_after_loop_consistency_fix.log`。
+最终需要分析的文件是 `full_trace_after_vertex_reuse_fix.log`。
 
 ## 5. 完整运行的快速人工检查
 
 ### 5.1 PCD 限流确实关闭
 
 ```bash
-rg -n "PCD performance sampling|SKIPPED_INTERVAL" full_trace_after_loop_consistency_fix.log
+rg -n "PCD performance sampling|SKIPPED_INTERVAL" full_trace_after_vertex_reuse_fix.log
 ```
 
 预期只有 `PCD performance sampling: disabled`，没有 `SKIPPED_INTERVAL`。
@@ -161,7 +168,7 @@ rg -n "PCD performance sampling|SKIPPED_INTERVAL" full_trace_after_loop_consiste
 
 ```bash
 rg -n "SERVICE_RESULT|event=SKIP_CREATE|event=CREATE|event=SET_CURRENT|\\[FAISS\\] Added" \
-  full_trace_after_loop_consistency_fix.log | head -n 200
+  full_trace_after_vertex_reuse_fix.log | head -n 200
 ```
 
 正常新图应始终满足：
@@ -185,7 +192,7 @@ event=SET_CURRENT ... faiss_size=N+1 faiss_identity=N+1
 重点查看第二个、第三个节点创建后的 FAISS 查询：
 
 ```bash
-rg -n "new_id=1|new_id=2|STAGE=FAISS" full_trace_after_loop_consistency_fix.log | head -n 120
+rg -n "new_id=1|new_id=2|STAGE=FAISS" full_trace_after_vertex_reuse_fix.log | head -n 120
 ```
 
 如果查询快照正好来自新节点自身，距离 `0.000000` 的候选 ID 应等于该节点 ID。例如节点 1 的自身 descriptor 应返回 `1:0.000000`，不能再返回 `0:0.000000`。
@@ -193,21 +200,22 @@ rg -n "new_id=1|new_id=2|STAGE=FAISS" full_trace_after_loop_consistency_fix.log 
 ### 5.4 回环节点必须有有效的新回环边
 
 ```bash
-rg -n "Loop edge validation|LOOP_CANDIDATE_DETECTED|LOOP_PRECHECK|LOOP_TRIGGER_PRECHECK|LOOP_REJECTED|LOOP_DETECTED|LOOP_NEW_VERTEX|valid_loop_edges" \
-  full_trace_after_loop_consistency_fix.log
+rg -n "Loop edge validation|LOOP_CANDIDATE_DETECTED|LOOP_PRECHECK|LOOP_TRIGGER_PRECHECK|LOOP_REUSE_CURRENT|LOOP_REJECTED|LOOP_DETECTED|LOOP_NEW_VERTEX|valid_loop_edges" \
+  full_trace_after_vertex_reuse_fix.log
 ```
 
 预期规则：
 
 - 启动阶段应打印 `max_abs_distance_error=1.500`、`max_distance_ratio=2.000`、`max_yaw_error=0.500`；
 - `LOOP_CANDIDATE_DETECTED` 只表示检测到候选，不代表已经建点；
-- 每个候选必须出现同 FRAME 的 `LOOP_TRIGGER_PRECHECK`，其中 `trigger_u/trigger_v` 与候选事件一致；
+- 创建新回环节点的候选必须出现同 FRAME 的 `LOOP_TRIGGER_PRECHECK`，其中 `trigger_u/trigger_v` 与候选事件一致；直接复用当前节点的分支改为记录 `EDGE_TYPE=LOOP_REUSE_CURRENT`；
 - `action=REJECT` 或 `u_covered=false` / `v_covered=false` 时，应出现
   `LOOP_REJECTED reason=TRIGGER_ENDPOINTS_NOT_COVERED`，同一 FRAME 不得出现
   `LOOP_DETECTED result=CONFIRMED` 或 `decision=LOOP_NEW_VERTEX`；
 - 被拒绝的回环帧若随后独立满足普通 5 m 距离扩图条件，可以出现
   `decision=NEW_VERTEX`，这不属于回环建点；
-- 真正的 `LOOP_DETECTED result=CONFIRMED` 前必须出现
+- `LOOP_DETECTED result=CONFIRMED commit=REUSE_CURRENT` 前必须出现
+  `EDGE_TYPE=LOOP_REUSE_CURRENT ... action=ADD/KEEP_EXISTING`；需要创建新节点的确认事件前仍必须出现
   `LOOP_TRIGGER_PRECHECK ... u_covered=true v_covered=true ... action=ACCEPT`；
 - 已确认事件、预检事件和候选事件的 `trigger_u/trigger_v` 必须一致；
 - 对应 `SET_CURRENT` 的 `valid_loop_edges` 可为 1（另一端由顺序边覆盖）或 2（两个端点都由回环边覆盖），但不能靠触发端点之外的候选通过。
@@ -216,13 +224,57 @@ rg -n "Loop edge validation|LOOP_CANDIDATE_DETECTED|LOOP_PRECHECK|LOOP_TRIGGER_P
 
 ```bash
 rg -n "decision=LOOP_NEW_VERTEX|event=LOOP_REJECTED|LOOP_TRIGGER_PRECHECK" \
-  full_trace_after_loop_consistency_fix.log
+  full_trace_after_vertex_reuse_fix.log
 ```
 
 预期 FRAME 编号不必与上一轮完全一致，但不应再出现类似“约 13.5 秒连续创建
 15 个回环节点”的簇。
 
-### 5.5 RViz 观察
+### 5.5 current 切换与顺序边
+
+```bash
+rg -n "require_gt_pose|global_source=ODOM|SAME_AS_CURRENT|POSE_INCONSISTENT|LOCALIZATION_SWITCH|EDGE_SWITCH|SEQUENTIAL_PRECHECK|WAIT_VERTEX_CONSISTENCY" \
+  full_trace_after_vertex_reuse_fix.log
+```
+
+预期规则：
+
+- 启动日志出现 `require_gt_pose: true`，所有已处理 FRAME 的
+  `global_source` 都应为 `GT`；
+- 可以出现 `reason=SAME_AS_CURRENT`，但不得再出现
+  `event=LOCALIZATION_SWITCH from=N to=N`；
+- `need_change=true` 的候选仍必须通过标准 IoU，或通过近距离复用的最低 IoU，并同时通过位姿一致性检查；
+- 被记录为 `reason=POSE_INCONSISTENT` 的 localization/edge switch 不得改变
+  `vertex_after`；
+- 每个 `event=CREATE` 之前必须有同 FRAME 的
+  `EDGE_TYPE=SEQUENTIAL_PRECHECK ... action=ACCEPT`，首节点除外；
+- `SEQUENTIAL_PRECHECK action=REJECT` 后不得在同 FRAME 创建节点；
+- 正常顺序边的 `predicted_length` 与 `global_direct_length` 应接近，且二者均不超过 5.5 m。
+
+重点复核旧日志 FRAME 394 和 FRAME 1802 附近：原来的 `1→1`、`20→20`
+自切换必须变成 `reason=SAME_AS_CURRENT`，随后应按普通 5 m 规则创建新节点。
+
+### 5.6 IoU 迟滞、近距离回环和旧节点复用
+
+```bash
+rg -n "Vertex reuse policy|WAIT_IOU_CONFIRMATION|WAIT_IOU_MIN_DISTANCE|LOOP_REUSE_CURRENT|reuse_mode=CLOSE_GEOMETRY|event=CREATE" \
+  full_trace_after_vertex_reuse_fix.log
+```
+
+预期规则：
+
+- 启动日志打印 `iou_confirm_frames=3`、`iou_min_creation_distance=1.000`、`loop_reuse_current_distance=0.500`、`localization_reuse_min_iou=0.100` 和 `localization_reuse_max_distance=1.000`；
+- 第一次和第二次单纯跌破 IoU 门限分别进入 `WAIT_IOU_CONFIRMATION`，不得在同 FRAME 出现 `event=CREATE`；
+- 连续低 IoU 已达到 3 帧但 `rel_dist < 1.0` 时进入 `WAIT_IOU_MIN_DISTANCE`，不得建点；
+- 超过 5 m或 `inside=false` 时仍可直接进入 `NEED_CHANGE`，不得被上述等待状态阻塞；
+- 旧日志 stamp `1517156385.431628` 附近应优先出现
+  `EDGE_TYPE=LOOP_REUSE_CURRENT ... action=ADD` 和
+  `decision=LOOP_REUSE_CURRENT`，不应再出现一条约 0.056 m的顺序边；
+- 旧日志 stamp `1517156423` 附近若再次匹配到空间上很近的旧节点，应优先出现
+  `LOCALIZATION_SWITCH ... reuse_mode=CLOSE_GEOMETRY`；同一 FRAME 不应再创建重复节点；
+- `CLOSE_GEOMETRY` 仍必须通过 registration、漂移、边位姿和机器人位姿一致性检查。任何 `POSE_INCONSISTENT` 候选都不得切换。
+
+### 5.7 RViz 观察
 
 请重点观察：
 
@@ -251,7 +303,7 @@ roslaunch prism_topomap build_map_by_iou_scout_rosbag_hybrid.launch \
 
 优先提供：
 
-1. `full_trace_after_loop_consistency_fix.log`；
+1. `full_trace_after_vertex_reuse_fix.log`；
 2. 本轮实际播放到的 bag 时间（约 245 秒或约 320 秒）；
 3. 如果无 interval 时出现明显积压，再提供 `0.1` 或 `0.3` 的对照日志；
 4. 运行时使用的完整 rosbag 命令，以及节点启动后等待了多少秒才开始播放。
